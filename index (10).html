@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Gestão de Pessoal · NeuroDynamics</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300352F'/%3E%3Ccircle cx='11' cy='16' r='4' fill='%23CEDC00'/%3E%3Ccircle cx='22' cy='10' r='2.6' fill='%23F8F7FF'/%3E%3Ccircle cx='22' cy='22' r='2.6' fill='%23F8F7FF'/%3E%3Cpath d='M14 14.5 19.8 11M14 17.5 19.8 21' stroke='%23CEDC00' stroke-width='1.6'/%3E%3C/svg%3E">
+<style>
+:root{
+  --deep:#00352F; --axon:#00594F; --syn:#CEDC00; --crystal:#F8F7FF; --ink:#1D1D1F;
+  --card:#FFFFFF; --border:#E4E3EE; --muted:#6B6F74; --soft:#EFEEF7;
+  --ok-bg:#E1F5EE; --ok-tx:#0F6E56; --warn-bg:#FAEEDA; --warn-tx:#854F0B;
+  --info-bg:#E6F1FB; --info-tx:#185FA5; --bad-bg:#FCEBEB; --bad-tx:#A32D2D;
+  --gray-bg:#EFEFF4; --gray-tx:#5F5E5A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:Arial,Helvetica,sans-serif;font-size:14px;color:var(--ink);background:var(--crystal)}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:14px;color:var(--ink)}
+a{color:var(--axon)}
+[hidden]{display:none!important}
+
+/* ---------- login ---------- */
+#login-view{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--deep);padding:24px}
+.login-card{background:var(--card);border-radius:14px;padding:40px 36px 30px;width:100%;max-width:400px}
+.wordmark{font-size:21px;font-weight:bold;letter-spacing:-.3px;color:var(--deep)}
+.wordmark .dot{color:transparent;-webkit-text-stroke:0;background:var(--syn);display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:4px}
+.eyebrow{font-size:11px;font-weight:bold;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.login-card .eyebrow{margin:6px 0 26px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:bold;color:#40444A;margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;border:1px solid #D6D5E2;border-radius:8px;padding:9px 11px;background:#fff}
+.field textarea{min-height:84px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--axon);box-shadow:0 0 0 3px rgba(206,220,0,.35)}
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid #D6D5E2;background:#fff;color:var(--ink);border-radius:8px;padding:8px 14px;font-size:13.5px;font-weight:bold}
+.btn:hover{border-color:var(--axon)}
+.btn-primary{background:var(--deep);border-color:var(--deep);color:var(--syn)}
+.btn-primary:hover{background:var(--axon);border-color:var(--axon)}
+.btn-danger{background:#fff;border-color:#E7B9B6;color:var(--bad-tx)}
+.btn-danger:hover{border-color:var(--bad-tx)}
+.btn-sm{padding:5px 10px;font-size:12.5px}
+.btn-block{width:100%;justify-content:center;padding:11px}
+.login-err{background:var(--bad-bg);color:var(--bad-tx);border-radius:8px;padding:9px 12px;font-size:13px;margin-bottom:14px}
+.login-note{margin-top:22px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);line-height:1.55}
+.doc-code{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.05em}
+
+/* ---------- estrutura ---------- */
+#app{display:flex;min-height:100vh}
+.sidebar{width:230px;flex-shrink:0;background:var(--deep);color:#CFE0DC;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.sb-brand{padding:22px 20px 18px;border-bottom:1px solid rgba(248,247,255,.12)}
+.sb-brand .wm{color:#F8F7FF;font-size:17px;font-weight:bold;letter-spacing:-.2px}
+.sb-brand .wm b{color:var(--syn)}
+.sb-brand .eyebrow{color:#8FB1AB;margin-top:4px}
+.sb-nav{flex:1;padding:14px 0;overflow-y:auto}
+.sb-nav button{display:flex;align-items:center;width:100%;background:none;border:none;color:#CFE0DC;text-align:left;padding:10px 20px;font-size:13.5px;border-left:3px solid transparent}
+.sb-nav button:hover{background:rgba(248,247,255,.06);color:#fff}
+.sb-nav button.active{background:var(--axon);border-left-color:var(--syn);color:#fff;font-weight:bold}
+.sb-sec{padding:16px 20px 6px;font-size:10.5px;font-weight:bold;letter-spacing:.14em;text-transform:uppercase;color:#7FA39D}
+.sb-user{padding:14px 20px;border-top:1px solid rgba(248,247,255,.12);font-size:12.5px}
+.sb-user .nm{color:#fff;font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-user .rl{color:#8FB1AB;margin:2px 0 8px;text-transform:capitalize}
+.sb-user button{background:none;border:1px solid rgba(248,247,255,.3);color:#CFE0DC;border-radius:7px;padding:5px 10px;font-size:12px}
+.sb-user button:hover{border-color:var(--syn);color:var(--syn)}
+main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:15px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:5}
+.topbar h1{font-size:18px}
+.content{padding:24px 28px 60px;max-width:1240px;width:100%}
+
+/* ---------- componentes ---------- */
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:18px}
+.card h3{font-size:15px;margin-bottom:14px}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:18px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.stat .n{font-size:26px;font-weight:bold;color:var(--deep)}
+.stat .l{font-size:12px;color:var(--muted);margin-top:3px}
+.stat.alert{border-color:#E7B9B6;background:#FFFBFB}
+.stat.alert .n{color:var(--bad-tx)}
+.pill{display:inline-block;border-radius:20px;padding:3px 10px;font-size:11.5px;font-weight:bold;white-space:nowrap}
+.p-ativo{background:var(--ok-bg);color:var(--ok-tx)}
+.p-pausa{background:var(--warn-bg);color:var(--warn-tx)}
+.p-demanda{background:var(--info-bg);color:var(--info-tx)}
+.p-desligado{background:var(--bad-bg);color:var(--bad-tx)}
+.p-egresso{background:var(--gray-bg);color:var(--gray-tx)}
+.chip{display:inline-block;background:var(--soft);border-radius:6px;padding:2px 7px;font-size:11px;font-family:'Courier New',monospace;margin:1px 2px 1px 0;color:#3E4249}
+.reg{font-family:'Courier New',monospace;font-weight:bold;color:var(--axon)}
+table.tb{width:100%;border-collapse:collapse}
+.tb th{text-align:left;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--border)}
+.tb td{padding:10px;border-bottom:1px solid #EFEEF6;vertical-align:middle}
+.tb tr:last-child td{border-bottom:none}
+.tb tbody tr.click{cursor:pointer}
+.tb tbody tr.click:hover{background:var(--crystal)}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:16px}
+.filters .field{margin:0;min-width:150px}
+.filters .field.grow{flex:1;min-width:220px}
+.muted{color:var(--muted)}
+.small{font-size:12.5px}
+.empty{padding:34px;text-align:center;color:var(--muted);font-size:13.5px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
+.bar-row .lb{width:190px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-row .tr{flex:1;background:var(--soft);border-radius:5px;height:10px;overflow:hidden}
+.bar-row .fl{height:100%;background:var(--axon);border-radius:5px}
+.bar-row .vl{width:26px;text-align:right;font-weight:bold;color:var(--deep)}
+.banner{border-radius:10px;padding:12px 15px;font-size:13.5px;margin-bottom:16px;line-height:1.5}
+.banner.red{background:var(--bad-bg);color:var(--bad-tx)}
+.banner.amber{background:var(--warn-bg);color:var(--warn-tx)}
+.banner.green{background:var(--ok-bg);color:var(--ok-tx)}
+
+/* ---------- ficha ---------- */
+.ficha-head{background:var(--deep);border-radius:12px;color:#F8F7FF;padding:22px 24px;margin-bottom:18px}
+.ficha-head .top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.ficha-head h2{font-size:21px}
+.ficha-head .meta{margin-top:7px;color:#B9D0CC;font-size:13px}
+.ficha-head .reg{color:var(--syn)}
+.ficha-head .grupos{margin-top:12px}
+.ficha-head .chip{background:rgba(248,247,255,.14);color:#E7EEEC}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:18px;flex-wrap:wrap}
+.tabs button{background:none;border:none;padding:10px 16px;font-size:13.5px;font-weight:bold;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabs button.active{color:var(--deep);border-bottom-color:var(--syn)}
+.dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px 24px}
+.dl .it dt{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.dl .it dd{font-size:14px;word-break:break-word}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px 16px}
+.form-grid .full{grid-column:1/-1}
+.timeline{position:relative;padding-left:22px}
+.timeline::before{content:'';position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--border)}
+.tl-item{position:relative;padding:0 0 18px 12px}
+.tl-item::before{content:'';position:absolute;left:-21px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--syn);border:2px solid var(--deep)}
+.tl-item .dt{font-size:11.5px;color:var(--muted)}
+.tl-item .tp{font-weight:bold;margin:2px 0}
+.tl-item .ds{font-size:13.5px;line-height:1.5;white-space:pre-wrap}
+.tl-item .rp{font-size:12px;color:var(--muted);margin-top:3px}
+.acc-group{margin-bottom:20px}
+.acc-group h4{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.acc-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 4px;border-bottom:1px solid #EFEEF6;flex-wrap:wrap}
+.acc-row:last-child{border-bottom:none}
+.acc-row .nm{font-weight:bold;min-width:200px}
+.acc-row .mt{flex:1;font-size:12px;color:var(--muted)}
+.aval-card{border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.aval-card .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.score{display:inline-block;background:var(--soft);border-radius:7px;padding:3px 9px;font-size:12px;font-weight:bold;margin-right:6px}
+.score.low{background:var(--bad-bg);color:var(--bad-tx)}
+
+/* ---------- modal / toast ---------- */
+.overlay{position:fixed;inset:0;background:rgba(29,29,31,.45);display:flex;align-items:flex-start;justify-content:center;padding:6vh 16px;z-index:50;overflow-y:auto}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:640px;padding:24px}
+.modal h3{font-size:17px;margin-bottom:16px}
+.modal .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.modal.narrow{max-width:440px}
+#toast{position:fixed;bottom:22px;right:22px;z-index:99;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--ink);color:#fff;border-radius:9px;padding:11px 16px;font-size:13.5px;max-width:360px;border-left:4px solid var(--syn)}
+.toast.err{border-left-color:#E24B4A}
+.dropzone{border:2px dashed #C9C7DB;border-radius:12px;padding:38px;text-align:center;color:var(--muted);background:#fff;cursor:pointer}
+.dropzone:hover{border-color:var(--axon)}
+.dropzone b{color:var(--deep)}
+.log{background:#F4F3FB;border-radius:8px;padding:12px 14px;font-family:'Courier New',monospace;font-size:12px;line-height:1.7;max-height:260px;overflow-y:auto;white-space:pre-wrap}
+@media (max-width:860px){
+  #app{flex-direction:column}
+  .sidebar{width:100%;height:auto;position:static}
+  .sb-nav{display:flex;flex-wrap:wrap;padding:6px}
+  .sb-nav button{width:auto;border-left:none;border-bottom:3px solid transparent;padding:8px 12px}
+  .sb-nav button.active{border-left:none;border-bottom-color:var(--syn)}
+  .sb-sec{display:none}
+  .content,.topbar{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== LOGIN ==================== -->
+<div id="login-view">
+  <div class="login-card">
+    <div class="wordmark">NeuroDynamics<span class="dot"></span></div>
+    <div class="eyebrow">Gestão de pessoal</div>
+    <div id="config-warn" class="login-err" hidden>
+      O sistema ainda não foi conectado ao banco de dados. Abra o arquivo
+      <b>index.html</b> e preencha o bloco <b>CONFIG</b> conforme o guia de implantação.
+    </div>
+    <div id="login-err" class="login-err" hidden></div>
+    <div class="field">
+      <label for="login-email">E-mail</label>
+      <input id="login-email" type="email" autocomplete="username" placeholder="nome@neurodynamics.dev">
+    </div>
+    <div class="field">
+      <label for="login-pass">Senha</label>
+      <input id="login-pass" type="password" autocomplete="current-password">
+    </div>
+    <button id="login-btn" class="btn btn-primary btn-block" onclick="fazerLogin()">Entrar</button>
+    <div class="login-note">
+      Acesso restrito a usuários autorizados pela Diretoria e pelo Depto de Pessoal.
+      Para obter acesso ou redefinir a senha, fale com o Depto de Pessoal.<br><br>
+      <span class="doc-code">NRO-SYS-001 · dados protegidos conforme a LGPD</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== APLICAÇÃO ==================== -->
+<div id="app" hidden>
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="wm">Neuro<b>Dynamics</b></div>
+      <div class="eyebrow">Gestão de pessoal</div>
+    </div>
+    <nav class="sb-nav" id="nav">
+      <button data-view="dashboard" onclick="showView('dashboard')">Visão geral</button>
+      <button data-view="membros" onclick="showView('membros')">Membros</button>
+      <button data-view="relatorios" onclick="showView('relatorios')">Relatórios</button>
+      <div class="sb-sec" data-adm>Administração</div>
+      <button data-view="pessoal" onclick="showView('pessoal')" data-adm>Painel do Pessoal</button>
+      <button data-view="acessos" onclick="showView('acessos')">Catálogo de acessos</button>
+      <button data-view="importar" onclick="showView('importar')" data-adm>Importar planilha</button>
+      <button data-view="auditoria" onclick="showView('auditoria')" data-adm>Auditoria</button>
+    </nav>
+    <div class="sb-user">
+      <div class="nm" id="user-nome">—</div>
+      <div class="rl" id="user-papel">—</div>
+      <button onclick="sair()">Sair</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <h1 id="page-title">Visão geral</h1>
+      <div id="page-actions"></div>
+    </div>
+    <div class="content">
+      <section id="view-dashboard"></section>
+      <section id="view-membros" hidden></section>
+      <section id="view-ficha" hidden></section>
+      <section id="view-relatorios" hidden></section>
+      <section id="view-pessoal" hidden></section>
+      <section id="view-acessos" hidden></section>
+      <section id="view-importar" hidden></section>
+      <section id="view-auditoria" hidden></section>
+    </div>
+  </main>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script>
+/* ============================================================
+   CONFIG — a ÚNICA parte do arquivo que você precisa editar.
+   Os dois valores estão no painel do Supabase, em:
+   Settings -> API  (veja o passo 4 do guia de implantação)
+   ============================================================ */
+const CONFIG = {
+  url:     'https://rxzmkyjttzzpwtodqkve.supabase.co',      // ex.: https://abcdefghij.supabase.co
+  anonKey: 'sb_publishable_MJFR-aaQqTS1BthxYJG2kg_5XGhs9wg' // chave longa que começa com "eyJ" ou "sb_publishable_"
+};
+/* ============================================================ */
+
+const STATUS_LIST = ['Ativo','Em pausa / avaliação','Sob demanda','Desligado','Egresso'];
+const STATUS_PILL = {'Ativo':'p-ativo','Em pausa / avaliação':'p-pausa','Sob demanda':'p-demanda','Desligado':'p-desligado','Egresso':'p-egresso'};
+const CAT_LABEL = {documento:'Termos e documentos', local:'Acessos físicos', sistema:'Sistemas e contas'};
+const PAGE_TITLES = {dashboard:'Visão geral', membros:'Membros', ficha:'Ficha do membro', relatorios:'Relatórios',
+  pessoal:'Painel do Depto de Pessoal', acessos:'Catálogo de acessos', importar:'Importar planilha', auditoria:'Trilha de auditoria'};
+
+const state = {
+  perfil:null, membros:[], itens:[], tipos:[], view:'dashboard',
+  filtros:{q:'', status:'', dep:'', grupo:''},
+  ficha:{reg:null, tab:'dados', ocorr:[], acessos:[], avals:[], pess:null, editando:false}
+};
+let db = null, booted = false;
+
+/* ---------------- utilidades ---------------- */
+const $ = (s)=>document.querySelector(s);
+const esc = (v)=> v==null ? '' : String(v).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtD = (d)=>{ if(!d) return '—'; const [a,m,dd]=String(d).slice(0,10).split('-'); return `${dd}/${m}/${a}`; };
+const fmtDT = (d)=>{ if(!d) return '—'; const x=new Date(d); return x.toLocaleDateString('pt-BR')+' '+x.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); };
+const hoje = ()=> new Date().toISOString().slice(0,10);
+const norm = (s)=> String(s||'').trim().replace(/\s+/g,' ').toLowerCase();
+const can = ()=> ['admin','pessoal'].includes(state.perfil?.papel);
+const pill = (st)=> `<span class="pill ${STATUS_PILL[st]||'p-egresso'}">${esc(st||'—')}</span>`;
+const quemSouEu = ()=> state.perfil ? (state.perfil.nome || state.perfil.email) : '';
+function toast(msg, err){ const t=document.createElement('div'); t.className='toast'+(err?' err':''); t.textContent=msg;
+  $('#toast').appendChild(t); setTimeout(()=>t.remove(), 4200); }
+function falha(e, contexto){ console.error(contexto, e); toast((contexto?contexto+': ':'')+(e?.message||'erro inesperado'), true); }
+function chips(arr, max){ if(!arr||!arr.length) return '<span class="muted">—</span>';
+  const v=arr.slice(0, max||99).map(g=>`<span class="chip">${esc(g)}</span>`).join('');
+  return v + (arr.length>(max||99)?`<span class="chip">+${arr.length-max}</span>`:''); }
+function fechaModal(){ $('#modal-root').innerHTML=''; }
+function abreModal(html, narrow){ $('#modal-root').innerHTML =
+  `<div class="overlay" onclick="if(event.target===this) fechaModal()"><div class="modal${narrow?' narrow':''}">${html}</div></div>`; }
+function confirma(msg){ return new Promise(res=>{ abreModal(`<h3>Confirmar</h3><p style="line-height:1.55">${msg}</p>
+  <div class="actions"><button class="btn" onclick="window.__cf(false)">Cancelar</button>
+  <button class="btn btn-primary" onclick="window.__cf(true)">Confirmar</button></div>`, true);
+  window.__cf = (v)=>{ fechaModal(); res(v); }; }); }
+async function upsertLotes(tabela, linhas, conflito){
+  for(let i=0;i<linhas.length;i+=100){
+    const {error} = await db.from(tabela).upsert(linhas.slice(i,i+100), {onConflict:conflito});
+    if(error) throw error;
+  }
+}
+
+/* ---------------- autenticação ---------------- */
+function init(){
+  if(CONFIG.url.includes('COLE_AQUI') || CONFIG.anonKey.includes('COLE_AQUI')){
+    $('#config-warn').hidden = false; $('#login-btn').disabled = true; return;
+  }
+  db = supabase.createClient(CONFIG.url, CONFIG.anonKey);
+  db.auth.getSession().then(({data:{session}})=>{ if(session) entrar(); });
+  db.auth.onAuthStateChange((ev)=>{ if(ev==='SIGNED_IN') entrar(); });
+  $('#login-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') fazerLogin(); });
+}
+async function fazerLogin(){
+  const email=$('#login-email').value.trim(), pass=$('#login-pass').value;
+  if(!email||!pass) return;
+  $('#login-btn').disabled=true; $('#login-err').hidden=true;
+  const {error} = await db.auth.signInWithPassword({email, password:pass});
+  $('#login-btn').disabled=false;
+  if(error){ $('#login-err').textContent='E-mail ou senha incorretos. Verifique os dados ou fale com o Depto de Pessoal.'; $('#login-err').hidden=false; }
+}
+async function sair(){ await db.auth.signOut(); location.reload(); }
+
+async function entrar(){
+  if(booted) return; booted=true;
+  try{
+    const {data:{user}} = await db.auth.getUser();
+    const {data:perfil, error} = await db.from('perfis').select('*').eq('id', user.id).single();
+    if(error||!perfil) throw (error||new Error('perfil não encontrado'));
+    state.perfil = perfil;
+    $('#user-nome').textContent = perfil.nome || perfil.email;
+    $('#user-papel').textContent = {admin:'Administração', pessoal:'Depto de Pessoal', leitura:'Consulta'}[perfil.papel] || perfil.papel;
+    if(!can()) document.querySelectorAll('[data-adm]').forEach(el=>el.hidden=true);
+    await carregarBase();
+    $('#login-view').hidden = true; $('#app').hidden = false;
+    showView('dashboard');
+  }catch(e){ booted=false; falha(e,'Não foi possível carregar seu perfil'); }
+}
+async function carregarBase(){
+  const [m,i,t] = await Promise.all([
+    db.from('membros').select('*').order('registro'),
+    db.from('itens_de_acesso').select('*').order('ordem'),
+    db.from('tipos_ocorrencia').select('*').eq('ativo',true).order('nome')
+  ]);
+  if(m.error) throw m.error;
+  state.membros = m.data||[]; state.itens = i.data||[]; state.tipos = t.data||[];
+}
+
+/* ---------------- navegação ---------------- */
+function showView(v){
+  state.view = v;
+  document.querySelectorAll('.content > section').forEach(s=>s.hidden = (s.id !== 'view-'+v));
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
+  $('#page-title').textContent = PAGE_TITLES[v] || '';
+  $('#page-actions').innerHTML = '';
+  ({dashboard:renderDashboard, membros:renderMembros, relatorios:renderRelatorios, pessoal:renderPessoal,
+    acessos:renderCatalogo, importar:renderImportar, auditoria:renderAuditoria, ficha:()=>{}}[v]||(()=>{}))();
+  window.scrollTo(0,0);
+}
+
+/* ---------------- visão geral ---------------- */
+async function renderDashboard(){
+  const ms = state.membros;
+  const c = (st)=> ms.filter(m=>m.status===st).length;
+  const deptos = {};
+  ms.filter(m=>m.status==='Ativo').forEach(m=>{ const d=m.departamento||'Sem departamento'; deptos[d]=(deptos[d]||0)+1; });
+  const maxDep = Math.max(1, ...Object.values(deptos));
+  $('#view-dashboard').innerHTML = `
+    <div class="grid-cards">
+      <div class="stat"><div class="n">${c('Ativo')}</div><div class="l">Membros ativos</div></div>
+      <div class="stat"><div class="n">${c('Em pausa / avaliação')}</div><div class="l">Em pausa / avaliação</div></div>
+      <div class="stat"><div class="n">${c('Sob demanda')}</div><div class="l">Sob demanda</div></div>
+      <div class="stat"><div class="n">${c('Desligado')+c('Egresso')}</div><div class="l">Desligados e egressos</div></div>
+      <div class="stat"><div class="n">${ms.length}</div><div class="l">Registros no quadro</div></div>
+    </div>
+    <div id="dash-pendencias"></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:18px">
+      <div class="card"><h3>Ativos por departamento</h3>
+        ${Object.entries(deptos).sort((a,b)=>b[1]-a[1]).map(([d,n])=>`
+          <div class="bar-row"><div class="lb">${esc(d)}</div>
+            <div class="tr"><div class="fl" style="width:${Math.round(n/maxDep*100)}%"></div></div>
+            <div class="vl">${n}</div></div>`).join('') || '<div class="empty">Nenhum membro ativo cadastrado.</div>'}
+      </div>
+      <div class="card"><h3>Ocorrências recentes</h3><div id="dash-ocorr"><div class="empty">Carregando…</div></div></div>
+    </div>`;
+  try{
+    const {data:oc} = await db.from('ocorrencias').select('*, membro:membros(nome)').order('data',{ascending:false}).order('criado_em',{ascending:false}).limit(8);
+    $('#dash-ocorr').innerHTML = (oc&&oc.length) ? `<div class="timeline">${oc.map(o=>`
+      <div class="tl-item"><div class="dt">${fmtD(o.data)}</div>
+        <div class="tp">${esc(o.tipo)} · <a href="#" onclick="abrirFicha(${o.registro});return false">${esc(o.membro?.nome||'registro '+o.registro)}</a></div>
+        ${o.descricao?`<div class="ds">${esc(o.descricao)}</div>`:''}</div>`).join('')}</div>`
+      : '<div class="empty">Nenhuma ocorrência registrada ainda. Elas aparecem aqui conforme o quadro se movimenta.</div>';
+  }catch(e){ $('#dash-ocorr').innerHTML='<div class="empty">Não foi possível carregar as ocorrências.</div>'; }
+  if(can()){
+    try{
+      const desligados = state.membros.filter(m=>['Desligado','Egresso'].includes(m.status)).map(m=>m.registro);
+      let pendRev = 0;
+      if(desligados.length){
+        const {data:ac} = await db.from('acessos_concedidos').select('registro').eq('ativo',true).in('registro', desligados);
+        pendRev = new Set((ac||[]).map(a=>a.registro)).size;
+      }
+      const {data:av} = await db.from('avaliacoes').select('id').eq('encaminhar_pessoal',true).eq('tratado',false);
+      const pendAv = (av||[]).length; let html='';
+      if(pendRev) html += `<div class="banner red"><b>Checklist de revogação pendente:</b> ${pendRev} membro(s) desligado(s) ainda com acessos ativos. Abra a ficha de cada um, aba Acessos, para revogar.</div>`;
+      if(pendAv) html += `<div class="banner amber"><b>${pendAv} avaliação(ões) encaminhada(s)</b> aguardando tratamento no <a href="#" onclick="showView('pessoal');return false">Painel do Depto de Pessoal</a>.</div>`;
+      $('#dash-pendencias').innerHTML = html;
+    }catch(e){ /* pendências são informativas */ }
+  }
+}
+
+/* ---------------- lista de membros ---------------- */
+function opcoesDe(campo){ return [...new Set(state.membros.map(m=>m[campo]).filter(Boolean))].sort(); }
+function todosGrupos(){ return [...new Set(state.membros.flatMap(m=>m.grupos||[]))].sort(); }
+function membrosFiltrados(){
+  const f = state.filtros, q = norm(f.q);
+  return state.membros.filter(m=>
+    (!f.status || m.status===f.status) &&
+    (!f.dep || m.departamento===f.dep) &&
+    (!f.grupo || (m.grupos||[]).includes(f.grupo)) &&
+    (!q || norm(m.nome).includes(q) || norm(m.email_nro).includes(q) || norm(m.email_pessoal).includes(q) || String(m.registro).includes(q))
+  );
+}
+function filtrosHTML(prefixo){
+  const f = state.filtros;
+  return `<div class="filters">
+    <div class="field grow"><label>Buscar</label>
+      <input id="${prefixo}-q" value="${esc(f.q)}" placeholder="Nome, e-mail ou registro" oninput="state.filtros.q=this.value;${prefixo==='fl'?'renderTabelaMembros()':'renderPrevRelatorio()'}"></div>
+    <div class="field"><label>Status</label><select id="${prefixo}-st" onchange="state.filtros.status=this.value;${prefixo==='fl'?'renderTabelaMembros()':'renderPrevRelatorio()'}">
+      <option value="">Todos</option>${STATUS_LIST.map(s=>`<option ${f.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
+    <div class="field"><label>Departamento</label><select onchange="state.filtros.dep=this.value;${prefixo==='fl'?'renderTabelaMembros()':'renderPrevRelatorio()'}">
+      <option value="">Todos</option>${opcoesDe('departamento').map(d=>`<option ${f.dep===d?'selected':''}>${esc(d)}</option>`).join('')}</select></div>
+    <div class="field"><label>Grupo</label><select onchange="state.filtros.grupo=this.value;${prefixo==='fl'?'renderTabelaMembros()':'renderPrevRelatorio()'}">
+      <option value="">Todos</option>${todosGrupos().map(g=>`<option ${f.grupo===g?'selected':''}>${esc(g)}</option>`).join('')}</select></div>
+    <button class="btn" onclick="state.filtros={q:'',status:'',dep:'',grupo:''};${prefixo==='fl'?'renderMembros()':'renderRelatorios()'}">Limpar</button>
+  </div>`;
+}
+function renderMembros(){
+  if(can()) $('#page-actions').innerHTML = `<button class="btn btn-primary" onclick="modalMembro()">+ Novo membro</button>`;
+  $('#view-membros').innerHTML = filtrosHTML('fl') + `<div class="card" style="padding:8px 14px"><div id="tb-membros"></div></div>`;
+  renderTabelaMembros();
+}
+function renderTabelaMembros(){
+  const ms = membrosFiltrados();
+  $('#tb-membros').innerHTML = ms.length ? `
+    <table class="tb"><thead><tr><th>Reg.</th><th>Nome</th><th>Departamento</th><th>Cargo</th><th>Grupos</th><th>Status</th><th>Ingresso</th></tr></thead>
+    <tbody>${ms.map(m=>`<tr class="click" onclick="abrirFicha(${m.registro})">
+      <td class="reg">${String(m.registro).padStart(3,'0')}</td>
+      <td><b>${esc(m.nome)}</b></td>
+      <td>${esc(m.departamento||'—')}</td>
+      <td>${esc(m.cargo||'—')}</td>
+      <td>${chips(m.grupos,2)}</td>
+      <td>${pill(m.status)}</td>
+      <td>${fmtD(m.data_ingresso)}</td></tr>`).join('')}</tbody></table>
+    <div class="small muted" style="padding:10px 4px">${ms.length} de ${state.membros.length} registros</div>`
+    : `<div class="empty">Nenhum membro corresponde aos filtros. Ajuste a busca ou <a href="#" onclick="state.filtros={q:'',status:'',dep:'',grupo:''};renderMembros();return false">limpe os filtros</a>.</div>`;
+}
+
+/* ---------------- ficha do membro ---------------- */
+const CAMPOS_MEMBRO = [
+  {k:'nome', l:'Nome completo', t:'text'},
+  {k:'status', l:'Status', t:'select', opts:STATUS_LIST},
+  {k:'departamento', l:'Departamento', t:'datalist', list:'dl-deptos'},
+  {k:'cargo', l:'Cargo atual', t:'datalist', list:'dl-cargos'},
+  {k:'grupos', l:'Grupos (separados por vírgula)', t:'grupos', full:true},
+  {k:'email_nro', l:'E-mail NRO', t:'text'},
+  {k:'email_pessoal', l:'E-mail pessoal', t:'text'},
+  {k:'telefone', l:'Telefone', t:'text'},
+  {k:'data_ingresso', l:'Data de ingresso', t:'date'},
+  {k:'forma_ingresso', l:'Forma de ingresso', t:'datalist', list:'dl-formas'},
+  {k:'data_desligamento', l:'Data de desligamento', t:'date'},
+  {k:'projeto_fomento', l:'Projeto no sistema de fomento', t:'text'},
+  {k:'classificacao', l:'Classificação', t:'text'},
+  {k:'bolsa', l:'Bolsa', t:'text'},
+  {k:'data_encerramento', l:'Data de encerramento da bolsa', t:'date'}
+];
+const CAMPOS_PESS = [
+  {k:'cpf', l:'CPF'}, {k:'data_nascimento', l:'Data de nascimento', t:'date'}, {k:'genero', l:'Gênero'},
+  {k:'endereco', l:'Endereço', full:true}, {k:'cidade_origem', l:'Cidade de origem'},
+  {k:'instituicao', l:'Instituição de ensino'}, {k:'curso', l:'Curso'}, {k:'matricula', l:'Matrícula'},
+  {k:'periodo_ingresso', l:'Período de ingresso'}, {k:'tempo_deslocamento', l:'Tempo de deslocamento'},
+  {k:'autodeclaracao_racial', l:'Autodeclaração racial'}, {k:'situacao_fump', l:'Situação junto à FUMP'},
+  {k:'acessibilidade', l:'Necessidades de acessibilidade', full:true},
+  {k:'background', l:'Background', t:'textarea', full:true},
+  {k:'lattes', l:'Currículo Lattes', full:true}, {k:'instagram', l:'Instagram'}, {k:'github', l:'GitHub'},
+  {k:'autorizacao_imagem', l:'Autorização de uso de imagem', t:'bool'}
+];
+function datalistsHTML(){
+  const dl=(id,vals)=>`<datalist id="${id}">${vals.map(v=>`<option value="${esc(v)}">`).join('')}</datalist>`;
+  return dl('dl-deptos',opcoesDe('departamento')) + dl('dl-cargos',opcoesDe('cargo')) + dl('dl-formas',opcoesDe('forma_ingresso'));
+}
+function campoInput(c, val){
+  if(c.t==='select') return `<select id="f-${c.k}">${c.opts.map(o=>`<option ${o===val?'selected':''}>${o}</option>`).join('')}</select>`;
+  if(c.t==='date')   return `<input type="date" id="f-${c.k}" value="${esc(val||'')}">`;
+  if(c.t==='textarea') return `<textarea id="f-${c.k}">${esc(val||'')}</textarea>`;
+  if(c.t==='bool')   return `<select id="f-${c.k}"><option value="" ${val==null?'selected':''}>—</option><option value="sim" ${val===true?'selected':''}>Sim</option><option value="nao" ${val===false?'selected':''}>Não</option></select>`;
+  const v = c.t==='grupos' ? (val||[]).join(', ') : (val==null?'':val);
+  return `<input id="f-${c.k}" value="${esc(v)}"${c.list?` list="${c.list}"`:''}>`;
+}
+function lerCampos(defs){
+  const o={};
+  defs.forEach(c=>{
+    const el=$('#f-'+c.k); if(!el) return; let v=el.value;
+    if(c.t==='grupos') o[c.k]=v.split(',').map(x=>x.trim()).filter(Boolean);
+    else if(c.t==='bool') o[c.k]= v==='' ? null : v==='sim';
+    else o[c.k]= String(v).trim()===''? null : String(v).trim();
+  });
+  return o;
+}
+function membroAtual(){ return state.membros.find(m=>m.registro===state.ficha.reg); }
+
+async function abrirFicha(reg){
+  state.ficha = {reg, tab:'dados', ocorr:[], acessos:[], avals:[], pess:null, editando:false};
+  showView('ficha');
+  $('#view-ficha').innerHTML = '<div class="empty">Carregando ficha…</div>';
+  try{ await carregarFicha(); renderFicha(); }catch(e){ falha(e,'Erro ao abrir a ficha'); }
+}
+async function carregarFicha(){
+  const reg = state.ficha.reg;
+  const pr = [
+    db.from('ocorrencias').select('*').eq('registro',reg).order('data',{ascending:false}).order('criado_em',{ascending:false}),
+    db.from('acessos_concedidos').select('*').eq('registro',reg),
+    db.from('avaliacoes').select('*').eq('registro',reg).order('data',{ascending:false})
+  ];
+  if(can()) pr.push(db.from('dados_pessoais').select('*').eq('registro',reg).maybeSingle());
+  const [o,a,v,p] = await Promise.all(pr);
+  state.ficha.ocorr=o.data||[]; state.ficha.acessos=a.data||[]; state.ficha.avals=v.data||[];
+  state.ficha.pess = p ? (p.data||null) : null;
+}
+function renderFicha(){
+  const m = membroAtual();
+  if(!m){ $('#view-ficha').innerHTML='<div class="empty">Registro não encontrado.</div>'; return; }
+  $('#page-actions').innerHTML = `<button class="btn" onclick="showView('membros')">← Voltar à lista</button>`;
+  const f = state.ficha;
+  const tabs = [['dados','Dados'],['ocorr',`Ocorrências (${f.ocorr.length})`],['acessos','Acessos'],['avals',`Avaliações (${f.avals.length})`]];
+  if(can()) tabs.push(['pess','Dados pessoais']);
+  $('#view-ficha').innerHTML = `
+    <div class="ficha-head"><div class="top">
+      <div><h2>${esc(m.nome)}</h2>
+        <div class="meta"><span class="reg">REG ${String(m.registro).padStart(3,'0')}</span> · ${esc(m.cargo||'Sem cargo')} · ${esc(m.departamento||'Sem departamento')}</div>
+        <div class="grupos">${(m.grupos||[]).map(g=>`<span class="chip">${esc(g)}</span>`).join('')||''}</div></div>
+      <div style="display:flex;gap:8px;align-items:center">${pill(m.status)}
+        ${can()?`<button class="btn btn-sm" style="background:rgba(248,247,255,.12);border-color:rgba(248,247,255,.3);color:#F8F7FF" onclick="state.ficha.editando=true;state.ficha.tab='dados';renderFicha()">Editar dados</button>`:''}</div>
+    </div></div>
+    <div class="tabs">${tabs.map(([k,l])=>`<button class="${f.tab===k?'active':''}" onclick="state.ficha.tab='${k}';state.ficha.editando=false;renderFicha()">${l}</button>`).join('')}</div>
+    <div id="ficha-body"></div>${datalistsHTML()}`;
+  ({dados:renderTabDados, ocorr:renderTabOcorr, acessos:renderTabAcessos, avals:renderTabAvals, pess:renderTabPess}[f.tab])();
+}
+
+/* --- aba dados --- */
+function renderTabDados(){
+  const m = membroAtual();
+  if(state.ficha.editando && can()){
+    $('#ficha-body').innerHTML = `<div class="card"><h3>Editar dados institucionais</h3>
+      <div class="form-grid">${CAMPOS_MEMBRO.map(c=>`<div class="field ${c.full?'full':''}"><label>${c.l}</label>${campoInput(c, m[c.k])}</div>`).join('')}</div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px">
+        <button class="btn" onclick="state.ficha.editando=false;renderFicha()">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarMembro()">Salvar alterações</button></div>
+      <p class="small muted" style="margin-top:12px">Toda alteração é registrada automaticamente na trilha de auditoria, com responsável e data.
+      Mudanças de status, cargo, departamento e grupos também geram ocorrências na linha do tempo.</p></div>`;
+    return;
+  }
+  $('#ficha-body').innerHTML = `<div class="card"><div class="dl">
+    ${CAMPOS_MEMBRO.filter(c=>c.k!=='nome'&&c.k!=='status').map(c=>{
+      let v = m[c.k];
+      if(c.t==='grupos') v = (v&&v.length)? v.join(', ') : null;
+      else if(c.t==='date') v = v? fmtD(v) : null;
+      return `<div class="it"><dt>${c.l.replace(' (separados por vírgula)','')}</dt><dd>${esc(v)||'<span class="muted">—</span>'}</dd></div>`;
+    }).join('')}
+    <div class="it"><dt>Cadastro atualizado em</dt><dd>${fmtDT(m.atualizado_em)}</dd></div>
+  </div></div>`;
+}
+async function salvarMembro(){
+  const m = membroAtual();
+  const novo = lerCampos(CAMPOS_MEMBRO);
+  if(!novo.nome){ toast('O nome é obrigatório.', true); return; }
+  if(['Desligado','Egresso'].includes(novo.status) && !novo.data_desligamento) novo.data_desligamento = hoje();
+  try{
+    const {error} = await db.from('membros').update(novo).eq('registro', m.registro);
+    if(error) throw error;
+    const ocs = [];
+    const oc = (tipo, descricao)=> ocs.push({registro:m.registro, tipo, descricao, responsavel:quemSouEu(), data:hoje()});
+    if(novo.status !== m.status) oc(['Desligado','Egresso'].includes(novo.status)?'Desligamento':'Mudança de status', `De "${m.status||'—'}" para "${novo.status}".`);
+    if(novo.cargo !== m.cargo) oc('Mudança de cargo', `De "${m.cargo||'—'}" para "${novo.cargo||'—'}".`);
+    if(novo.departamento !== m.departamento) oc('Mudança de departamento', `De "${m.departamento||'—'}" para "${novo.departamento||'—'}".`);
+    const antes=m.grupos||[], depois=novo.grupos||[];
+    const add=depois.filter(g=>!antes.includes(g)), rem=antes.filter(g=>!depois.includes(g));
+    if(add.length) oc('Adição a grupo', add.join(', '));
+    if(rem.length) oc('Remoção de grupo', rem.join(', '));
+    if(ocs.length){ const r = await db.from('ocorrencias').insert(ocs); if(r.error) throw r.error; }
+    Object.assign(m, novo);
+    state.ficha.editando=false;
+    await carregarFicha(); renderFicha();
+    toast('Dados salvos.');
+  }catch(e){ falha(e,'Erro ao salvar'); }
+}
+function modalMembro(){
+  const prox = state.membros.length ? Math.max(...state.membros.map(x=>x.registro))+1 : 1;
+  abreModal(`<h3>Novo membro</h3>
+    <div class="form-grid">
+      <div class="field"><label>Nº de registro</label><input id="f-registro" type="number" value="${prox}"></div>
+      ${CAMPOS_MEMBRO.map(c=>`<div class="field ${c.full?'full':''}"><label>${c.l}</label>${campoInput(c, c.k==='status'?'Ativo':(c.k==='data_ingresso'?hoje():null))}</div>`).join('')}
+    </div>${datalistsHTML()}
+    <div class="actions"><button class="btn" onclick="fechaModal()">Cancelar</button>
+    <button class="btn btn-primary" onclick="criarMembro()">Cadastrar membro</button></div>`);
+}
+async function criarMembro(){
+  const novo = lerCampos(CAMPOS_MEMBRO);
+  novo.registro = parseInt($('#f-registro').value, 10);
+  if(!novo.registro || !novo.nome){ toast('Registro e nome são obrigatórios.', true); return; }
+  if(state.membros.some(x=>x.registro===novo.registro)){ toast('Já existe um membro com esse número de registro.', true); return; }
+  try{
+    const {error} = await db.from('membros').insert(novo); if(error) throw error;
+    await db.from('ocorrencias').insert({registro:novo.registro, tipo:'Ingresso',
+      descricao:`Ingresso via ${novo.forma_ingresso||'cadastro manual'}.`, responsavel:quemSouEu(), data:novo.data_ingresso||hoje()});
+    state.membros.push(novo); state.membros.sort((a,b)=>a.registro-b.registro);
+    fechaModal(); toast('Membro cadastrado.'); abrirFicha(novo.registro);
+  }catch(e){ falha(e,'Erro ao cadastrar'); }
+}
+
+/* --- aba ocorrências --- */
+function renderTabOcorr(){
+  const f = state.ficha;
+  $('#ficha-body').innerHTML = `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0">Linha do tempo</h3>
+      ${can()?`<button class="btn btn-sm btn-primary" onclick="modalOcorrencia(${f.reg})">+ Registrar ocorrência</button>`:''}
+    </div>
+    ${f.ocorr.length ? `<div class="timeline">${f.ocorr.map(o=>`
+      <div class="tl-item"><div class="dt">${fmtD(o.data)}</div>
+        <div class="tp">${esc(o.tipo)}</div>
+        ${o.descricao?`<div class="ds">${esc(o.descricao)}</div>`:''}
+        <div class="rp">Registrado por ${esc(o.responsavel||'—')}${can()?` · <a href="#" onclick="excluirOcorrencia('${o.id}');return false">excluir</a>`:''}</div>
+      </div>`).join('')}</div>`
+    : '<div class="empty">Nenhuma ocorrência registrada para este membro. Use o botão acima para registrar a primeira.</div>'}
+  </div>`;
+}
+function modalOcorrencia(reg){
+  abreModal(`<h3>Registrar ocorrência</h3>
+    <div class="field"><label>Tipo</label><select id="oc-tipo">${state.tipos.map(t=>`<option>${esc(t.nome)}</option>`).join('')}</select></div>
+    <div class="field"><label>Data</label><input id="oc-data" type="date" value="${hoje()}"></div>
+    <div class="field"><label>Descrição</label><textarea id="oc-desc" placeholder="Contexto, decisão, encaminhamento…"></textarea></div>
+    <div class="actions"><button class="btn" onclick="fechaModal()">Cancelar</button>
+    <button class="btn btn-primary" onclick="salvarOcorrencia(${reg})">Registrar</button></div>`, true);
+}
+async function salvarOcorrencia(reg){
+  try{
+    const {error} = await db.from('ocorrencias').insert({registro:reg, tipo:$('#oc-tipo').value,
+      data:$('#oc-data').value||hoje(), descricao:$('#oc-desc').value.trim()||null, responsavel:quemSouEu()});
+    if(error) throw error;
+    fechaModal(); toast('Ocorrência registrada.');
+    if(state.view==='ficha'){ await carregarFicha(); renderFicha(); }
+  }catch(e){ falha(e,'Erro ao registrar'); }
+}
+async function excluirOcorrencia(id){
+  if(!await confirma('Excluir esta ocorrência? A exclusão fica registrada na auditoria.')) return;
+  try{
+    const {error} = await db.from('ocorrencias').delete().eq('id', id); if(error) throw error;
+    await carregarFicha(); renderFicha(); toast('Ocorrência excluída.');
+  }catch(e){ falha(e,'Erro ao excluir'); }
+}
+
+/* --- aba acessos --- */
+function renderTabAcessos(){
+  const f=state.ficha, m=membroAtual();
+  const conc = new Map(f.acessos.map(a=>[a.item_id, a]));
+  const ativos = f.acessos.filter(a=>a.ativo);
+  const desligado = ['Desligado','Egresso'].includes(m.status);
+  const grupos = ['documento','local','sistema'];
+  $('#ficha-body').innerHTML = `
+    ${desligado && ativos.length ? `<div class="banner red"><b>Checklist de revogação:</b> este membro está com status "${esc(m.status)}"
+      e ainda possui ${ativos.length} acesso(s) ativo(s). ${can()?`<button class="btn btn-sm btn-danger" style="margin-left:8px" onclick="revogarTodos()">Revogar todos agora</button>`:''}</div>`:''}
+    <div class="card">
+    ${grupos.map(cat=>{
+      const itens = state.itens.filter(i=>i.categoria===cat && (i.ativo || conc.has(i.id)));
+      if(!itens.length) return '';
+      return `<div class="acc-group"><h4>${CAT_LABEL[cat]}</h4>
+        ${itens.map(i=>{
+          const a = conc.get(i.id);
+          let st, mt;
+          if(a && a.ativo){ st=`<span class="pill p-ativo">Concedido</span>`; mt=`${a.concedido_em?'desde '+fmtD(a.concedido_em):''}${a.responsavel?' · por '+esc(a.responsavel):''}`; }
+          else if(a){ st=`<span class="pill p-egresso">Revogado</span>`; mt=`${a.revogado_em?'em '+fmtD(a.revogado_em):''}${a.responsavel?' · por '+esc(a.responsavel):''}`; }
+          else { st=`<span class="muted small">Não concedido</span>`; mt=''; }
+          const btn = !can() ? '' : (a && a.ativo
+            ? `<button class="btn btn-sm btn-danger" onclick="revogarAcesso('${a.id}')">Revogar</button>`
+            : `<button class="btn btn-sm" onclick="concederAcesso('${i.id}')">Conceder</button>`);
+          return `<div class="acc-row"><div class="nm">${esc(i.nome)}</div><div class="mt">${mt}</div><div>${st} ${btn}</div></div>`;
+        }).join('')}</div>`;
+    }).join('')}
+    <p class="small muted">Para incluir um novo sistema, local ou documento nesta lista, use o
+    <a href="#" onclick="showView('acessos');return false">Catálogo de acessos</a> — o item passa a valer para todos os membros sem alterar a estrutura.</p>
+    </div>`;
+}
+async function concederAcesso(itemId){
+  try{
+    const {error} = await db.from('acessos_concedidos').upsert({registro:state.ficha.reg, item_id:itemId,
+      ativo:true, concedido_em:hoje(), revogado_em:null, responsavel:quemSouEu()}, {onConflict:'registro,item_id'});
+    if(error) throw error;
+    await carregarFicha(); renderFicha(); toast('Acesso concedido.');
+  }catch(e){ falha(e,'Erro ao conceder'); }
+}
+async function revogarAcesso(id){
+  try{
+    const {error} = await db.from('acessos_concedidos').update({ativo:false, revogado_em:hoje(), responsavel:quemSouEu()}).eq('id', id);
+    if(error) throw error;
+    await carregarFicha(); renderFicha(); toast('Acesso revogado.');
+  }catch(e){ falha(e,'Erro ao revogar'); }
+}
+async function revogarTodos(){
+  const ativos = state.ficha.acessos.filter(a=>a.ativo);
+  if(!await confirma(`Revogar os ${ativos.length} acessos ativos deste membro? Cada revogação fica registrada na auditoria.`)) return;
+  try{
+    const {error} = await db.from('acessos_concedidos').update({ativo:false, revogado_em:hoje(), responsavel:quemSouEu()})
+      .eq('registro', state.ficha.reg).eq('ativo', true);
+    if(error) throw error;
+    await carregarFicha(); renderFicha(); toast('Todos os acessos foram revogados.');
+  }catch(e){ falha(e,'Erro ao revogar'); }
+}
+
+/* --- aba avaliações --- */
+function cicloAtual(){ const d=new Date(); return d.getFullYear()+'/'+(d.getMonth()<6?'1':'2'); }
+function renderTabAvals(){
+  const f=state.ficha;
+  const score=(n,l)=> n==null?'':`<span class="score ${n<=2?'low':''}">${l} ${n}/5</span>`;
+  $('#ficha-body').innerHTML = `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0">Avaliações periódicas</h3>
+      <button class="btn btn-sm btn-primary" onclick="modalAval(${f.reg})">+ Nova avaliação</button></div>
+    ${f.avals.length ? f.avals.map(a=>`
+      <div class="aval-card"><div class="hd">
+        <div><b>Ciclo ${esc(a.ciclo)}</b> <span class="muted small">· ${fmtD(a.data)} · por ${esc(a.responsavel||'—')}</span></div>
+        <div>${score(a.assiduidade,'Assiduidade')}${score(a.comprometimento,'Comprometimento')}</div></div>
+        ${a.apontamentos?`<div class="small" style="line-height:1.55;white-space:pre-wrap">${esc(a.apontamentos)}</div>`:''}
+        ${a.encaminhar_pessoal?`<div style="margin-top:8px"><span class="pill ${a.tratado?'p-egresso':'p-pausa'}">${a.tratado?'Tratado pelo Depto de Pessoal':'Encaminhado ao Depto de Pessoal — pendente'}</span></div>`:''}
+      </div>`).join('')
+    : '<div class="empty">Nenhuma avaliação registrada. Supervisores e gestores podem registrar avaliações de assiduidade e comprometimento a cada ciclo.</div>'}
+  </div>`;
+}
+function modalAval(reg){
+  const notas = (id)=>`<select id="${id}"><option value="">—</option>${[1,2,3,4,5].map(n=>`<option>${n}</option>`).join('')}</select>`;
+  abreModal(`<h3>Nova avaliação</h3>
+    <div class="form-grid">
+      <div class="field"><label>Ciclo</label><input id="av-ciclo" value="${cicloAtual()}"></div>
+      <div class="field"><label>Assiduidade (1 a 5)</label>${notas('av-assid')}</div>
+      <div class="field"><label>Comprometimento (1 a 5)</label>${notas('av-comp')}</div>
+      <div class="field full"><label>Apontamentos e circunstâncias</label>
+        <textarea id="av-apont" placeholder="Contexto relevante: sobrecarga acadêmica, questões pessoais, entregas, participação nas reuniões…"></textarea></div>
+      <div class="field full"><label style="display:flex;align-items:center;gap:8px;font-size:13px">
+        <input type="checkbox" id="av-enc" style="width:auto"> Encaminhar ao Depto de Pessoal para conversa</label></div>
+    </div>
+    <div class="actions"><button class="btn" onclick="fechaModal()">Cancelar</button>
+    <button class="btn btn-primary" onclick="salvarAval(${reg})">Registrar avaliação</button></div>`);
+}
+async function salvarAval(reg){
+  try{
+    const v=(id)=>{ const x=$('#'+id).value; return x===''?null:parseInt(x,10); };
+    const {error} = await db.from('avaliacoes').insert({registro:reg, ciclo:$('#av-ciclo').value.trim()||cicloAtual(),
+      assiduidade:v('av-assid'), comprometimento:v('av-comp'), apontamentos:$('#av-apont').value.trim()||null,
+      encaminhar_pessoal:$('#av-enc').checked, responsavel:quemSouEu()});
+    if(error) throw error;
+    fechaModal(); toast('Avaliação registrada.');
+    if(state.view==='ficha'){ await carregarFicha(); renderFicha(); }
+  }catch(e){ falha(e,'Erro ao registrar'); }
+}
+
+/* --- aba dados pessoais --- */
+function renderTabPess(){
+  const p = state.ficha.pess;
+  if(state.ficha.editando){
+    $('#ficha-body').innerHTML = `<div class="card"><h3>Editar dados pessoais</h3>
+      <div class="form-grid">${CAMPOS_PESS.map(c=>`<div class="field ${c.full?'full':''}"><label>${c.l}</label>${campoInput(c, p?p[c.k]:null)}</div>`).join('')}</div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px">
+        <button class="btn" onclick="state.ficha.editando=false;renderFicha()">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarPess()">Salvar</button></div></div>`;
+    return;
+  }
+  $('#ficha-body').innerHTML = `<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0">Dados pessoais</h3>
+      <button class="btn btn-sm" onclick="state.ficha.editando=true;renderFicha()">Editar</button></div>
+    <div class="banner amber small" style="margin-bottom:16px">Dados sensíveis sob a LGPD. Visíveis apenas para a Diretoria e o Depto de Pessoal;
+    todo acesso de edição fica registrado na auditoria. Não inclua estes campos em relatórios ou comunicações.</div>
+    ${p ? `<div class="dl">${CAMPOS_PESS.map(c=>{
+        let v=p[c.k];
+        if(c.t==='date') v=v?fmtD(v):null;
+        if(c.t==='bool') v= v===true?'Sim': v===false?'Não':null;
+        return `<div class="it"><dt>${c.l}</dt><dd>${esc(v)||'<span class="muted">—</span>'}</dd></div>`;
+      }).join('')}</div>`
+    : '<div class="empty">Nenhum dado pessoal cadastrado para este membro. Use "Editar" para preencher ou importe a aba FORM da planilha.</div>'}
+  </div>`;
+}
+async function salvarPess(){
+  try{
+    const o = lerCampos(CAMPOS_PESS); o.registro = state.ficha.reg;
+    const {error} = await db.from('dados_pessoais').upsert(o, {onConflict:'registro'});
+    if(error) throw error;
+    state.ficha.editando=false;
+    await carregarFicha(); renderFicha(); toast('Dados pessoais salvos.');
+  }catch(e){ falha(e,'Erro ao salvar'); }
+}
+
+/* ---------------- relatórios ---------------- */
+function renderRelatorios(){
+  $('#view-relatorios').innerHTML = filtrosHTML('rl') + `
+    <div class="card"><h3>Exportar quadro de pessoal</h3>
+      <p class="small" style="line-height:1.6;margin-bottom:6px" id="rl-count"></p>
+      <p class="small muted" style="line-height:1.6;margin-bottom:16px">
+        O relatório inclui: registro, nome, status, departamento, cargo, grupos, e-mails, telefone e datas de ingresso/desligamento.
+        Dados pessoais sensíveis (CPF, endereço, autodeclarações) nunca entram nos relatórios.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="exportarExcel()">Exportar Excel (.xlsx)</button>
+        <button class="btn btn-primary" onclick="exportarPDF()">Exportar PDF</button>
+      </div></div>`;
+  renderPrevRelatorio();
+}
+function renderPrevRelatorio(){
+  const el = $('#rl-count'); if(!el) return;
+  el.innerHTML = `<b>${membrosFiltrados().length} membro(s)</b> serão incluídos com os filtros atuais.`;
+}
+function descFiltros(){
+  const f=state.filtros, p=[];
+  if(f.status) p.push('Status: '+f.status);
+  if(f.dep) p.push('Departamento: '+f.dep);
+  if(f.grupo) p.push('Grupo: '+f.grupo);
+  if(f.q) p.push('Busca: "'+f.q+'"');
+  return p.length? p.join(' · ') : 'Sem filtros (quadro completo)';
+}
+function exportarExcel(){
+  try{
+    const rows = membrosFiltrados().map(m=>({
+      'Registro':m.registro, 'Status':m.status, 'Nome':m.nome, 'Departamento':m.departamento||'',
+      'Cargo':m.cargo||'', 'Grupos':(m.grupos||[]).join(', '), 'E-mail NRO':m.email_nro||'',
+      'E-mail pessoal':m.email_pessoal||'', 'Telefone':m.telefone||'',
+      'Data de ingresso':m.data_ingresso?fmtD(m.data_ingresso):'', 'Forma de ingresso':m.forma_ingresso||'',
+      'Data de desligamento':m.data_desligamento?fmtD(m.data_desligamento):'',
+      'Projeto no fomento':m.projeto_fomento||'', 'Classificação':m.classificacao||'', 'Bolsa':m.bolsa||''
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [{wch:8},{wch:18},{wch:38},{wch:26},{wch:24},{wch:40},{wch:30},{wch:30},{wch:16},{wch:14},{wch:20},{wch:14},{wch:18},{wch:16},{wch:12}];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'QUADRO');
+    XLSX.writeFile(wb, `NRO-PES_relatorio_${hoje()}.xlsx`);
+    toast('Excel gerado.');
+  }catch(e){ falha(e,'Erro ao exportar Excel'); }
+}
+function exportarPDF(){
+  try{
+    const {jsPDF} = window.jspdf;
+    const doc = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
+    const W = doc.internal.pageSize.getWidth();
+    doc.setFillColor(0,53,47); doc.rect(0,0,W,20,'F');
+    doc.setFillColor(206,220,0); doc.rect(0,20,W,1.2,'F');
+    doc.setTextColor(248,247,255); doc.setFontSize(13); doc.setFont('helvetica','bold');
+    doc.text('NeuroDynamics — Quadro de pessoal', 12, 9.5);
+    doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(206,220,0);
+    doc.text(descFiltros() + '  ·  Emitido em ' + new Date().toLocaleDateString('pt-BR'), 12, 15.5);
+    doc.autoTable({
+      startY: 26,
+      head: [['Reg.','Nome','Status','Departamento','Cargo','Grupos','E-mail','Telefone','Ingresso']],
+      body: membrosFiltrados().map(m=>[String(m.registro).padStart(3,'0'), m.nome, m.status,
+        m.departamento||'', m.cargo||'', (m.grupos||[]).join(', '),
+        m.email_nro||m.email_pessoal||'', m.telefone||'', m.data_ingresso?fmtD(m.data_ingresso):'']),
+      styles:{font:'helvetica', fontSize:7.5, cellPadding:1.6, textColor:[29,29,31]},
+      headStyles:{fillColor:[0,53,47], textColor:[206,220,0], fontSize:8},
+      alternateRowStyles:{fillColor:[246,245,252]},
+      margin:{left:12, right:12}
+    });
+    const total = doc.getNumberOfPages();
+    for(let i=1;i<=total;i++){
+      doc.setPage(i); doc.setFontSize(7.5); doc.setTextColor(107,111,116);
+      doc.text(`NRO-SYS-001 · uso interno · gerado por ${quemSouEu()}`, 12, 202);
+      doc.text(`Página ${i} de ${total}`, W-12, 202, {align:'right'});
+    }
+    doc.save(`NRO-PES_relatorio_${hoje()}.pdf`);
+    toast('PDF gerado.');
+  }catch(e){ falha(e,'Erro ao exportar PDF'); }
+}
+
+/* ---------------- catálogo de acessos ---------------- */
+function renderCatalogo(){
+  if(can()) $('#page-actions').innerHTML = `<button class="btn btn-primary" onclick="modalItem()">+ Novo item</button>`;
+  $('#view-acessos').innerHTML = `<div class="card">
+    <p class="small muted" style="line-height:1.6;margin-bottom:14px">
+      Cada linha é um sistema, local ou documento controlado. Ao criar um item novo, ele passa a aparecer
+      na aba Acessos de todos os membros — sem alterar nenhuma estrutura.</p>
+    <table class="tb"><thead><tr><th>Item</th><th>Categoria</th><th>Situação</th>${can()?'<th></th>':''}</tr></thead>
+    <tbody>${state.itens.map(i=>`<tr>
+      <td><b>${esc(i.nome)}</b></td>
+      <td>${CAT_LABEL[i.categoria]||esc(i.categoria)}</td>
+      <td>${i.ativo?'<span class="pill p-ativo">Em uso</span>':'<span class="pill p-egresso">Desativado</span>'}</td>
+      ${can()?`<td style="text-align:right;white-space:nowrap">
+        <button class="btn btn-sm" onclick="modalItem('${i.id}')">Editar</button>
+        <button class="btn btn-sm" onclick="alternarItem('${i.id}', ${!i.ativo})">${i.ativo?'Desativar':'Reativar'}</button></td>`:''}
+    </tr>`).join('')}</tbody></table></div>`;
+}
+function modalItem(id){
+  const i = id ? state.itens.find(x=>x.id===id) : null;
+  abreModal(`<h3>${i?'Editar item de acesso':'Novo item de acesso'}</h3>
+    <div class="field"><label>Nome</label><input id="it-nome" value="${esc(i?.nome||'')}" placeholder="Ex.: Figma, Sala de reuniões, Termo de sigilo — Parceiro X"></div>
+    <div class="field"><label>Categoria</label><select id="it-cat">
+      ${['sistema','local','documento'].map(c=>`<option value="${c}" ${i?.categoria===c?'selected':''}>${CAT_LABEL[c]}</option>`).join('')}</select></div>
+    <div class="actions"><button class="btn" onclick="fechaModal()">Cancelar</button>
+    <button class="btn btn-primary" onclick="salvarItem(${i?`'${i.id}'`:'null'})">${i?'Salvar':'Criar item'}</button></div>`, true);
+}
+async function salvarItem(id){
+  const nome = $('#it-nome').value.trim(), categoria = $('#it-cat').value;
+  if(!nome){ toast('Informe o nome do item.', true); return; }
+  try{
+    const {error} = id
+      ? await db.from('itens_de_acesso').update({nome, categoria}).eq('id', id)
+      : await db.from('itens_de_acesso').insert({nome, categoria});
+    if(error) throw error;
+    const {data} = await db.from('itens_de_acesso').select('*').order('ordem'); state.itens = data||[];
+    fechaModal(); renderCatalogo(); toast(id?'Item atualizado.':'Item criado.');
+  }catch(e){ falha(e, e?.code==='23505'?'Já existe um item com esse nome':'Erro ao salvar'); }
+}
+async function alternarItem(id, ativo){
+  try{
+    const {error} = await db.from('itens_de_acesso').update({ativo}).eq('id', id); if(error) throw error;
+    const it = state.itens.find(x=>x.id===id); if(it) it.ativo = ativo;
+    renderCatalogo(); toast(ativo?'Item reativado.':'Item desativado. Concessões existentes foram preservadas.');
+  }catch(e){ falha(e,'Erro ao atualizar'); }
+}
+
+/* ---------------- painel do depto de pessoal ---------------- */
+async function renderPessoal(){
+  $('#view-pessoal').innerHTML = '<div class="empty">Carregando…</div>';
+  try{
+    const {data, error} = await db.from('avaliacoes').select('*, membro:membros(nome, departamento)')
+      .eq('encaminhar_pessoal', true).order('tratado').order('data',{ascending:false}).limit(120);
+    if(error) throw error;
+    const pend = (data||[]).filter(a=>!a.tratado), trat = (data||[]).filter(a=>a.tratado);
+    const cartao = (a)=>`<div class="aval-card"><div class="hd">
+      <div><a href="#" onclick="abrirFicha(${a.registro});return false"><b>${esc(a.membro?.nome||'Registro '+a.registro)}</b></a>
+        <span class="muted small">· ${esc(a.membro?.departamento||'')} · ciclo ${esc(a.ciclo)} · ${fmtD(a.data)}</span></div>
+      <div>${a.assiduidade!=null?`<span class="score ${a.assiduidade<=2?'low':''}">Assiduidade ${a.assiduidade}/5</span>`:''}
+          ${a.comprometimento!=null?`<span class="score ${a.comprometimento<=2?'low':''}">Comprometimento ${a.comprometimento}/5</span>`:''}</div></div>
+      ${a.apontamentos?`<div class="small" style="line-height:1.55;white-space:pre-wrap;margin-bottom:8px">${esc(a.apontamentos)}</div>`:''}
+      <div class="small muted">Encaminhado por ${esc(a.responsavel||'—')}</div>
+      ${!a.tratado&&can()?`<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-primary" onclick="registrarConversa('${a.id}', ${a.registro})">Registrar conversa e concluir</button>
+        <button class="btn btn-sm" onclick="marcarTratada('${a.id}')">Marcar como tratada</button></div>`:''}
+    </div>`;
+    $('#view-pessoal').innerHTML = `
+      <div class="card"><h3>Encaminhamentos pendentes (${pend.length})</h3>
+        ${pend.length? pend.map(cartao).join('') : '<div class="empty">Nenhuma conversa pendente. Quando um supervisor encaminhar uma avaliação, ela aparece aqui.</div>'}</div>
+      <div class="card"><h3>Tratados recentemente</h3>
+        ${trat.length? trat.slice(0,10).map(cartao).join('') : '<div class="empty">Nada por aqui ainda.</div>'}</div>`;
+  }catch(e){ falha(e,'Erro ao carregar o painel'); }
+}
+async function marcarTratada(id){
+  try{
+    const {error} = await db.from('avaliacoes').update({tratado:true}).eq('id', id); if(error) throw error;
+    renderPessoal(); toast('Encaminhamento concluído.');
+  }catch(e){ falha(e,'Erro ao atualizar'); }
+}
+function registrarConversa(avalId, reg){
+  abreModal(`<h3>Registrar conversa</h3>
+    <p class="small muted" style="margin-bottom:12px">A conversa entra na linha do tempo do membro como ocorrência
+    e o encaminhamento é marcado como tratado.</p>
+    <div class="field"><label>Data</label><input id="cv-data" type="date" value="${hoje()}"></div>
+    <div class="field"><label>Resumo da conversa</label><textarea id="cv-desc" placeholder="Pontos conversados, combinados e próximos passos…"></textarea></div>
+    <div class="actions"><button class="btn" onclick="fechaModal()">Cancelar</button>
+    <button class="btn btn-primary" onclick="salvarConversa('${avalId}', ${reg})">Registrar e concluir</button></div>`, true);
+}
+async function salvarConversa(avalId, reg){
+  try{
+    let r = await db.from('ocorrencias').insert({registro:reg, tipo:'Conversa com o Depto de Pessoal',
+      data:$('#cv-data').value||hoje(), descricao:$('#cv-desc').value.trim()||null, responsavel:quemSouEu()});
+    if(r.error) throw r.error;
+    r = await db.from('avaliacoes').update({tratado:true}).eq('id', avalId);
+    if(r.error) throw r.error;
+    fechaModal(); renderPessoal(); toast('Conversa registrada.');
+  }catch(e){ falha(e,'Erro ao registrar'); }
+}
+
+/* ---------------- auditoria ---------------- */
+const TAB_LABEL = {membros:'Membros', dados_pessoais:'Dados pessoais', acessos_concedidos:'Acessos',
+  ocorrencias:'Ocorrências', avaliacoes:'Avaliações', itens_de_acesso:'Catálogo'};
+let audRows = [];
+async function renderAuditoria(){
+  $('#view-auditoria').innerHTML = '<div class="empty">Carregando trilha de auditoria…</div>';
+  try{
+    const {data, error} = await db.from('auditoria').select('*').order('ocorrido_em',{ascending:false}).limit(400);
+    if(error) throw error;
+    audRows = data||[];
+    $('#view-auditoria').innerHTML = `
+      <div class="filters">
+        <div class="field grow"><label>Buscar</label><input id="au-q" placeholder="Campo, valor, responsável ou registro" oninput="renderTabelaAud()"></div>
+        <div class="field"><label>Tabela</label><select id="au-tb" onchange="renderTabelaAud()">
+          <option value="">Todas</option>${Object.entries(TAB_LABEL).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></div>
+      </div>
+      <div class="card" style="padding:8px 14px"><div id="tb-aud"></div></div>`;
+    renderTabelaAud();
+  }catch(e){ falha(e,'Erro ao carregar a auditoria'); }
+}
+function nomePorRef(ref){
+  const n = parseInt(ref,10);
+  if(!isNaN(n)){ const m = state.membros.find(x=>x.registro===n); if(m) return m.nome; }
+  return null;
+}
+function renderTabelaAud(){
+  const q = norm($('#au-q')?.value), tb = $('#au-tb')?.value;
+  const rows = audRows.filter(r=>
+    (!tb || r.tabela===tb) &&
+    (!q || [r.campo, r.valor_anterior, r.valor_novo, r.responsavel_email, r.registro_ref, nomePorRef(r.registro_ref)]
+      .some(v=> v && norm(v).includes(q))));
+  $('#tb-aud').innerHTML = rows.length ? `
+    <table class="tb"><thead><tr><th>Quando</th><th>Responsável</th><th>Tabela</th><th>Registro</th><th>Ação</th><th>Campo</th><th>De</th><th>Para</th></tr></thead>
+    <tbody>${rows.slice(0,200).map(r=>{
+      const nm = nomePorRef(r.registro_ref);
+      return `<tr><td class="small" style="white-space:nowrap">${fmtDT(r.ocorrido_em)}</td>
+      <td class="small">${esc(r.responsavel_email||'sistema')}</td>
+      <td class="small">${TAB_LABEL[r.tabela]||esc(r.tabela)}</td>
+      <td class="small">${nm?esc(nm):`<span class="reg">${esc((r.registro_ref||'').slice(0,8))}</span>`}</td>
+      <td class="small">${{INSERT:'Criação',UPDATE:'Alteração',DELETE:'Exclusão'}[r.operacao]||esc(r.operacao)}</td>
+      <td class="small">${esc(r.campo||'—')}</td>
+      <td class="small" style="max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.valor_anterior)}">${esc(r.valor_anterior)||'—'}</td>
+      <td class="small" style="max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.valor_novo)}">${esc(r.valor_novo)||'—'}</td></tr>`;
+    }).join('')}</tbody></table>
+    <div class="small muted" style="padding:10px 4px">Exibindo ${Math.min(rows.length,200)} de ${rows.length} eventos (últimos 400 carregados)</div>`
+    : '<div class="empty">Nenhum evento encontrado. A trilha registra automaticamente toda criação, alteração e exclusão.</div>';
+}
+
+/* ---------------- importar planilha ---------------- */
+const MAPA_INST = {'REGISTRO':'registro','STATUS':'status','NOME':'nome','DEPARTAMENTO':'departamento',
+  'CARGO ATUAL':'cargo','GRUPOS':'grupos','EMAIL NRO':'email_nro','EMAIL PESSOAL':'email_pessoal','TELEFONE':'telefone',
+  'DATA DE INGRESSO':'data_ingresso','FORMA DE INGRESSO':'forma_ingresso','DATA DE DESLIGAMENTO':'data_desligamento',
+  'PROJETO REGISTRADO NO SISTEMA DE FOMENTO':'projeto_fomento','CLASSIFICAÇÃO':'classificacao','BOLSA':'bolsa',
+  'DATA DE ENCERRAMENTO':'data_encerramento'};
+const MAPA_ACESSOS = {
+  'POSSUI TERMO DE SIGILO DO LABBIO ASSINADO?':'Termo de sigilo — LABBIO',
+  'POSSUI TERMO DE SIGILO DA VISURI ASSINADO?':'Termo de sigilo — Visuri',
+  'POSSUI TERMO DE SIGILO DA NRO ASSINADO?':'Termo de sigilo — NRO',
+  'ACESSO BIOMÉTRICO AO LABBIO':'Biometria — LABBIO',
+  'ACESSO BIOMÉTRICO AO LEB':'Biometria — LEB',
+  'PASTAS COM ACESSO NO DRIVE CTA-EEUFMG':'Drive CTA-EEUFMG',
+  'ACESSO A TIMES NO GITHUB CTA-EEUFMG':'GitHub CTA-EEUFMG',
+  'ACESSO À CONTA DE EMAIL ZIMBRA':'E-mail Zimbra',
+  'ACESSO À CONTA GOOGLE NRO':'Conta Google NRO',
+  'ACESSO À CONTA GOOGLE CTA-EEUFMG':'Conta Google CTA-EEUFMG',
+  'ACESSO AO TIME CANVA':'Canva',
+  'ACESSO AO INSTAGRAM':'Instagram',
+  'ACESSO AO LINKEDIN':'LinkedIn',
+  'ACESSO AO WIX':'Wix',
+  'ACESSO AO CLOUDFLARE':'Cloudflare',
+  'ACESSO AO WHATSAPP BUSINESS':'WhatsApp Business',
+  'ACESSO AO NOTION':'Notion'};
+const MAPA_FORM = {'CPF':'cpf','DATA DE NASCIMENTO':'data_nascimento','ENDEREÇO':'endereco','CIDADE DE ORIGEM':'cidade_origem',
+  'INSTITUIÇÃO DE ENSINO':'instituicao','CURSO':'curso','MATRÍCULA':'matricula','PERÍODO DE INGRESSO':'periodo_ingresso',
+  'BACKGROUND':'background','LINK DO CURRÍCULO LATTES':'lattes','TEMPO DE DESLOCAMENTO ATÉ A UNIVERSIDADE':'tempo_deslocamento',
+  'AUTODECLARAÇÃO RACIAL':'autodeclaracao_racial','SITUAÇÃO JUNTO À FUMP':'situacao_fump',
+  'NECESSIDADES ESPECÍFICAS DE ACESSIBILIDADE':'acessibilidade','GÊNERO':'genero','PERFIL DO INSTAGRAM':'instagram',
+  'USUÁRIO DO GITHUB':'github'};
+let pacote = null;
+
+const t = (v)=>{ if(v==null) return null; const s=String(v).trim(); return s===''||s==='--' ? null : s; };
+const textoNum = (v)=>{ if(v==null||v==='') return null; if(typeof v==='number') return v.toFixed(0); return t(v); };
+const ehVerdade = (v)=> v===true || String(v).trim().toUpperCase()==='TRUE';
+function dataISO(v){
+  if(v==null||v==='') return null;
+  if(typeof v==='number'){ if(v<20000||v>80000) return null;
+    return new Date(Math.round((v-25569)*86400*1000)).toISOString().slice(0,10); }
+  if(v instanceof Date && !isNaN(v)) return v.toISOString().slice(0,10);
+  const s=String(v).trim();
+  let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/); if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+  return null;
+}
+function normLinhas(ws){
+  return XLSX.utils.sheet_to_json(ws, {defval:null, raw:true}).map(r=>{
+    const o={}; Object.keys(r).forEach(k=> o[k.trim().toUpperCase()] = r[k]); return o;
+  });
+}
+function renderImportar(){
+  pacote = null;
+  $('#view-importar').innerHTML = `
+    <div class="card"><h3>Importar a planilha NRO-PES-005</h3>
+      <p class="small muted" style="line-height:1.65;margin-bottom:16px">
+        Selecione o arquivo .xlsx do quadro de pessoal. O sistema reconhece as abas
+        <b>INSTITUCIONAL</b> (membros), <b>FORM</b> (dados pessoais) e <b>ACESSOS</b> (concessões marcadas como TRUE).
+        Registros já existentes são atualizados pelo número de registro — pode importar a mesma planilha mais de uma vez sem duplicar nada.</p>
+      <div class="dropzone" onclick="document.getElementById('imp-file').click()">
+        Clique para selecionar o arquivo<br><b>NRO-PES-005_QUADRO_DE_PESSOAL.xlsx</b>
+      </div>
+      <input id="imp-file" type="file" accept=".xlsx,.xls,.csv" hidden onchange="lerArquivo(this.files[0])">
+    </div>
+    <div id="imp-resumo"></div>`;
+}
+async function lerArquivo(file){
+  if(!file) return;
+  try{
+    const wb = XLSX.read(new Uint8Array(await file.arrayBuffer()), {type:'array'});
+    const acha = (nome)=>{ const n = wb.SheetNames.find(s=>s.trim().toUpperCase()===nome); return n? wb.Sheets[n] : null; };
+    let wsInst = acha('INSTITUCIONAL'), wsForm = acha('FORM'), wsAcc = acha('ACESSOS');
+    if(!wsInst && wb.SheetNames.length===1){
+      const unica = wb.Sheets[wb.SheetNames[0]];
+      const teste = normLinhas(unica)[0]||{};
+      if('REGISTRO' in teste && 'NOME' in teste) wsInst = unica;
+    }
+    const membros = !wsInst ? [] : normLinhas(wsInst).map(r=>{
+      const o={};
+      Object.entries(MAPA_INST).forEach(([h,k])=>{
+        const v=r[h];
+        if(k==='registro') o[k] = v==null||v===''? null : Math.round(Number(v));
+        else if(k==='grupos') o[k] = t(v)? String(v).split(',').map(x=>x.trim()).filter(Boolean) : [];
+        else if(k.startsWith('data_')) o[k] = dataISO(v);
+        else o[k] = t(v);
+      });
+      if(!o.status) o.status='Ativo';
+      return o;
+    }).filter(o=>o.registro && o.nome);
+    const pess = !wsForm ? [] : normLinhas(wsForm).map(r=>{
+      const o={_nome: t(r['NOME COMPLETO'])};
+      Object.entries(MAPA_FORM).forEach(([h,k])=>{
+        const v=r[h];
+        if(k==='data_nascimento') o[k]=dataISO(v);
+        else if(k==='matricula') o[k]=textoNum(v);
+        else o[k]=t(v);
+      });
+      const term = t(r['TERMO DE AUTORIZAÇÃO DO USO DE IMAGEM']);
+      o.autorizacao_imagem = term ? term.toLowerCase().startsWith('autorizo') : null;
+      return o;
+    }).filter(o=>o._nome);
+    const acessos = [];
+    if(wsAcc) normLinhas(wsAcc).forEach(r=>{
+      const nome = t(r['NOME']); if(!nome) return;
+      Object.entries(MAPA_ACESSOS).forEach(([h,item])=>{ if(ehVerdade(r[h])) acessos.push({_nome:nome, _item:item}); });
+    });
+    if(!membros.length && !pess.length && !acessos.length){
+      toast('Não encontrei as abas esperadas nesse arquivo. Confira se é a planilha NRO-PES-005.', true); return;
+    }
+    pacote = {membros, pess, acessos};
+    $('#imp-resumo').innerHTML = `<div class="card"><h3>Pronto para importar — ${esc(file.name)}</h3>
+      <div class="field"><label style="display:flex;gap:8px;align-items:center;font-size:13.5px">
+        <input type="checkbox" id="ck-m" style="width:auto" ${membros.length?'checked':'disabled'}>
+        <b>${membros.length}</b>&nbsp;membros (aba INSTITUCIONAL)</label></div>
+      <div class="field"><label style="display:flex;gap:8px;align-items:center;font-size:13.5px">
+        <input type="checkbox" id="ck-p" style="width:auto" ${pess.length?'checked':'disabled'}>
+        <b>${pess.length}</b>&nbsp;fichas de dados pessoais (aba FORM)</label></div>
+      <div class="field"><label style="display:flex;gap:8px;align-items:center;font-size:13.5px">
+        <input type="checkbox" id="ck-a" style="width:auto" ${acessos.length?'checked':'disabled'}>
+        <b>${acessos.length}</b>&nbsp;concessões de acesso marcadas (aba ACESSOS)</label></div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn btn-primary" id="imp-go" onclick="executarImport()">Importar agora</button>
+        <button class="btn" onclick="renderImportar()">Escolher outro arquivo</button></div>
+      <div id="imp-log" class="log" style="margin-top:16px" hidden></div></div>`;
+  }catch(e){ falha(e,'Não consegui ler o arquivo'); }
+}
+async function executarImport(){
+  if(!pacote) return;
+  const log = $('#imp-log'); log.hidden=false; log.textContent='';
+  const diz = (s)=>{ log.textContent += s+'\n'; log.scrollTop = log.scrollHeight; };
+  $('#imp-go').disabled = true;
+  try{
+    if($('#ck-m').checked && pacote.membros.length){
+      diz(`Importando ${pacote.membros.length} membros…`);
+      await upsertLotes('membros', pacote.membros, 'registro');
+      const {data} = await db.from('membros').select('*').order('registro');
+      state.membros = data||[];
+      diz(`✔ Membros importados. O quadro agora tem ${state.membros.length} registros.`);
+    }
+    const porNome = new Map(state.membros.map(m=>[norm(m.nome), m.registro]));
+    if($('#ck-p').checked && pacote.pess.length){
+      const linhas=[], semPar=[];
+      pacote.pess.forEach(p=>{
+        const reg = porNome.get(norm(p._nome));
+        if(!reg){ semPar.push(p._nome); return; }
+        const {_nome, ...resto} = p; linhas.push({registro:reg, ...resto});
+      });
+      diz(`Importando ${linhas.length} fichas de dados pessoais…`);
+      await upsertLotes('dados_pessoais', linhas, 'registro');
+      diz(`✔ Dados pessoais importados.`);
+      if(semPar.length) diz(`⚠ ${semPar.length} resposta(s) do FORM sem membro correspondente pelo nome: ${semPar.join('; ')}`);
+    }
+    if($('#ck-a').checked && pacote.acessos.length){
+      const porItem = new Map(state.itens.map(i=>[i.nome, i.id]));
+      const linhas=[]; let semMembro=0, semItem=0;
+      pacote.acessos.forEach(a=>{
+        const reg = porNome.get(norm(a._nome)); if(!reg){ semMembro++; return; }
+        const item = porItem.get(a._item); if(!item){ semItem++; return; }
+        linhas.push({registro:reg, item_id:item, ativo:true, responsavel:'Importação da planilha'});
+      });
+      diz(`Importando ${linhas.length} concessões de acesso…`);
+      await upsertLotes('acessos_concedidos', linhas, 'registro,item_id');
+      diz(`✔ Acessos importados.`);
+      if(semMembro) diz(`⚠ ${semMembro} concessão(ões) ignorada(s): nome sem membro correspondente.`);
+      if(semItem) diz(`⚠ ${semItem} concessão(ões) ignorada(s): item fora do catálogo.`);
+    }
+    diz('');
+    diz('Importação concluída. Confira o quadro na aba Membros.');
+    toast('Importação concluída.');
+  }catch(e){ diz('✖ ERRO: '+(e?.message||e)); falha(e,'A importação foi interrompida'); }
+  $('#imp-go').disabled = false;
+}
+
+init();
+</script>
+</body>
+</html>
