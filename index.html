@@ -330,8 +330,8 @@ table.tb{width:100%;border-collapse:collapse}
    (Settings -> API no painel do Supabase)
    ============================================================ */
 const CONFIG = {
-  url:     'https://rxzmkyjttzzpwtodqkve.supabase.co',
-  anonKey: 'sb_publishable_MJFR-aaQqTS1BthxYJG2kg_5XGhs9wg'
+  url:     'COLE_AQUI_A_PROJECT_URL',
+  anonKey: 'COLE_AQUI_A_CHAVE_ANON_PUBLIC'
 };
 /* ------------------------------------------------------------
    LOGO — imagotipo oficial da NeuroDynamics (preto sobre fundo
@@ -460,6 +460,12 @@ const norm = (s)=> String(s||'').trim().replace(/\s+/g,' ').toLowerCase();
 const can = ()=> ['admin','pessoal'].includes(state.perfil?.papel);
 const pill = (st)=> `<span class="pill"><span class="dt ${STATUS_DOT[st]||'dt-gray'}"></span>${esc(st||'—')}</span>`;
 const iniciais = (n)=> String(n||'?').trim().split(/\s+/).map(p=>p[0]).filter(Boolean).slice(0,2).join('').toUpperCase();
+const FOTOS_BASE = 'https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/fotos/';
+const fotoDe = (m)=> m && (m.foto_url || (m.registro!=null ? FOTOS_BASE + m.registro + '.jpg' : null));
+function avatarConteudo(m){ const u = fotoDe(m);
+  return esc(iniciais(m.nome)) + (u ? `<img src="${esc(u)}" alt="" loading="lazy"
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.remove()">` : ''); }
+const avatarFoto = (m, extra)=> `<span class="avatar" style="position:relative;overflow:hidden;${extra||''}">${avatarConteudo(m)}</span>`;
 const quemSouEu = ()=> state.perfil ? (state.perfil.nome || state.perfil.email) : '';
 const nomeDe = (reg)=> state.membros.find(m=>m.registro===reg)?.nome || null;
 function toast(msg, err){ const t=document.createElement('div'); t.className='toast'+(err?' err':''); t.textContent=msg;
@@ -536,7 +542,9 @@ async function entrar(){
     if(error||!perfil) throw (error||new Error('perfil não encontrado'));
     state.perfil = perfil;
     $('#user-nome').textContent = perfil.nome || perfil.email;
-    $('#user-avatar').textContent = iniciais(perfil.nome || perfil.email);
+    const uav = $('#user-avatar');
+    uav.style.position='relative'; uav.style.overflow='hidden';
+    uav.innerHTML = avatarConteudo({registro: perfil.registro, nome: perfil.nome || perfil.email});
     $('#user-papel').textContent = {admin:'Administração', pessoal:'Depto de Pessoal', leitura:'Consulta'}[perfil.papel] || perfil.papel;
     $('#nav').innerHTML = NAV.filter(([,,,adm])=>!adm||can()).map(([v,l,i])=>
       `<button data-view="${v}" onclick="showView('${v}')">${ic(i)}<span class="lb">${l}</span></button>`).join('');
@@ -689,6 +697,7 @@ const CAMPOS_MEMBRO = [
   {k:'email_nro', l:'E-mail NRO', t:'text'},
   {k:'email_pessoal', l:'E-mail pessoal', t:'text'},
   {k:'telefone', l:'Telefone', t:'text'},
+  {k:'foto_url', l:'Foto (URL — vazio usa fotos/REG.jpg do repositório)', t:'text', full:true},
   {k:'data_ingresso', l:'Data de ingresso', t:'date'},
   {k:'forma_ingresso', l:'Forma de ingresso', t:'datalist', list:'dl-formas'},
   {k:'data_desligamento', l:'Data de desligamento', t:'date'},
@@ -770,7 +779,7 @@ function renderFicha(){
   if(can()) tabs.push(['pess','Dados pessoais']);
   $('#view-ficha').innerHTML = `
     <div class="card" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-      <span class="avatar" style="width:52px;height:52px;font-size:17px">${iniciais(m.nome)}</span>
+      ${avatarFoto(m,'width:52px;height:52px;font-size:17px')}
       <div style="flex:1;min-width:220px">
         <div style="font-size:17px;font-weight:600;letter-spacing:-.2px">${esc(m.nome)}</div>
         <div class="small muted" style="margin-top:2px"><span class="reg">REG ${String(m.registro).padStart(3,'0')}</span>
@@ -1044,7 +1053,7 @@ async function salvarPess(){
 
 /* ------------- organização (Org Explorer, estilo Microsoft Teams) ------------- */
 let orgFoco = null;
-function orgAtivos(){ return state.membros.filter(m => ['Ativo', 'Em pausa / avaliação'].includes(m.status)); }
+function orgAtivos(){ return state.membros.filter(m=>m.status==='Ativo' || m.status==='Em pausa / avaliação'); }
 function orgGestorDe(m, ativos){ return (m.gestor_registro && ativos.find(x=>x.registro===m.gestor_registro)) || null; }
 function orgRaiz(ativos){
   const raizes = ativos.filter(m=>!orgGestorDe(m, ativos));
@@ -1065,9 +1074,9 @@ function focarOrg(reg){ orgFoco = reg; desenhaOrg(''); }
 function cartaoOrg(m, ativos){
   const lidera = ativos.filter(x=>x.gestor_registro===m.registro).length;
   return `<button class="org-card" onclick="focarOrg(${m.registro})" title="${esc(m.nome)}">
-    <span class="avatar">${iniciais(m.nome)}</span>
+    ${avatarFoto(m,'')}
     <span class="tx"><span class="nm">${esc(m.nome)}</span>
-    <span class="cg">${esc(m.cargo||'—')}${lidera?` · lidera ${lidera}`:''}</span></span></button>`;
+    <span class="cg">${esc(m.cargo||'—')}${lidera?` · lidera ${lidera}`:''}${m.status!=='Ativo'?' · em pausa':''}</span></span></button>`;
 }
 function desenhaOrg(filtro){
   const ativos = orgAtivos();
@@ -1089,13 +1098,13 @@ function desenhaOrg(filtro){
     <div class="org-busca"><div class="field" style="margin:0">
       <input id="org-q" placeholder="Buscar por nome…" value="${esc(filtro)}" oninput="desenhaOrg(this.value)"></div>
       ${achados.length?`<div class="org-res">${achados.map(m=>`<div class="op" onclick="focarOrg(${m.registro})">
-        <span class="avatar" style="width:26px;height:26px;font-size:10px">${iniciais(m.nome)}</span>
+        ${avatarFoto(m,'width:26px;height:26px;font-size:10px')}
         <span>${esc(m.nome)} <span class="muted small">· ${esc(m.cargo||'')}</span></span></div>`).join('')}</div>`:''}
     </div>
     <div class="org-chain">
       ${cadeia.map(m=>cartaoOrg(m, ativos)+'<span class="org-link"></span>').join('')}
       <div class="org-card org-focus">
-        <span class="avatar">${iniciais(foco.nome)}</span>
+        ${avatarFoto(foco,'')}
         <span class="tx" style="flex:1">
           <span class="nm" style="font-size:14.5px">${esc(foco.nome)}</span>
           <span class="cg" style="white-space:normal">${esc(foco.cargo||'—')} · ${esc(foco.departamento||'—')}</span>
@@ -1217,7 +1226,7 @@ function secaoTabela(doc, y, titulo, head, body, colStyles){
     columnStyles:colStyles||{}, margin:{left:12,right:12} });
   return doc.lastAutoTable.finalY + 8;
 }
-function gerarRelatorioMembro(){
+async function gerarRelatorioMembro(){
   try{
     const m = membroAtual(); if(!m) return;
     const f = state.ficha;
@@ -1226,8 +1235,23 @@ function gerarRelatorioMembro(){
     let y = pdfCabecalho(doc, 'FICHA DO MEMBRO — '+m.nome.toUpperCase(),
       `Registro ${pad3(m.registro)} · ${m.status} · Emitida em ${new Date().toLocaleDateString('pt-BR')}`
       + (temPess?' · CONFIDENCIAL — contém dados pessoais protegidos pela LGPD':''));
+    const fu = fotoDe(m);
+    if (fu){ try{
+      const bl = await (await fetch(fu)).blob();
+      if (bl.type.startsWith('image/')){
+        const du = await new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(bl);});
+        const img = new Image();
+        await new Promise((ok,er)=>{img.onload=ok;img.onerror=er;img.src=du;});
+        let fw = 24, fh = 24*img.height/img.width;
+        if (fh > 32){ fh = 32; fw = 32*img.width/img.height; }
+        const W = doc.internal.pageSize.getWidth();
+        doc.addImage(du, bl.type.includes('png')?'PNG':'JPEG', W-14-fw, y, fw, fh);
+        doc.setDrawColor(200); doc.setLineWidth(.25); doc.rect(W-14-fw, y, fw, fh);
+        y += fh + 4;
+      }
+    }catch(_){ /* segue sem foto */ } }
     const rot = {0:{fontStyle:'bold', cellWidth:58}};
-    const inst = CAMPOS_MEMBRO.filter(c=>c.k!=='nome').map(c=>{
+    const inst = CAMPOS_MEMBRO.filter(c=>c.k!=='nome' && c.k!=='foto_url').map(c=>{
       let v = m[c.k];
       if(c.t==='grupos') v = (v||[]).join(', ');
       else if(c.t==='date') v = v? fmtD(v) : '';
