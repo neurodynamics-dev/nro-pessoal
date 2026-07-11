@@ -259,11 +259,21 @@ const CONFIG = {
 
 const sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id);
-const FOTOS_BASE = 'https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/fotos/';
+const FOTOS_BASE = 'https://raw.githubusercontent.com/neurodynamics-dev/nro-pessoal/refs/heads/main/fotos/';
 const LOCAIS_STATUS = ['LABBIO','Lanchonete de dentro','Lanchonete de fora','Diretoria'];
 const fotoDe = (m)=> m && (m.foto_url || (m.registro!=null ? FOTOS_BASE + m.registro + '.jpg' : null));
-function avatarConteudo(m){ const u = fotoDe(m);
-  return esc(primeirasLetras(m.nome)) + (u ? `<img src="${esc(u)}" alt="" loading="lazy" onerror="this.remove()">` : ''); }
+const FOTO_EXTS = ['jpg','jpeg','png','webp'];
+function fotoErro(img){
+  const i = Number(img.dataset.ext||0) + 1, reg = img.dataset.reg;
+  if (reg && i < FOTO_EXTS.length){ img.dataset.ext = i; img.src = FOTOS_BASE + reg + '.' + FOTO_EXTS[i]; }
+  else img.remove();
+}
+function avatarConteudo(m){
+  const u = fotoDe(m);
+  if (!u) return esc(primeirasLetras(m.nome));
+  const cascata = (!m.foto_url && m.registro!=null) ? ` data-reg="${m.registro}" data-ext="0"` : '';
+  return esc(primeirasLetras(m.nome)) + `<img src="${esc(u)}" alt="" loading="lazy"${cascata} onerror="fotoErro(this)">`;
+}
 const avatarFoto = (m, px, fs)=> `<span class="avx" style="width:${px}px;height:${px}px;font-size:${fs||12}px">${avatarConteudo(m)}</span>`;
 function primeirasLetras(n){ return String(n||'?').trim().split(/\s+/).map(p=>p[0]).filter(Boolean).slice(0,2).join('').toUpperCase(); }
 function abreviaArea(dep){

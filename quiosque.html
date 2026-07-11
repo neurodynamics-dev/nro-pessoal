@@ -226,7 +226,7 @@ const CONFIG = {
   SEGREDO_QUIOSQUE: 'Zurich1410',
   APP_URL: 'https://neurodynamics-dev.github.io/nro-pessoal/app.html',
   LAT: -19.8657, LON: -43.9648,  // Campus Pampulha, UFMG
-  FOTOS_BASE: 'https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/fotos/'
+  FOTOS_BASE: 'https://raw.githubusercontent.com/neurodynamics-dev/nro-pessoal/refs/heads/main/fotos/'
 };
 /* ============================================================ */
 
@@ -310,10 +310,17 @@ function renderAgenda(evs){
 
 const fotoDe = (m)=> m && (m.foto_url || (m.registro!=null ? CONFIG.FOTOS_BASE + m.registro + '.jpg' : null));
 const letras = (n)=> String(n||'?').trim().split(/\s+/).map(p=>p[0]).filter(Boolean).slice(0,2).join('').toUpperCase();
+const FOTO_EXTS = ['jpg','jpeg','png','webp'];
+function fotoErro(img){
+  const i = Number(img.dataset.ext||0) + 1, reg = img.dataset.reg;
+  if (reg && i < FOTO_EXTS.length){ img.dataset.ext = i; img.src = CONFIG.FOTOS_BASE + reg + '.' + FOTO_EXTS[i]; }
+  else img.remove();
+}
 function avatarK(m, px, fs){
   const u = fotoDe(m);
+  const cascata = (!m.foto_url && m.registro!=null) ? ` data-reg="${m.registro}" data-ext="0"` : '';
   return `<span class="avk" style="width:${px}px;height:${px}px;font-size:${fs}px">${esc(letras(m.nome))}${
-    u?`<img src="${esc(u)}" alt="" onerror="this.remove()">`:''}</span>`;
+    u?`<img src="${esc(u)}" alt=""${cascata} onerror="fotoErro(this)">`:''}</span>`;
 }
 function abreviaArea(dep){
   if(!dep) return '';

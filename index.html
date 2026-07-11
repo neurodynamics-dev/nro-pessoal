@@ -460,11 +460,26 @@ const norm = (s)=> String(s||'').trim().replace(/\s+/g,' ').toLowerCase();
 const can = ()=> ['admin','pessoal'].includes(state.perfil?.papel);
 const pill = (st)=> `<span class="pill"><span class="dt ${STATUS_DOT[st]||'dt-gray'}"></span>${esc(st||'—')}</span>`;
 const iniciais = (n)=> String(n||'?').trim().split(/\s+/).map(p=>p[0]).filter(Boolean).slice(0,2).join('').toUpperCase();
-const FOTOS_BASE = 'https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/fotos/';
+/* Repositório público das fotos: fotos/<registro>.<ext>, sem custo de storage no Supabase.
+   Se o repositório mudar, altere APENAS esta linha (e a equivalente em app.html e quiosque.html). */
+const FOTOS_BASE = 'https://raw.githubusercontent.com/neurodynamics-dev/nro-pessoal/refs/heads/main/fotos/';
+const FOTO_EXTS = ['jpg','jpeg','png','webp'];
 const fotoDe = (m)=> m && (m.foto_url || (m.registro!=null ? FOTOS_BASE + m.registro + '.jpg' : null));
-function avatarConteudo(m){ const u = fotoDe(m);
-  return esc(iniciais(m.nome)) + (u ? `<img src="${esc(u)}" alt="" loading="lazy"
-    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.remove()">` : ''); }
+/* Se a foto_url não estiver preenchida, tenta as extensões em cascata antes de cair nas iniciais. */
+function fotoErro(img){
+  const i = Number(img.dataset.ext||0) + 1;
+  const reg = img.dataset.reg;
+  if (reg && i < FOTO_EXTS.length){ img.dataset.ext = i; img.src = FOTOS_BASE + reg + '.' + FOTO_EXTS[i]; }
+  else img.remove();
+}
+function avatarConteudo(m){
+  const custom = m && m.foto_url;
+  const u = fotoDe(m);
+  if (!u) return esc(iniciais(m.nome));
+  const cascata = (!custom && m.registro!=null) ? ` data-reg="${m.registro}" data-ext="0"` : '';
+  return esc(iniciais(m.nome)) + `<img src="${esc(u)}" alt="" loading="lazy"${cascata}
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="fotoErro(this)">`;
+}
 const avatarFoto = (m, extra)=> `<span class="avatar" style="position:relative;overflow:hidden;${extra||''}">${avatarConteudo(m)}</span>`;
 const quemSouEu = ()=> state.perfil ? (state.perfil.nome || state.perfil.email) : '';
 const nomeDe = (reg)=> state.membros.find(m=>m.registro===reg)?.nome || null;
