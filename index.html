@@ -390,7 +390,7 @@ const STATUS_LIST = ['Ativo','Em pausa / avaliação','Sob demanda','Desligado',
 const STATUS_DOT = {'Ativo':'dt-ok','Em pausa / avaliação':'dt-warn','Sob demanda':'dt-info','Desligado':'dt-bad','Egresso':'dt-gray'};
 const CAT_LABEL = {documento:'Termos e documentos', local:'Acessos físicos', sistema:'Sistemas e contas'};
 const LOCAIS_PORTARIA = ['PORTARIA PRINCIPAL (HALL)','PORTARIA DO GALPÃO DA MECÂNICA'];
-const EVENTO_TIPOS = ['Reunião geral','Reunião de gerência','Confraternização','Reunião com stakeholder','Visita de externos','Viagem','Outro'];
+const EVENTO_TIPOS = ['Reunião geral','Teste','Reunião de gerência','Confraternização','Reunião com stakeholder','Visita de externos','Viagem','Outro'];
 const JUSTIFICATIVAS = ['Faltas recorrentes sem justificativa','Atrasos recorrentes','Baixa participação nas reuniões',
   'Atraso ou não entrega de atividades','Qualidade insuficiente das entregas','Dificuldade de comunicação com a equipe',
   'Descumprimento de acordos anteriores','Outra (descrever nos detalhes)'];
@@ -428,6 +428,13 @@ const CHECKLISTS = {
     'Solicitar aprovações e recursos','Reservar transporte e hospedagem',
     'Confirmar agenda com os anfitriões','Conferir documentos dos participantes',
     'Comunicar itinerário e contatos de emergência'],
+  'Teste': [
+    'Definir protocolo e objetivos do teste',
+    'Reservar o espaço e confirmar a agenda dos participantes',
+    'Preparar equipamentos, materiais e instrumentação',
+    'Verificar termos e autorizações necessárias (sigilo, imagem, segurança)',
+    'Executar e registrar os resultados (relatório de execução NRO)',
+    'Organizar e limpar o espaço ao final'],
   'Outro': ['Definir pauta e objetivos','Enviar convite com agendamento (RSVP)','Reservar local',
     'Enviar lembrete com instruções de acesso','Registrar ata ou resumo']
 };
@@ -1037,7 +1044,7 @@ async function salvarPess(){
 
 /* ------------- organização (Org Explorer, estilo Microsoft Teams) ------------- */
 let orgFoco = null;
-function orgAtivos(){ return state.membros.filter(m=>['Ativo','Em pausa / avaliação'].includes(m.status)); }
+function orgAtivos(){ return state.membros.filter(m=>m.status==='Ativo'); }
 function orgGestorDe(m, ativos){ return (m.gestor_registro && ativos.find(x=>x.registro===m.gestor_registro)) || null; }
 function orgRaiz(ativos){
   const raizes = ativos.filter(m=>!orgGestorDe(m, ativos));
@@ -1670,7 +1677,9 @@ function modalEvento(){
       <div class="field"><label>Tipo</label><select id="ev-tipo">${EVENTO_TIPOS.map(t=>`<option>${t}</option>`).join('')}</select></div>
       <div class="field"><label>Título</label><input id="ev-tit" placeholder="ex.: Reunião Geral de Julho"></div>
       <div class="field"><label>Data</label><input id="ev-data" type="date"></div>
-      <div class="field"><label>Hora</label><input id="ev-hora" placeholder="ex.: 9h às 12h"></div>
+      <div class="field"><label>Início</label><input id="ev-hini" type="time"></div>
+      <div class="field"><label>Fim</label><input id="ev-hfim" type="time"></div>
+      <div class="field"><label>Espaço (LABBIO)</label><select id="ev-espaco"><option value="">Outro / fora do LABBIO</option></select></div>
       <div class="field"><label>Local</label><input id="ev-local" placeholder="ex.: Auditório do LABBIO"></div>
       <div class="field"><label>Recorrência</label><select id="ev-rec">${['Única','Semanal','Quinzenal','Mensal'].map(r=>`<option>${r}</option>`).join('')}</select></div>
       <div class="field full"><label>Organizador (owner)</label><select id="ev-owner">
@@ -1681,6 +1690,11 @@ function modalEvento(){
     </div>
     <div class="actions"><button class="btn" onclick="fechaModal()">Cancelar</button>
     <button class="btn btn-primary" onclick="criarEvento()">Criar evento</button></div>`);
+  db.from('espacos').select('id,nome').eq('ativo',true).order('ordem').then(({data})=>{
+    if(data && data.length) $('#ev-espaco').innerHTML =
+      '<option value="">Outro / fora do LABBIO</option>' +
+      data.map(e=>`<option value="${e.id}">${esc(e.nome)}</option>`).join('');
+  });
 }
 async function criarEvento(){
   const tipo = $('#ev-tipo').value, dataEv = $('#ev-data').value||null;
@@ -1688,8 +1702,12 @@ async function criarEvento(){
   const grupos = marcados('g-ev'), extras = marcados('p-ev').map(Number);
   const owner = parseInt($('#ev-owner').value,10)||null;
   try{
+    const hi = $('#ev-hini').value||null, hf = $('#ev-hfim').value||null;
+    const espSel = $('#ev-espaco'), espId = espSel && espSel.value ? parseInt(espSel.value,10) : null;
+    const localTxt = espId ? espSel.selectedOptions[0].text : ($('#ev-local').value.trim()||null);
     const {data:ev, error} = await db.from('eventos').insert({titulo, tipo, data:dataEv,
-      hora:$('#ev-hora').value.trim()||null, local:$('#ev-local').value.trim()||null,
+      hora: hi ? (hf ? `${hi} às ${hf}` : hi) : null,
+      hora_inicio: hi, hora_fim: hf, espaco_id: espId, local: localTxt,
       recorrencia:$('#ev-rec').value, owner_registro:owner, grupos, criado_por:quemSouEu()}).select('*').single();
     if(error) throw error;
     const regs = new Set(extras);
@@ -1760,10 +1778,11 @@ function renderEvento(){
     const presentes = parts.filter(p=>p.presente===true).length;
     $('#ev-body').innerHTML = `
       <div class="card"><h3>Presenças <span class="muted small" style="font-weight:400">· ${presentes} presente(s) de ${parts.length}</span></h3>
-        ${parts.length? `<table class="tb"><thead><tr><th>Participante</th><th>Cargo</th><th style="text-align:right">Presença</th></tr></thead>
+        ${parts.length? `<table class="tb"><thead><tr><th>Participante</th><th>Cargo</th><th>Convite</th><th style="text-align:right">Presença</th></tr></thead>
         <tbody>${parts.map(p=>`<tr>
           <td style="font-weight:600">${esc(p.membro?.nome||'Reg. '+p.registro)}</td>
           <td>${esc(p.membro?.cargo||'—')}</td>
+          <td>${({vou:'Vou',talvez:'Talvez',nao:'Não vou'})[p.resposta]||'<span class="muted">—</span>'}</td>
           <td style="text-align:right"><span class="seg">
             <button class="${p.presente===true?'on-ok':''}" onclick="setPresenca('${p.id}', true)">Presente</button>
             <button class="${p.presente===false?'on-bad':''}" onclick="setPresenca('${p.id}', false)">Ausente</button>
