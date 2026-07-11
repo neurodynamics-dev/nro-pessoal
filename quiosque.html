@@ -111,13 +111,41 @@ body.nocursor{cursor:none}
 .ckrow:last-child{border-bottom:none}
 .ckrow .h{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--faint)}
 .ckempty{color:var(--faint);font-size:13.5px;padding:14px 2px}
+.avk{border-radius:50%;background:var(--glass-2);color:var(--synapse);display:inline-flex;
+  align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;
+  font-weight:600;position:relative;overflow:hidden;flex:none}
+.avk img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ckrow{gap:11px}
+.ckrow .cinfo{flex:1;min-width:0}
+.ckrow .cn{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ckrow .cs{font-size:11px;color:var(--faint);margin-top:1px}
+.ckrow .cs .fma{color:#7DD3FC}
+.ckrow .cs .ndp{color:#FDA4AF}
+
+/* ---------- boas-vindas ---------- */
+.welcome{
+  position:fixed;inset:0;z-index:90;display:none;
+  align-items:center;justify-content:center;flex-direction:column;text-align:center;
+  background:rgba(2,17,14,.72);backdrop-filter:blur(22px);
+  opacity:0;transition:opacity .45s ease;
+}
+.welcome.on{display:flex}
+.welcome.vis{opacity:1}
+.welcome .wav{width:180px;height:180px;font-size:52px;border:4px solid var(--synapse);
+  box-shadow:0 0 90px rgba(206,220,0,.28);margin-bottom:30px}
+.welcome .wt{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:52px;letter-spacing:-.01em}
+.welcome .wa{font-size:15px;color:var(--dim);margin-top:10px;letter-spacing:.08em;text-transform:uppercase}
+.welcome .wi{font-size:17px;color:var(--dim);margin-top:20px;line-height:1.7}
+.welcome .wi b{color:var(--synapse);font-weight:600}
 </style>
 </head>
 <body>
 
 <div class="stage">
   <div class="brandline">
-    <span class="lab">LABBIO</span>
+    <img src="labbio-branco.png" alt="LABBIO" style="height:26px;display:block;align-self:center"
+      onerror="this.remove();document.getElementById('lab-txt').style.display='inline'">
+    <span class="lab" id="lab-txt" style="display:none">LABBIO</span>
     <span class="by">Painel de entrada · NeuroDynamics</span>
     <span class="live" id="livewrap"><span class="pulse"></span><span id="livetxt">ao vivo</span></span>
   </div>
@@ -131,7 +159,7 @@ body.nocursor{cursor:none}
         <div class="temp" id="wtemp">--°</div>
         <div class="wmeta">
           <b id="wdesc">—</b><br>
-          Sensação <span id="wfeel">--°</span> · Umidade <span id="whum">--%</span>
+          Sensação <span id="wfeel">--°</span> · Precipitação <span id="wprec">--</span>
           <div class="hilo">máx <b id="wmax">--°</b> &nbsp; mín <b id="wmin">--°</b> &nbsp; · Campus UFMG</div>
         </div>
       </div>
@@ -176,6 +204,13 @@ body.nocursor{cursor:none}
   </div>
 </div>
 
+<div class="welcome" id="welcome">
+  <span class="avk wav" id="w-av"></span>
+  <div class="wt" id="w-nome">—</div>
+  <div class="wa" id="w-area"></div>
+  <div class="wi" id="w-info"></div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
@@ -190,7 +225,8 @@ const CONFIG = {
   SUPABASE_ANON_KEY: 'sb_publishable_MJFR-aaQqTS1BthxYJG2kg_5XGhs9wg',
   SEGREDO_QUIOSQUE: 'Zurich1410',
   APP_URL: 'https://neurodynamics-dev.github.io/nro-pessoal/app.html',
-  LAT: -19.8657, LON: -43.9648   // Campus Pampulha, UFMG
+  LAT: -19.8657, LON: -43.9648,  // Campus Pampulha, UFMG
+  FOTOS_BASE: 'https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/fotos/'
 };
 /* ============================================================ */
 
@@ -238,11 +274,12 @@ async function atualizarEstado(){
     }
     renderAgenda(data.eventos_hoje);
     renderChecks(data.presentes, data.ultimos_checkins);
+    tratarUltimoEvento(data.ultimo_evento);
   }catch(e){
     online(false);
   }
 }
-setInterval(atualizarEstado, 12000); atualizarEstado();
+setInterval(atualizarEstado, 6000); atualizarEstado();
 
 function online(ok){
   $('qrwrap').style.display = ok ? '' : 'none';
@@ -271,6 +308,28 @@ function renderAgenda(evs){
     </div>`).join('');
 }
 
+const fotoDe = (m)=> m && (m.foto_url || (m.registro!=null ? CONFIG.FOTOS_BASE + m.registro + '.jpg' : null));
+const letras = (n)=> String(n||'?').trim().split(/\s+/).map(p=>p[0]).filter(Boolean).slice(0,2).join('').toUpperCase();
+function avatarK(m, px, fs){
+  const u = fotoDe(m);
+  return `<span class="avk" style="width:${px}px;height:${px}px;font-size:${fs}px">${esc(letras(m.nome))}${
+    u?`<img src="${esc(u)}" alt="" onerror="this.remove()">`:''}</span>`;
+}
+function abreviaArea(dep){
+  if(!dep) return '';
+  const d = dep.toLowerCase();
+  if(d.includes('diretoria')) return 'DIR';
+  if(d.includes('market')) return 'MKT';
+  if(d.includes('rela')) return 'REL';
+  if(d.includes('p&d')||d.includes('pesquisa')||d.includes('desenvolv')) return 'P&D';
+  if(d.includes('clín')||d.includes('clin')) return 'CLI';
+  return dep.slice(0,3).toUpperCase();
+}
+function statusK(s){
+  if(!s) return '';
+  return s.tipo==='nao_perturbe' ? '<span class="ndp">Não perturbe</span>'
+       : `<span class="fma">Find me at ${esc(s.local||'—')}</span>`;
+}
 function renderChecks(presentes, ultimos){
   $('presn').textContent = (presentes||[]).length;
   const el = $('cklist');
@@ -278,8 +337,39 @@ function renderChecks(presentes, ultimos){
     el.innerHTML = '<div class="ckempty">Nenhum check-in hoje ainda.</div>';
     return;
   }
-  el.innerHTML = ultimos.map(c=>
-    `<div class="ckrow"><span>${esc(c.nome)}</span><span class="h">${c.hora}</span></div>`).join('');
+  el.innerHTML = ultimos.map(c=>{
+    const sub = [abreviaArea(c.departamento), statusK(c.status)].filter(Boolean).join(' · ');
+    return `<div class="ckrow">${avatarK(c, 30, 11)}
+      <span class="cinfo"><span class="cn">${esc(c.nome)}</span>
+        ${sub?`<span class="cs" style="display:block">${sub}</span>`:''}</span>
+      <span class="h">${c.hora}</span></div>`;
+  }).join('');
+}
+
+/* ---------------- boas-vindas ---------------- */
+let vistoPresenca;   // undefined = primeiro poll (não reexibe check-ins antigos)
+let welcomeTimer = null;
+function tratarUltimoEvento(ev){
+  const id = ev ? ev.presenca_id : null;
+  if (vistoPresenca === undefined){ vistoPresenca = id; return; }
+  if (id != null && id !== vistoPresenca){ vistoPresenca = id; mostrarBoasVindas(ev); }
+}
+function mostrarBoasVindas(ev){
+  $('w-av').style.width=''; // reset
+  $('w-av').outerHTML = avatarK(ev, 180, 52).replace('class="avk"','class="avk wav" id="w-av"');
+  $('w-nome').textContent = 'Bem-vindo, ' + (ev.nome||'').split(' ')[0] + '!';
+  $('w-area').textContent = ev.departamento || '';
+  const mes = new Date().toLocaleDateString('pt-BR',{month:'long'});
+  $('w-info').innerHTML = `<b>${ev.visitas_mes}ª visita</b> em ${mes}<br>`
+    + (ev.anterior ? `Último check-in: ${esc(ev.anterior)}` : 'Primeira visita registrada');
+  const w = $('welcome');
+  clearTimeout(welcomeTimer);
+  w.classList.add('on');
+  requestAnimationFrame(()=>w.classList.add('vis'));
+  welcomeTimer = setTimeout(()=>{
+    w.classList.remove('vis');
+    setTimeout(()=>w.classList.remove('on'), 500);
+  }, 8000);
 }
 
 /* ---------------- tempo (Open-Meteo) ---------------- */
@@ -306,14 +396,14 @@ const ICONES = {
 async function atualizarTempo(){
   try{
     const u = `https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.LAT}&longitude=${CONFIG.LON}`
-      + '&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code'
+      + '&current=temperature_2m,apparent_temperature,precipitation,weather_code'
       + '&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset'
       + '&timezone=America%2FSao_Paulo';
     const r = await fetch(u); const j = await r.json();
     const c = j.current, d = j.daily;
     $('wtemp').textContent = Math.round(c.temperature_2m) + '°';
     $('wfeel').textContent = Math.round(c.apparent_temperature) + '°';
-    $('whum').textContent = Math.round(c.relative_humidity_2m) + '%';
+    $('wprec').textContent = (Number(c.precipitation)||0).toFixed(1).replace('.',',') + ' mm';
     $('wmax').textContent = Math.round(d.temperature_2m_max[0]) + '°';
     $('wmin').textContent = Math.round(d.temperature_2m_min[0]) + '°';
     const [desc, ic] = WMO(c.weather_code);

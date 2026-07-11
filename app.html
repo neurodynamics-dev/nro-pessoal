@@ -158,13 +158,26 @@ nav.tabs .wrap{display:flex;align-items:center;gap:10px;max-width:560px;margin:0
 .ck-nome{font-size:22px;font-weight:700;color:var(--deep);margin-bottom:8px}
 .ck-info{color:var(--muted);font-size:14.5px;line-height:1.6;max-width:320px}
 .ck-info b{color:var(--green)}
+.avx{border-radius:50%;background:var(--soft);color:var(--green);display:inline-flex;
+  align-items:center;justify-content:center;font-weight:700;font-size:12px;
+  position:relative;overflow:hidden;flex:none}
+.avx img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pline{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)}
+.pline:last-child{border-bottom:none}
+.pline .pinfo{flex:1;min-width:0}
+.pline .pn{font-size:14px;font-weight:500}
+.pline .ps{font-size:11.5px;color:var(--muted);margin-top:1px}
+.pline .ps .fma{color:var(--info);font-weight:600}
+.pline .ps .ndp{color:var(--bad);font-weight:600}
+.pline .h{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+.btn-mini{padding:9px 16px;border-radius:10px;background:var(--green);color:#fff;font-weight:600;font-size:13px;flex:none}
 .hide{display:none!important}
 </style>
 </head>
 <body>
 
 <div id="view-login" class="center-page hide">
-  <div class="logo">NeuroDynamics<small>Eventos &amp; Presença</small></div>
+  <div class="logo"><img src="https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/imagotipo%20preto.png" alt="NeuroDynamics" style="height:26px;max-width:80vw;display:block;margin:0 auto"><small>Eventos &amp; Presença</small></div>
   <div class="login-box">
     <div id="login-notice" class="notice hide" style="border-color:var(--syn);background:#FBFCE8">
       Entre para confirmar seu check-in no LABBIO.</div>
@@ -186,7 +199,7 @@ nav.tabs .wrap{display:flex;align-items:center;gap:10px;max-width:560px;margin:0
 
 <div id="app" class="hide">
   <header class="top">
-    <div class="brand">NeuroDynamics<small>Eventos &amp; Presença</small></div>
+    <div class="brand"><img src="https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/imagotipo%20preto.png" alt="NeuroDynamics" style="height:18px;display:block"><small>Eventos &amp; Presença</small></div>
     <div class="userchip"><b id="u-nome">—</b><button onclick="sair()">sair</button></div>
   </header>
   <main>
@@ -246,6 +259,29 @@ const CONFIG = {
 
 const sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id);
+const FOTOS_BASE = 'https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/fotos/';
+const LOCAIS_STATUS = ['LABBIO','Lanchonete de dentro','Lanchonete de fora','Diretoria'];
+const fotoDe = (m)=> m && (m.foto_url || (m.registro!=null ? FOTOS_BASE + m.registro + '.jpg' : null));
+function avatarConteudo(m){ const u = fotoDe(m);
+  return esc(primeirasLetras(m.nome)) + (u ? `<img src="${esc(u)}" alt="" loading="lazy" onerror="this.remove()">` : ''); }
+const avatarFoto = (m, px, fs)=> `<span class="avx" style="width:${px}px;height:${px}px;font-size:${fs||12}px">${avatarConteudo(m)}</span>`;
+function primeirasLetras(n){ return String(n||'?').trim().split(/\s+/).map(p=>p[0]).filter(Boolean).slice(0,2).join('').toUpperCase(); }
+function abreviaArea(dep){
+  if(!dep) return '';
+  const d = dep.toLowerCase();
+  if(d.includes('diretoria')) return 'DIR';
+  if(d.includes('market')) return 'MKT';
+  if(d.includes('rela')) return 'REL';
+  if(d.includes('p&d')||d.includes('pesquisa')||d.includes('desenvolv')) return 'P&D';
+  if(d.includes('clín')||d.includes('clin')) return 'CLI';
+  return dep.slice(0,3).toUpperCase();
+}
+function statusHTML(s){
+  if(!s) return '';
+  return s.tipo==='nao_perturbe' ? '<span class="ndp">Não perturbe</span>'
+       : `<span class="fma">Find me at ${esc(s.local||'—')}</span>`;
+}
+let STATUS_MAP = {};
 
 /* Tipos e checklists — idênticos ao NRO-SYS-001 v3 (desktop) */
 const EVENTO_TIPOS = ['Reunião geral','Teste','Reunião de gerência','Confraternização',
@@ -341,12 +377,20 @@ async function fazerCheckin(token){
   const tela = (cls,ic,tit,txt)=>{ body.innerHTML =
     `<div class="ck-circle ${cls}">${ic}</div><div class="ck-nome">${tit}</div><div class="ck-info">${txt}</div>`; };
   if (error){ tela('warn',wI,'Algo falhou', esc(error.message)); return; }
+  const foto = (data && (data.registro!=null || data.foto_url))
+    ? `<div style="margin-bottom:22px">${avatarFoto({registro:data.registro, foto_url:data.foto_url, nome:data.nome}, 104, 30).replace('class="avx"','class="avx" data-ring="1"')}</div>`
+    : null;
+  const telaFoto = (tit,txt)=>{ body.innerHTML = foto
+      ? `${foto}<div class="ck-nome">${tit}</div><div class="ck-info">${txt}</div>`
+      : `<div class="ck-circle">${okI}</div><div class="ck-nome">${tit}</div><div class="ck-info">${txt}</div>`;
+    const av = body.querySelector('[data-ring]'); if(av) av.style.border='3px solid var(--ok)'; };
   if (data.status === 'ok'){
     const mes = new Date().toLocaleDateString('pt-BR',{month:'long'});
-    tela('',okI,`Bem-vindo, ${esc(primeiroNome(data.nome))}!`,
-      `Check-in registrado no LABBIO.<br><b>${data.visitas_mes}ª visita</b> em ${mes}.`);
+    telaFoto(`Bem-vindo, ${esc(primeiroNome(data.nome))}!`,
+      `Check-in registrado no LABBIO.<br><b>${data.visitas_mes}ª visita</b> em ${mes}.<br>`
+      + (data.anterior ? `Último check-in: ${esc(data.anterior)}.` : 'Primeira visita registrada!'));
   } else if (data.status === 'repetido'){
-    tela('',okI,'Você já está aqui',
+    telaFoto('Você já está aqui',
       `Seu check-in já foi registrado há pouco, ${esc(primeiroNome(data.nome))}.`);
   } else if (data.status === 'token_expirado'){
     tela('warn',wI,'QR expirado','Esse código já girou. Escaneie novamente o QR na tela da entrada.');
@@ -363,7 +407,7 @@ async function entrarNoApp(){
   $('app').classList.remove('hide');
   const [p, m, e] = await Promise.all([
     sb.from('perfis').select('id,nome,email,papel,registro').eq('id', ME.id).single(),
-    sb.from('membros').select('registro,nome,cargo,status,grupos').order('nome'),
+    sb.from('membros').select('registro,nome,cargo,status,grupos,departamento,foto_url').order('nome'),
     sb.from('espacos').select('*').eq('ativo', true).order('ordem')
   ]);
   PERFIL = p.data || {};
@@ -503,25 +547,41 @@ async function renderPresenca(){
   const dia0 = new Date(); dia0.setHours(0,0,0,0);
   const mes0 = new Date(); mes0.setDate(1); mes0.setHours(0,0,0,0);
   const q = [
-    sb.from('presencas').select('registro,registrado_em,membros(nome)')
+    sb.from('presencas').select('registro,registrado_em')
       .gte('registrado_em', new Date(Date.now()-14*24*3600e3).toISOString())
-      .order('registrado_em', {ascending:false}).limit(200)
+      .order('registrado_em', {ascending:false}).limit(200),
+    sb.from('status_membro').select('*')
   ];
   if (PERFIL.registro) q.push(
     sb.from('presencas').select('registrado_em').eq('registro', PERFIL.registro)
       .gte('registrado_em', mes0.toISOString()));
-  const [rec, minhas] = await Promise.all(q);
+  const [rec, sts, minhas] = await Promise.all(q);
   if (rec.error){ el.innerHTML = `<div class="empty">Erro: ${esc(rec.error.message)}</div>`; return; }
+  STATUS_MAP = {};
+  const hojeStr = new Date().toDateString();
+  (sts.data||[]).forEach(s=>{
+    if (new Date(s.definido_em).toDateString() === hojeStr) STATUS_MAP[s.registro] = s;
+  });
   const regs = rec.data || [];
   const vistos = new Set(), presentes = [];
   for (const r of regs){
     if (new Date(r.registrado_em) < h4) break;
     if (!vistos.has(r.registro)){
       vistos.add(r.registro);
-      presentes.push({ nome: r.membros?.nome || ('Reg. '+r.registro), hora: hhmm(r.registrado_em) });
+      presentes.push({ registro: r.registro, hora: hhmm(r.registrado_em) });
     }
   }
   const hoje = regs.filter(r => new Date(r.registrado_em) >= dia0).slice(0,10);
+  const linha = (registro, direita) => {
+    const m = MEMBROS.find(x=>x.registro===registro) || {registro, nome:'Reg. '+registro};
+    const st = STATUS_MAP[registro];
+    const area = abreviaArea(m.departamento);
+    const sub = [area, statusHTML(st)].filter(Boolean).join(' · ');
+    return `<div class="pline">${avatarFoto(m, 32, 12)}
+      <div class="pinfo"><div class="pn">${esc(m.nome)}</div>
+        ${sub?`<div class="ps">${sub}</div>`:''}</div>
+      <span class="h">${direita}</span></div>`;
+  };
   let voce = '';
   if (PERFIL.registro && minhas && !minhas.error){
     const dias = new Set((minhas.data||[]).map(r => new Date(r.registrado_em).toDateString())).size;
@@ -531,16 +591,55 @@ async function renderPresenca(){
       <span class="stat-mono">${dias} dia${dias===1?'':'s'}</span></div>`;
   }
   el.innerHTML = `
+    ${cardStatus()}
     <div class="pres-hero"><span class="n">${presentes.length}</span>
       <span class="l">no LABBIO agora<br><span style="font-size:11px">check-ins das últimas 4 horas</span></span></div>
     <div class="card">${presentes.length
-      ? presentes.map(p=>`<div class="pessoa"><span>${esc(p.nome)}</span><span class="h">desde ${p.hora}</span></div>`).join('')
+      ? presentes.map(p=>linha(p.registro, 'desde '+p.hora)).join('')
       : '<div class="empty" style="padding:12px">Ninguém fez check-in nas últimas 4 horas.</div>'}</div>
     <div class="sec-title">Últimos check-ins de hoje</div>
     <div class="card">${hoje.length
-      ? hoje.map(r=>`<div class="pessoa"><span>${esc(r.membros?.nome||'—')}</span><span class="h">${hhmm(r.registrado_em)}</span></div>`).join('')
+      ? hoje.map(r=>linha(r.registro, hhmm(r.registrado_em))).join('')
       : '<div class="empty" style="padding:12px">Nenhum check-in hoje ainda.</div>'}</div>
     ${voce}`;
+}
+
+/* ---------------- status do membro ---------------- */
+function cardStatus(){
+  if (!PERFIL.registro) return '';
+  const meu = STATUS_MAP[PERFIL.registro];
+  const chip = (on, label, fn)=>`<button class="chip ${on?'on':''}" onclick="${fn}">${label}</button>`;
+  return `<div class="sec-title">Seu status de hoje</div>
+    <div class="card">
+      <div class="chips">
+        ${chip(meu?.tipo==='nao_perturbe','Não perturbe',"definirStatus('nao_perturbe')")}
+        ${chip(meu?.tipo==='find_me_at','Find me at…',"mostrarFMA()")}
+        ${meu ? chip(false,'Limpar',"limparStatus()") : ''}
+      </div>
+      <div id="fma-row" class="hide" style="margin-top:12px;display:flex;gap:8px;align-items:stretch">
+        <select id="fma-local">${LOCAIS_STATUS.map(l=>
+          `<option ${meu?.local===l?'selected':''}>${esc(l)}</option>`).join('')}</select>
+        <button class="btn-mini" onclick="definirStatus('find_me_at')">Definir</button>
+      </div>
+      ${meu ? `<div class="sub" style="margin:10px 0 0">Visível para a equipe no app e no painel da entrada, até o fim do dia.</div>` : ''}
+    </div>`;
+}
+function mostrarFMA(){
+  const r = $('fma-row'); r.classList.remove('hide'); r.style.display='flex';
+}
+async function definirStatus(tipo){
+  const local = tipo==='find_me_at' ? ($('fma-local') ? $('fma-local').value : LOCAIS_STATUS[0]) : null;
+  const { error } = await sb.from('status_membro').upsert({
+    registro: PERFIL.registro, tipo, local,
+    definido_em: new Date().toISOString()
+  }, { onConflict: 'registro' });
+  if (error) alert('Não foi possível definir o status: '+error.message);
+  renderPresenca();
+}
+async function limparStatus(){
+  const { error } = await sb.from('status_membro').delete().eq('registro', PERFIL.registro);
+  if (error) alert('Não foi possível limpar: '+error.message);
+  renderPresenca();
 }
 
 /* ---------------- novo evento ---------------- */
