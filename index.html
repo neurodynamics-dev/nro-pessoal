@@ -1037,7 +1037,7 @@ async function salvarPess(){
 
 /* ------------- organização (Org Explorer, estilo Microsoft Teams) ------------- */
 let orgFoco = null;
-function orgAtivos(){ return state.membros.filter(m=>m.status==='Ativo'); }
+function orgAtivos(){ return state.membros.filter(m=>['Ativo','Em pausa / avaliação'].includes(m.status)); }
 function orgGestorDe(m, ativos){ return (m.gestor_registro && ativos.find(x=>x.registro===m.gestor_registro)) || null; }
 function orgRaiz(ativos){
   const raizes = ativos.filter(m=>!orgGestorDe(m, ativos));
