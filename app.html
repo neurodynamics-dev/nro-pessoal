@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F5F5F7">
+<title>NeuroDynamics · Eventos</title>
+<style>
+:root{
+  --bg:#F5F5F7; --panel:#FFFFFF; --ink:#1D1D1F; --muted:#6E6E73; --soft:#F0F0F2;
+  --line:#E8E8ED; --line2:#D2D2D7; --green:#00594F; --deep:#00352F; --syn:#CEDC00;
+  --ok:#1F8A5B; --bad:#C0392B; --warn:#B7791F; --info:#4C6FBF; --gray:#8E8E93;
+  --r:12px; --sh:0 1px 2px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,Helvetica,sans-serif;
+  background:var(--bg);color:var(--ink);-webkit-tap-highlight-color:transparent;
+}
+button{font-family:inherit;cursor:pointer;color:inherit;border:none;background:none;font-size:14px}
+input,select,textarea{
+  font-family:inherit;font-size:16px;color:var(--ink);width:100%;
+  background:var(--panel);border:1px solid var(--line2);border-radius:10px;
+  padding:11px 12px;outline:none;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}
+label{font-size:12px;font-weight:600;color:var(--muted);display:block;margin:14px 0 6px}
+
+/* ---------- shell ---------- */
+#app{max-width:560px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+header.top{
+  position:sticky;top:0;z-index:30;background:rgba(245,245,247,.92);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+  padding:calc(env(safe-area-inset-top) + 12px) 18px 10px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.brand{font-weight:700;font-size:16px;color:var(--deep)}
+.brand small{display:block;font-weight:500;font-size:10.5px;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
+.userchip{font-size:11.5px;color:var(--muted);text-align:right}
+.userchip b{display:block;color:var(--ink);font-weight:600;font-size:13px}
+.userchip button{color:var(--muted);font-size:11px;text-decoration:underline;padding:0}
+main{flex:1;padding:12px 14px calc(env(safe-area-inset-bottom) + 96px)}
+
+/* ---------- bottom nav ---------- */
+nav.tabs{
+  position:fixed;bottom:0;left:0;right:0;z-index:40;
+  background:rgba(255,255,255,.94);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);
+  padding:8px 16px calc(env(safe-area-inset-bottom) + 8px);
+}
+nav.tabs .wrap{display:flex;align-items:center;gap:10px;max-width:560px;margin:0 auto}
+.tab{flex:1;text-align:center;padding:10px 0;border-radius:10px;
+  font-size:13px;font-weight:600;color:var(--muted)}
+.tab.on{color:var(--green);background:var(--soft)}
+.fab{
+  width:52px;height:52px;border-radius:50%;flex:none;
+  background:var(--green);color:#fff;font-size:26px;font-weight:500;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(0,89,79,.35);
+}
+
+/* ---------- cards & listas ---------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh);padding:13px 14px;margin-bottom:10px}
+.sec-title{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin:20px 4px 8px}
+.day-title{font-size:13.5px;font-weight:600;color:var(--muted);margin:16px 4px 8px;text-transform:capitalize}
+.evt{display:flex;gap:12px;align-items:stretch}
+.evt .barv{width:4px;border-radius:4px;flex:none;background:var(--gray)}
+.evt .body{flex:1;min-width:0}
+.evt .hora{font-family:ui-monospace,'SF Mono','Courier New',monospace;font-size:12px;color:var(--muted)}
+.evt .titulo{font-weight:600;font-size:15.5px;margin:2px 0;color:var(--ink)}
+.evt .meta{font-size:12px;color:var(--muted)}
+.evt .meta b{color:var(--ink);font-weight:500}
+.badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;padding:2px 8px;border-radius:12px;margin-left:6px;vertical-align:1px}
+.badge.live{background:var(--syn);color:var(--deep)}
+.badge.evn{background:var(--soft);color:var(--muted);font-family:ui-monospace,monospace;letter-spacing:0}
+.detail{margin-top:12px;border-top:1px solid var(--line);padding-top:12px;font-size:13px}
+.detail .desc{color:var(--muted);margin-bottom:10px;white-space:pre-wrap}
+.plist{display:flex;flex-direction:column;gap:7px;max-height:220px;overflow-y:auto}
+.plist .p{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink)}
+.plist .p .st{margin-left:auto;color:var(--muted);font-size:11px}
+.dot{width:8px;height:8px;border-radius:50%;flex:none}
+.dot.vou{background:var(--ok)} .dot.talvez{background:var(--warn)}
+.dot.nao{background:var(--bad)} .dot.pendente{background:var(--line2)}
+.rsvp{display:flex;gap:8px;margin-top:12px}
+.rsvp button{flex:1;padding:9px 0;border-radius:10px;font-size:13px;font-weight:600;
+  background:var(--soft);border:1px solid var(--line);color:var(--muted)}
+.rsvp button.sel-vou{background:#E7F4EE;border-color:var(--ok);color:var(--ok)}
+.rsvp button.sel-talvez{background:#FBF3E3;border-color:var(--warn);color:var(--warn)}
+.rsvp button.sel-nao{background:#F9E9E7;border-color:var(--bad);color:var(--bad)}
+.linkbtn{color:var(--bad);font-size:12px;text-decoration:underline;margin-top:10px;display:inline-block}
+.empty{color:var(--muted);font-size:13.5px;text-align:center;padding:26px 12px;line-height:1.6}
+.notice-inline{background:#FBF3E3;border:1px solid #EAD9AE;color:#7a5a17;
+  border-radius:10px;padding:10px 12px;font-size:12.5px;margin-bottom:12px;line-height:1.5}
+
+/* ---------- presença ---------- */
+.pres-hero{display:flex;align-items:baseline;gap:10px;padding:4px 4px 2px}
+.pres-hero .n{font-size:42px;font-weight:700;color:var(--green)}
+.pres-hero .l{font-size:12.5px;color:var(--muted);line-height:1.4}
+.pessoa{display:flex;justify-content:space-between;align-items:center;padding:10px 2px;
+  border-bottom:1px solid var(--line);font-size:14px}
+.pessoa:last-child{border-bottom:none}
+.pessoa .h{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted)}
+.stat-mono{font-family:ui-monospace,monospace;color:var(--green);font-weight:600}
+
+/* ---------- sheet ---------- */
+.sheet-veil{position:fixed;inset:0;background:rgba(29,29,31,.35);z-index:60;display:none}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:61;display:none;
+  max-width:560px;margin:0 auto;max-height:92dvh;overflow-y:auto;
+  background:var(--bg);border-radius:18px 18px 0 0;
+  box-shadow:0 -8px 40px rgba(0,0,0,.18);
+  padding:18px 18px calc(env(safe-area-inset-bottom) + 18px);
+}
+.sheet.open,.sheet-veil.open{display:block}
+.sheet h2{font-size:18px;color:var(--deep);margin-bottom:3px}
+.sheet .sub{font-size:12.5px;color:var(--muted);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 13px;border-radius:18px;font-size:13px;font-weight:500;
+  background:var(--panel);border:1px solid var(--line2);color:var(--muted)}
+.chip.on{background:var(--deep);border-color:var(--deep);color:#fff}
+.row2{display:flex;gap:10px}.row2>div{flex:1}
+.mlist{max-height:190px;overflow-y:auto;border:1px solid var(--line2);
+  border-radius:10px;background:var(--panel);margin-top:8px}
+.mrow{display:flex;align-items:center;gap:10px;padding:10px 12px;font-size:14px;
+  border-bottom:1px solid var(--line)}
+.mrow:last-child{border-bottom:none}
+.mrow .ck{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--line2);
+  flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+.mrow.on .ck{background:var(--green);border-color:var(--green)}
+.mrow .cargo{margin-left:auto;font-size:11px;color:var(--muted)}
+.btn-primary{width:100%;padding:14px;border-radius:12px;margin-top:18px;
+  background:var(--green);color:#fff;font-weight:700;font-size:15px}
+.btn-primary:disabled{opacity:.5}
+.btn-ghost{width:100%;padding:11px;color:var(--muted);font-size:13.5px;margin-top:4px}
+.err{color:var(--bad);font-size:13px;margin-top:10px;text-align:center;min-height:18px}
+
+/* ---------- login & check-in ---------- */
+.center-page{min-height:100dvh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:28px;text-align:center}
+.center-page .logo{font-weight:700;font-size:22px;color:var(--deep)}
+.center-page .logo small{display:block;font-weight:500;font-size:10.5px;color:var(--muted);
+  letter-spacing:.14em;text-transform:uppercase;margin-top:4px}
+.login-box{width:100%;max-width:360px;text-align:left;margin-top:26px}
+.notice{font-size:12.5px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--line);border-radius:10px;padding:11px 12px;
+  margin-top:14px;text-align:center;line-height:1.5}
+.ck-circle{width:104px;height:104px;border-radius:50%;margin:0 auto 22px;
+  display:flex;align-items:center;justify-content:center;
+  background:#E7F4EE;border:2px solid var(--ok)}
+.ck-circle svg{width:48px;height:48px;stroke:var(--ok);fill:none;stroke-width:2.5}
+.ck-circle.warn{background:#FBF3E3;border-color:var(--warn)}
+.ck-circle.warn svg{stroke:var(--warn)}
+.ck-nome{font-size:22px;font-weight:700;color:var(--deep);margin-bottom:8px}
+.ck-info{color:var(--muted);font-size:14.5px;line-height:1.6;max-width:320px}
+.ck-info b{color:var(--green)}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="view-login" class="center-page hide">
+  <div class="logo">NeuroDynamics<small>Eventos &amp; Presença</small></div>
+  <div class="login-box">
+    <div id="login-notice" class="notice hide" style="border-color:var(--syn);background:#FBFCE8">
+      Entre para confirmar seu check-in no LABBIO.</div>
+    <label>E-mail</label>
+    <input id="li-email" type="email" autocomplete="email" placeholder="voce@neurodynamics.dev">
+    <label>Senha</label>
+    <input id="li-senha" type="password" autocomplete="current-password" placeholder="••••••••">
+    <button class="btn-primary" id="li-btn" onclick="fazerLogin()">Entrar</button>
+    <div class="err" id="li-err"></div>
+    <div class="notice">Use a mesma conta do NRO&#8209;SYS&#8209;001 (sistema de gestão de pessoal).
+      Sem acesso? Fale com o Depto. de Pessoal.</div>
+  </div>
+</div>
+
+<div id="view-checkin" class="center-page hide">
+  <div id="ck-body"></div>
+  <button class="btn-primary" style="max-width:360px" onclick="irParaApp()">Abrir o app</button>
+</div>
+
+<div id="app" class="hide">
+  <header class="top">
+    <div class="brand">NeuroDynamics<small>Eventos &amp; Presença</small></div>
+    <div class="userchip"><b id="u-nome">—</b><button onclick="sair()">sair</button></div>
+  </header>
+  <main>
+    <section id="tab-agenda"></section>
+    <section id="tab-presenca" class="hide"></section>
+  </main>
+  <nav class="tabs"><div class="wrap">
+    <button class="tab on" id="tabbtn-agenda" onclick="trocarAba('agenda')">Agenda</button>
+    <button class="fab" onclick="abrirSheet()" aria-label="Novo evento">+</button>
+    <button class="tab" id="tabbtn-presenca" onclick="trocarAba('presenca')">Presença</button>
+  </div></nav>
+</div>
+
+<div class="sheet-veil" id="veil" onclick="fecharSheet()"></div>
+<div class="sheet" id="sheet">
+  <h2>Novo evento</h2>
+  <div class="sub">Cria o evento no NRO&#8209;SYS&#8209;001 (com checklist de preparação) e convida os participantes, que respondem pelo app.</div>
+  <label>Tipo</label>
+  <div class="chips" id="ev-tipos"></div>
+  <label>Título</label>
+  <input id="ev-titulo" placeholder="ex.: Teste do protótipo Órion">
+  <label>Data</label>
+  <input id="ev-data" type="date">
+  <div class="row2">
+    <div><label>Início</label><input id="ev-ini" type="time"></div>
+    <div><label>Fim</label><input id="ev-fim" type="time"></div>
+  </div>
+  <label>Espaço (LABBIO)</label>
+  <select id="ev-espaco"></select>
+  <div id="ev-local-wrap" class="hide">
+    <label>Local (fora do LABBIO)</label>
+    <input id="ev-local" placeholder="ex.: Auditório da Escola de Engenharia">
+  </div>
+  <label>Pauta / descrição <span style="font-weight:400;text-transform:none">(opcional)</span></label>
+  <textarea id="ev-pauta" rows="2" placeholder="Objetivo, o que levar, observações..."></textarea>
+  <label>Grupos convidados</label>
+  <div class="chips" id="ev-grupos"></div>
+  <label>Participantes adicionais</label>
+  <input id="ev-busca" placeholder="Buscar membro ativo..." oninput="renderMembros()">
+  <div class="mlist" id="ev-membros"></div>
+  <div class="sub" id="ev-count" style="margin-top:8px"></div>
+  <button class="btn-primary" id="ev-salvar" onclick="salvarEvento()">Criar evento e convidar</button>
+  <button class="btn-ghost" onclick="fecharSheet()">Cancelar</button>
+  <div class="err" id="ev-err"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* ============================================================
+   CONFIG — os MESMOS dados do NRO-SYS-001
+   ============================================================ */
+const CONFIG = {
+  SUPABASE_URL: 'https://SEU-PROJETO.supabase.co',
+  SUPABASE_ANON_KEY: 'SUA-CHAVE-ANON'
+};
+/* ============================================================ */
+
+const sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+const $ = id => document.getElementById(id);
+
+/* Tipos e checklists — idênticos ao NRO-SYS-001 v3 (desktop) */
+const EVENTO_TIPOS = ['Reunião geral','Teste','Reunião de gerência','Confraternização',
+  'Reunião com stakeholder','Visita de externos','Viagem','Outro'];
+const CHECKLISTS = {
+  'Reunião geral': [
+    'Enviar e-mail de convite aos membros ativos com agendamento no Google Agenda (RSVP), usando o modelo padrão',
+    'Enviar a lista de convidados (PDF) para slog@eng.ufmg.br, cc marcondes@neurodynamics.dev, com portaria, data e horário — até 17h da sexta anterior',
+    'Reservar o local: auditórios pelo SisCAS; fins de semana por reservas@eng.ufmg.br; LABBIO por office.pinotti@gmail.com',
+    'Orçar e confirmar o coffee break com henriquerm@gmail.com (quando aplicável)',
+    'Criar os slides na pasta Eventos > Reunião Geral do Drive e enviar aos supervisores/gerentes com 1 semana de antecedência',
+    'Convidar o Prof. Henrique Martins via dir@adm.eng.ufmg.br, cc henriquerm@gmail.com',
+    'Enviar lembrete por e-mail e no grupo Geral do WhatsApp, com local, portaria e instruções de acesso',
+    'Designar responsável por fotos e vídeos do evento (upload na pasta do Drive depois)',
+    'Imprimir a lista de presença e as placas de sinalização da sala',
+    'Pegar a chave no Centro de Audiovisual no dia útil anterior'],
+  'Teste': [
+    'Definir protocolo e objetivos do teste',
+    'Reservar o espaço e confirmar a agenda dos participantes',
+    'Preparar equipamentos, materiais e instrumentação',
+    'Verificar termos e autorizações necessárias (sigilo, imagem, segurança)',
+    'Executar e registrar os resultados (relatório de execução NRO)',
+    'Organizar e limpar o espaço ao final'],
+  'Reunião de gerência': [
+    'Definir pauta e objetivos com a Diretoria','Enviar convite com agendamento na agenda (RSVP)',
+    'Reservar sala de reuniões','Compartilhar materiais de apoio com antecedência',
+    'Enviar lembrete com local e instruções','Registrar ata e encaminhamentos'],
+  'Confraternização': [
+    'Definir data, local e orçamento','Convidar os membros e coletar confirmações',
+    'Organizar alimentação / coffee','Reservar ou preparar o espaço',
+    'Designar responsável por registros fotográficos','Enviar lembrete com local e horário'],
+  'Reunião com stakeholder': [
+    'Alinhar objetivos e pauta com a Diretoria','Enviar convite e confirmar a agenda do stakeholder',
+    'Reservar sala adequada','Preparar a apresentação institucional',
+    'Solicitar autorização de entrada na portaria (slog@eng.ufmg.br)','Enviar lembrete e instruções de acesso',
+    'Registrar ata e encaminhamentos'],
+  'Visita de externos': [
+    'Confirmar data, horário e lista de visitantes','Enviar a lista para autorização na portaria (slog@eng.ufmg.br), com local, data e horário',
+    'Reservar os espaços a serem visitados','Definir roteiro e anfitriões da visita',
+    'Enviar instruções de acesso aos visitantes','Designar responsável por registros fotográficos'],
+  'Viagem': [
+    'Definir roteiro e objetivos da viagem','Levantar orçamento (transporte, hospedagem, alimentação)',
+    'Solicitar aprovações e recursos','Reservar transporte e hospedagem',
+    'Confirmar agenda com os anfitriões','Conferir documentos dos participantes',
+    'Comunicar itinerário e contatos de emergência'],
+  'Outro': ['Definir pauta e objetivos','Enviar convite com agendamento (RSVP)','Reservar local',
+    'Enviar lembrete com instruções de acesso','Registrar ata ou resumo']
+};
+
+let ME = null, PERFIL = null, MEMBROS = [], ESPACOS = [], GRUPOS = [];
+let selTipo = 'Reunião geral', selGrupos = new Set(), selExtras = new Set(), abertos = new Set();
+let tokenPendente = new URLSearchParams(location.search).get('t');
+
+/* ---------------- boot ---------------- */
+async function boot(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session){ mostrarLogin(); return; }
+  ME = session.user;
+  if (tokenPendente){ await fazerCheckin(tokenPendente); return; }
+  await entrarNoApp();
+}
+function mostrarLogin(){
+  $('view-login').classList.remove('hide');
+  if (tokenPendente) $('login-notice').classList.remove('hide');
+}
+async function fazerLogin(){
+  $('li-err').textContent=''; $('li-btn').disabled = true;
+  const { data, error } = await sb.auth.signInWithPassword({
+    email: $('li-email').value.trim(), password: $('li-senha').value });
+  $('li-btn').disabled = false;
+  if (error){ $('li-err').textContent = 'E-mail ou senha incorretos.'; return; }
+  ME = data.user;
+  $('view-login').classList.add('hide');
+  if (tokenPendente){ await fazerCheckin(tokenPendente); return; }
+  await entrarNoApp();
+}
+async function sair(){ await sb.auth.signOut(); location.href = location.pathname; }
+function irParaApp(){
+  history.replaceState(null,'',location.pathname);
+  tokenPendente = null;
+  $('view-checkin').classList.add('hide');
+  entrarNoApp();
+}
+
+/* ---------------- check-in ---------------- */
+async function fazerCheckin(token){
+  const view = $('view-checkin'), body = $('ck-body');
+  view.classList.remove('hide');
+  body.innerHTML = '<div class="ck-info">Registrando…</div>';
+  const { data, error } = await sb.rpc('registrar_checkin', { p_token: token });
+  const okI = '<svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>';
+  const wI  = '<svg viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M12 3l9 18H3l9-18z"/></svg>';
+  const tela = (cls,ic,tit,txt)=>{ body.innerHTML =
+    `<div class="ck-circle ${cls}">${ic}</div><div class="ck-nome">${tit}</div><div class="ck-info">${txt}</div>`; };
+  if (error){ tela('warn',wI,'Algo falhou', esc(error.message)); return; }
+  if (data.status === 'ok'){
+    const mes = new Date().toLocaleDateString('pt-BR',{month:'long'});
+    tela('',okI,`Bem-vindo, ${esc(primeiroNome(data.nome))}!`,
+      `Check-in registrado no LABBIO.<br><b>${data.visitas_mes}ª visita</b> em ${mes}.`);
+  } else if (data.status === 'repetido'){
+    tela('',okI,'Você já está aqui',
+      `Seu check-in já foi registrado há pouco, ${esc(primeiroNome(data.nome))}.`);
+  } else if (data.status === 'token_expirado'){
+    tela('warn',wI,'QR expirado','Esse código já girou. Escaneie novamente o QR na tela da entrada.');
+  } else if (data.status === 'sem_vinculo'){
+    tela('warn',wI,'Conta sem vínculo',
+      'Sua conta ainda não está associada a um registro de membro. Fale com o Depto. de Pessoal para vincular — depois disso o check-in funciona.');
+  } else {
+    tela('warn',wI,'Sessão inválida','Entre novamente e escaneie outra vez.');
+  }
+}
+
+/* ---------------- app principal ---------------- */
+async function entrarNoApp(){
+  $('app').classList.remove('hide');
+  const [p, m, e] = await Promise.all([
+    sb.from('perfis').select('id,nome,email,papel,registro').eq('id', ME.id).single(),
+    sb.from('membros').select('registro,nome,cargo,status,grupos').order('nome'),
+    sb.from('espacos').select('*').eq('ativo', true).order('ordem')
+  ]);
+  PERFIL = p.data || {};
+  MEMBROS = m.data || [];
+  ESPACOS = e.data || [];
+  GRUPOS = [...new Set(MEMBROS.filter(x=>x.status==='Ativo')
+    .flatMap(x=>x.grupos||[]))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  $('u-nome').textContent = primeiroNome(PERFIL.nome || '');
+  montarSheet();
+  await Promise.all([renderAgenda(), renderPresenca()]);
+}
+
+function trocarAba(ab){
+  ['agenda','presenca'].forEach(t=>{
+    $('tab-'+t).classList.toggle('hide', t!==ab);
+    $('tabbtn-'+t).classList.toggle('on', t===ab);
+  });
+  if (ab==='presenca') renderPresenca();
+  if (ab==='agenda') renderAgenda();
+}
+
+const nomeDe = r => MEMBROS.find(m=>m.registro===r)?.nome || ('Reg. '+r);
+
+/* ---------------- agenda ---------------- */
+async function renderAgenda(){
+  const hoje = hojeISO();
+  const { data, error } = await sb.from('eventos')
+    .select('*, espacos(nome,cor), evento_participantes(registro,resposta)')
+    .neq('status','Cancelado')
+    .gte('data', hoje)
+    .order('data').order('hora_inicio', {nullsFirst:false});
+  const el = $('tab-agenda');
+  if (error){ el.innerHTML = `<div class="empty">Erro ao carregar a agenda: ${esc(error.message)}</div>`; return; }
+  const evs = data || [];
+  let html = '';
+  if (!PERFIL.registro){
+    html += `<div class="notice-inline">Sua conta ainda não está vinculada a um registro de membro —
+      dá para ver tudo, mas RSVP e check-in ficam bloqueados. Fale com o Depto. de Pessoal.</div>`;
+  }
+  const meuReg = PERFIL.registro;
+  const pend = meuReg ? evs.filter(e =>
+    (e.evento_participantes||[]).some(p => p.registro===meuReg && p.resposta==='pendente')) : [];
+  if (pend.length){
+    html += `<div class="sec-title">Convites pendentes · ${pend.length}</div>`;
+    html += pend.map(cardEvento).join('');
+  }
+  html += `<div class="sec-title">Próximos eventos</div>`;
+  if (!evs.length){
+    html += `<div class="empty">Nada agendado por enquanto.<br>Toque em <b>+</b> para criar o primeiro evento.</div>`;
+  } else {
+    let dia = '';
+    for (const e of evs){
+      const d = diaLabel(e.data);
+      if (d !== dia){ dia = d; html += `<div class="day-title">${d}</div>`; }
+      html += cardEvento(e);
+    }
+  }
+  el.innerHTML = html;
+}
+
+function horaDe(e){
+  const hi = e.hora_inicio ? e.hora_inicio.slice(0,5) : null;
+  const hf = e.hora_fim ? e.hora_fim.slice(0,5) : null;
+  if (hi) return hi + (hf ? '–'+hf : '');
+  return e.hora || 'horário a definir';
+}
+function emAndamento(e){
+  if (!e.hora_inicio) return false;
+  if (e.data !== hojeISO()) return false;
+  const t = new Date().toTimeString().slice(0,8);
+  return t >= e.hora_inicio && t <= (e.hora_fim || e.hora_inicio);
+}
+
+function cardEvento(e){
+  const cor = e.espacos?.cor || '#8E8E93';
+  const parts = e.evento_participantes || [];
+  const conf = parts.filter(p=>p.resposta==='vou').length;
+  const minha = PERFIL.registro ? parts.find(p=>p.registro===PERFIL.registro) : null;
+  const souDono = (PERFIL.registro && e.owner_registro===PERFIL.registro)
+    || ['admin','pessoal'].includes(PERFIL.papel);
+  const aberto = abertos.has(e.id);
+  let det = '';
+  if (aberto){
+    const ordenados = [...parts].sort((a,b)=>nomeDe(a.registro).localeCompare(nomeDe(b.registro),'pt-BR'));
+    const lista = ordenados.map(p=>`<div class="p"><span class="dot ${p.resposta}"></span>
+        ${esc(nomeDe(p.registro))}<span class="st">${rLabel(p.resposta)}</span></div>`).join('')
+      || '<div class="p" style="color:var(--muted)">Sem convidados.</div>';
+    det = `<div class="detail">
+      ${e.pauta ? `<div class="desc">${esc(e.pauta)}</div>` : ''}
+      <div class="plist">${lista}</div>
+      ${minha ? rsvpBotoes(e.id, minha.resposta) : ''}
+      ${souDono ? `<button class="linkbtn" onclick="event.stopPropagation();cancelarEvento('${e.id}')">Cancelar este evento</button>` : ''}
+    </div>`;
+  }
+  return `<div class="card" onclick="toggleEvento('${e.id}')">
+    <div class="evt">
+      <div class="barv" style="background:${cor}"></div>
+      <div class="body">
+        <div class="hora">${horaDe(e)}
+          ${emAndamento(e)?'<span class="badge live">agora</span>':''}
+          <span class="badge evn">EVT-${String(e.numero).padStart(3,'0')}</span></div>
+        <div class="titulo">${esc(e.titulo)}</div>
+        <div class="meta"><b>${esc(e.espacos?.nome || e.local || 'Local a definir')}</b>
+          · ${esc(e.tipo)} · ${conf} confirmado${conf===1?'':'s'}</div>
+      </div>
+    </div>${det}</div>`;
+}
+
+function rsvpBotoes(evId, atual){
+  const b = (v,l)=>`<button class="${atual===v?'sel-'+v:''}"
+    onclick="event.stopPropagation();responder('${evId}','${v}')">${l}</button>`;
+  return `<div class="rsvp">${b('vou','Vou')}${b('talvez','Talvez')}${b('nao','Não vou')}</div>`;
+}
+function toggleEvento(id){
+  abertos.has(id) ? abertos.delete(id) : abertos.add(id);
+  renderAgenda();
+}
+async function responder(evId, resp){
+  const { error } = await sb.from('evento_participantes')
+    .update({ resposta: resp, respondido_em: new Date().toISOString() })
+    .eq('evento_id', evId).eq('registro', PERFIL.registro);
+  if (error) alert('Não foi possível responder: '+error.message);
+  renderAgenda();
+}
+async function cancelarEvento(id){
+  if (!confirm('Cancelar este evento para todos os convidados?')) return;
+  const { error } = await sb.from('eventos').update({ status:'Cancelado' }).eq('id', id);
+  if (error) alert('Não foi possível cancelar: '+error.message);
+  abertos.delete(id);
+  renderAgenda();
+}
+
+/* ---------------- presença ---------------- */
+async function renderPresenca(){
+  const el = $('tab-presenca');
+  const h4 = new Date(Date.now() - 4*3600e3);
+  const dia0 = new Date(); dia0.setHours(0,0,0,0);
+  const mes0 = new Date(); mes0.setDate(1); mes0.setHours(0,0,0,0);
+  const q = [
+    sb.from('presencas').select('registro,registrado_em,membros(nome)')
+      .gte('registrado_em', new Date(Date.now()-14*24*3600e3).toISOString())
+      .order('registrado_em', {ascending:false}).limit(200)
+  ];
+  if (PERFIL.registro) q.push(
+    sb.from('presencas').select('registrado_em').eq('registro', PERFIL.registro)
+      .gte('registrado_em', mes0.toISOString()));
+  const [rec, minhas] = await Promise.all(q);
+  if (rec.error){ el.innerHTML = `<div class="empty">Erro: ${esc(rec.error.message)}</div>`; return; }
+  const regs = rec.data || [];
+  const vistos = new Set(), presentes = [];
+  for (const r of regs){
+    if (new Date(r.registrado_em) < h4) break;
+    if (!vistos.has(r.registro)){
+      vistos.add(r.registro);
+      presentes.push({ nome: r.membros?.nome || ('Reg. '+r.registro), hora: hhmm(r.registrado_em) });
+    }
+  }
+  const hoje = regs.filter(r => new Date(r.registrado_em) >= dia0).slice(0,10);
+  let voce = '';
+  if (PERFIL.registro && minhas && !minhas.error){
+    const dias = new Set((minhas.data||[]).map(r => new Date(r.registrado_em).toDateString())).size;
+    const mes = new Date().toLocaleDateString('pt-BR',{month:'long'});
+    voce = `<div class="sec-title">Você</div>
+      <div class="card" style="font-size:14px">Visitas em ${mes}:
+      <span class="stat-mono">${dias} dia${dias===1?'':'s'}</span></div>`;
+  }
+  el.innerHTML = `
+    <div class="pres-hero"><span class="n">${presentes.length}</span>
+      <span class="l">no LABBIO agora<br><span style="font-size:11px">check-ins das últimas 4 horas</span></span></div>
+    <div class="card">${presentes.length
+      ? presentes.map(p=>`<div class="pessoa"><span>${esc(p.nome)}</span><span class="h">desde ${p.hora}</span></div>`).join('')
+      : '<div class="empty" style="padding:12px">Ninguém fez check-in nas últimas 4 horas.</div>'}</div>
+    <div class="sec-title">Últimos check-ins de hoje</div>
+    <div class="card">${hoje.length
+      ? hoje.map(r=>`<div class="pessoa"><span>${esc(r.membros?.nome||'—')}</span><span class="h">${hhmm(r.registrado_em)}</span></div>`).join('')
+      : '<div class="empty" style="padding:12px">Nenhum check-in hoje ainda.</div>'}</div>
+    ${voce}`;
+}
+
+/* ---------------- novo evento ---------------- */
+function montarSheet(){
+  $('ev-tipos').innerHTML = EVENTO_TIPOS.map(t =>
+    `<button class="chip ${t===selTipo?'on':''}" data-tipo="${esc(t)}" onclick="selTipoFn(this)">${esc(t)}</button>`).join('');
+  $('ev-espaco').innerHTML =
+    ESPACOS.map(e=>`<option value="${e.id}">${esc(e.nome)}</option>`).join('')
+    + '<option value="">Outro / fora do LABBIO</option>';
+  $('ev-espaco').onchange = () =>
+    $('ev-local-wrap').classList.toggle('hide', !!$('ev-espaco').value);
+  $('ev-grupos').innerHTML = GRUPOS.map(g =>
+    `<button class="chip" data-grupo="${esc(g)}" onclick="selGrupoFn(this)">${esc(g)}</button>`).join('')
+    || '<span class="sub">Nenhum grupo cadastrado nos membros.</span>';
+  renderMembros();
+}
+function selTipoFn(btn){
+  selTipo = btn.dataset.tipo;
+  document.querySelectorAll('#ev-tipos .chip').forEach(c=>c.classList.remove('on'));
+  btn.classList.add('on');
+}
+function selGrupoFn(btn){
+  const g = btn.dataset.grupo;
+  selGrupos.has(g) ? selGrupos.delete(g) : selGrupos.add(g);
+  btn.classList.toggle('on', selGrupos.has(g));
+  contaConvidados();
+}
+function renderMembros(){
+  const q = ($('ev-busca').value||'').toLowerCase();
+  const ativos = MEMBROS.filter(m=>m.status==='Ativo');
+  $('ev-membros').innerHTML = ativos
+    .filter(m => (m.nome||'').toLowerCase().includes(q))
+    .map(m => `<div class="mrow ${selExtras.has(m.registro)?'on':''}" onclick="toggleExtra(${m.registro})">
+      <span class="ck">${selExtras.has(m.registro)?'✓':''}</span>${esc(m.nome)}
+      <span class="cargo">${esc(m.cargo||'')}</span></div>`).join('')
+    || '<div class="mrow" style="color:var(--muted)">Nenhum membro encontrado.</div>';
+  contaConvidados();
+}
+function toggleExtra(r){
+  selExtras.has(r) ? selExtras.delete(r) : selExtras.add(r);
+  renderMembros();
+}
+function convidadosAtuais(){
+  const regs = new Set(selExtras);
+  MEMBROS.filter(m => m.status==='Ativo' && (m.grupos||[]).some(g=>selGrupos.has(g)))
+    .forEach(m => regs.add(m.registro));
+  if (PERFIL.registro) regs.add(PERFIL.registro);
+  return regs;
+}
+function contaConvidados(){
+  const n = convidadosAtuais().size;
+  $('ev-count').textContent = n
+    ? `${n} convidado${n===1?'':'s'} (grupos + adicionais${PERFIL.registro?' + você':''})`
+    : 'Ninguém selecionado ainda';
+}
+function abrirSheet(){
+  if (!$('ev-data').value) $('ev-data').value = hojeISO();
+  $('veil').classList.add('open'); $('sheet').classList.add('open');
+}
+function fecharSheet(){
+  $('veil').classList.remove('open'); $('sheet').classList.remove('open');
+}
+async function salvarEvento(){
+  const err = $('ev-err'); err.textContent='';
+  const dataEv = $('ev-data').value;
+  const hi = $('ev-ini').value || null, hf = $('ev-fim').value || null;
+  const titulo = $('ev-titulo').value.trim() || `${selTipo}${dataEv?' — '+fmtD(dataEv):''}`;
+  if (!dataEv){ err.textContent='Escolha a data.'; return; }
+  if (hi && hf && hf <= hi){ err.textContent='O horário de fim precisa ser depois do início.'; return; }
+  const espSel = $('ev-espaco');
+  const espId = espSel.value ? parseInt(espSel.value,10) : null;
+  const localTxt = espId ? espSel.selectedOptions[0].text : ($('ev-local').value.trim() || null);
+  $('ev-salvar').disabled = true;
+  try{
+    const { data: ev, error } = await sb.from('eventos').insert({
+      titulo, tipo: selTipo, data: dataEv,
+      hora: hi ? (hf ? `${hi} às ${hf}` : hi) : null,
+      hora_inicio: hi, hora_fim: hf, espaco_id: espId, local: localTxt,
+      recorrencia: 'Única',
+      owner_registro: PERFIL.registro || null,
+      grupos: [...selGrupos],
+      pauta: $('ev-pauta').value.trim() || null,
+      criado_por: PERFIL.nome || PERFIL.email
+    }).select('id,numero').single();
+    if (error) throw error;
+    const regs = convidadosAtuais();
+    if (regs.size){
+      const parts = [...regs].map(r => ({
+        evento_id: ev.id, registro: r,
+        origem: selExtras.has(r) && !selGrupos.size ? 'manual' : 'grupo',
+        resposta: r===PERFIL.registro ? 'vou' : 'pendente',
+        respondido_em: r===PERFIL.registro ? new Date().toISOString() : null
+      }));
+      const r1 = await sb.from('evento_participantes').insert(parts);
+      if (r1.error) throw r1.error;
+    }
+    const modelo = CHECKLISTS[selTipo] || CHECKLISTS['Outro'];
+    const r2 = await sb.from('evento_checklist').insert(
+      modelo.map((item,ix)=>({ evento_id: ev.id, item, ordem:(ix+1)*10 })));
+    if (r2.error) throw r2.error;
+    ['ev-titulo','ev-pauta','ev-ini','ev-fim','ev-busca'].forEach(i=>$(i).value='');
+    selGrupos = new Set(); selExtras = new Set();
+    document.querySelectorAll('#ev-grupos .chip').forEach(c=>c.classList.remove('on'));
+    renderMembros(); fecharSheet(); renderAgenda();
+  }catch(e){
+    err.textContent = 'Erro ao criar: ' + e.message;
+  }finally{
+    $('ev-salvar').disabled = false;
+  }
+}
+
+/* ---------------- util ---------------- */
+function hojeISO(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function hhmm(x){ return new Date(x).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
+function fmtD(iso){ const [a,m,d]=iso.split('-'); return `${d}/${m}/${a}`; }
+function diaLabel(iso){
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const [a,m,d] = iso.split('-').map(Number);
+  const dd = new Date(a, m-1, d);
+  const diff = Math.round((dd-hoje)/86400000);
+  if (diff===0) return 'Hoje';
+  if (diff===1) return 'Amanhã';
+  return dd.toLocaleDateString('pt-BR',{weekday:'long', day:'numeric', month:'long'});
+}
+function rLabel(r){ return {vou:'vou',talvez:'talvez',nao:'não vou',pendente:'pendente'}[r]||r; }
+function primeiroNome(n){ return (n||'').split(' ')[0]; }
+function esc(s){ return String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+boot();
+</script>
+</body>
+</html>
