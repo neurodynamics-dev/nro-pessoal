@@ -40,11 +40,11 @@ a:hover{text-decoration:underline}
 .lg-field input{width:100%;background:transparent;border:none;border-bottom:1px solid #77777C;color:#F5F5F7;
   padding:7px 2px;font-size:15px;border-radius:0}
 .lg-field input:focus{outline:none;border-bottom-color:var(--syn)}
-.lg-go{align-self:flex-end;margin-top:34px;width:62px;height:62px;border-radius:50%;border:none;background:#F5F5F7;
+.lg-go{align-self:flex-end;margin-top:34px;width:38px;height:38px;border-radius:11px;border:none;background:#F5F5F7;
   color:#1D1D1F;display:flex;align-items:center;justify-content:center;transition:transform .15s}
 .lg-go:hover{transform:scale(1.05)}
 .lg-go:disabled{opacity:.5;transform:none;cursor:default}
-.lg-go .ic{width:22px;height:22px}
+.lg-go .ic{width:19px;height:19px}
 .lg-err{background:rgba(192,57,43,.16);border:1px solid rgba(192,57,43,.4);color:#F1A9A0;
   border-radius:10px;padding:10px 13px;font-size:12.5px;margin-bottom:20px;line-height:1.5}
 .lg-warn{background:rgba(183,121,31,.14);border:1px solid rgba(183,121,31,.4);color:#E5C07B;
@@ -58,10 +58,10 @@ a:hover{text-decoration:underline}
 .sidebar{width:230px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--line);
   display:flex;flex-direction:column;position:sticky;top:0;height:100vh;transition:width .18s ease;overflow:hidden}
 #app.rail .sidebar{width:66px}
-.sb-top{display:flex;align-items:center;gap:10px;padding:18px 14px 14px}
-.sb-brand{display:flex;flex-direction:column;gap:4px;color:var(--ink);min-width:0}
-.sb-brand .logo-mark{height:20px;width:auto;max-width:148px}
-.sb-brand .sub{font-size:10px;color:var(--muted);letter-spacing:.09em;text-transform:uppercase;white-space:nowrap}
+.sb-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 14px 12px}
+#app.rail .sb-top{justify-content:center}
+.sb-brand{display:flex;align-items:center;min-width:0}
+.sb-brand .logo-mark{height:22px;width:auto;max-width:150px}
 #app.rail .sb-brand{display:none}
 .sb-nav{flex:1;padding:6px;overflow-y:auto;overflow-x:hidden}
 .sb-nav button{display:flex;align-items:center;gap:11px;width:100%;background:none;border:none;text-align:left;
@@ -131,6 +131,11 @@ table.tb{width:100%;border-collapse:collapse}
 .tb tr:last-child td{border-bottom:none}
 .tb tbody tr.click{cursor:pointer}
 .tb tbody tr.click:hover{background:#FAFAFB}
+.tb-wrap{overflow:auto;max-height:calc(100vh - 275px)}
+.tb-wrap .tb thead th{position:sticky;top:0;background:var(--panel);z-index:2}
+.tb-fixa{font-size:12.5px}
+.tb-fixa th{white-space:nowrap}
+.tb-fixa td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px;padding-top:9px;padding-bottom:9px}
 .field{margin-bottom:13px;min-width:0}
 .field label{display:block;font-size:11.5px;font-weight:600;color:#48484A;margin-bottom:5px}
 .field input,.field select,.field textarea{width:100%;border:1px solid var(--line2);border-radius:10px;
@@ -200,16 +205,25 @@ table.tb{width:100%;border-collapse:collapse}
   display:inline-flex;align-items:center;gap:6px}
 .seg button.on-ok{background:#E7F4EE;color:var(--ok)}
 .seg button.on-bad{background:#FBEBE9;color:var(--bad)}
-.tree .kids{margin-left:15px;border-left:1px solid var(--line);padding-left:16px}
-.tree details>summary{list-style:none;cursor:pointer}
-.tree details>summary::-webkit-details-marker{display:none}
-.node{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:10px;margin:2px 0}
-.node:hover{background:var(--soft)}
-.node .avatar{width:30px;height:30px}
-.node .nm{font-size:13.5px;font-weight:600}
-.node .mt{font-size:11.5px;color:var(--muted)}
-.node .caret{transition:transform .15s;color:var(--muted)}
-.tree details[open]>summary .caret{transform:rotate(90deg)}
+.org-wrap{max-width:820px;margin:0 auto}
+.org-busca{position:relative;max-width:340px;margin:0 0 18px auto}
+.org-res{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 26px rgba(0,0,0,.12);z-index:8;overflow:hidden;margin-top:4px}
+.org-res .op{display:flex;align-items:center;gap:9px;padding:8px 12px;cursor:pointer;font-size:13px}
+.org-res .op:hover{background:var(--soft)}
+.org-chain{display:flex;flex-direction:column;align-items:center}
+.org-link{width:1.5px;height:14px;background:var(--line2)}
+.org-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 13px;display:flex;align-items:center;gap:10px;width:310px;max-width:100%;cursor:pointer;box-shadow:var(--sh);text-align:left;font-family:inherit}
+.org-card:hover{border-color:var(--line2)}
+.org-card .avatar{width:32px;height:32px;flex-shrink:0}
+.org-card .tx{min-width:0;line-height:1.35}
+.org-card .nm{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.org-card .cg{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.org-focus{width:390px;border:1.5px solid var(--green);padding:14px 16px;cursor:default}
+.org-focus .avatar{width:46px;height:46px;font-size:15px}
+.org-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.org-sec h4{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:600}
+.org-sec .org-card{width:100%;margin-bottom:8px}
+@media (max-width:760px){.org-bottom{grid-template-columns:1fr}.org-card{width:100%}.org-focus{width:100%}}
 .prog{height:6px;background:var(--soft);border-radius:4px;overflow:hidden;flex:1}
 .prog .fl{height:100%;background:var(--green);border-radius:4px;transition:width .2s}
 .chk-row{display:flex;align-items:flex-start;gap:10px;padding:8px 2px;border-bottom:1px solid #F1F1F4;font-size:13.5px;line-height:1.5}
@@ -269,9 +283,8 @@ table.tb{width:100%;border-collapse:collapse}
 <div id="app" hidden>
   <aside class="sidebar">
     <div class="sb-top">
+      <div class="sb-brand"><span class="logo-slot"></span></div>
       <button class="icon-btn ghost" id="sb-collapse" onclick="document.getElementById('app').classList.toggle('rail')" title="Recolher menu"></button>
-      <div class="sb-brand"><span class="logo-slot"></span>
-        <span class="txt"><span class="sub">Gestão de pessoal</span></span></div>
     </div>
     <nav class="sb-nav" id="nav"></nav>
     <div class="sb-user">
@@ -646,14 +659,14 @@ function renderTabelaMembros(){
   const ms = membrosFiltrados();
   const el = $('#tb-membros'); if(!el) return;
   el.innerHTML = ms.length ? `
-    <table class="tb"><thead><tr><th>Reg.</th><th>Nome</th><th>Departamento</th><th>Cargo</th><th>Grupos</th><th>Status</th></tr></thead>
+    <div class="tb-wrap"><table class="tb tb-fixa"><thead><tr><th>Reg.</th><th>Nome</th><th>Departamento</th><th>Cargo</th><th>Grupos</th><th>Status</th></tr></thead>
     <tbody>${ms.map(m=>`<tr class="click" onclick="abrirFicha(${m.registro})">
       <td class="reg">${String(m.registro).padStart(3,'0')}</td>
-      <td style="font-weight:600">${esc(m.nome)}</td>
-      <td>${esc(m.departamento||'—')}</td>
-      <td>${esc(m.cargo||'—')}</td>
-      <td>${chips(m.grupos,2)}</td>
-      <td>${pill(m.status)}</td></tr>`).join('')}</tbody></table>
+      <td style="font-weight:600" title="${esc(m.nome)}">${esc(m.nome)}</td>
+      <td title="${esc(m.departamento||'')}">${esc(m.departamento||'—')}</td>
+      <td title="${esc(m.cargo||'')}">${esc(m.cargo||'—')}</td>
+      <td title="${esc((m.grupos||[]).join(', '))}">${chips(m.grupos,2)}</td>
+      <td>${pill(m.status)}</td></tr>`).join('')}</tbody></table></div>
     <div class="small muted" style="padding:10px 4px">${ms.length} de ${state.membros.length} registros</div>`
     : `<div class="empty">Nenhum membro corresponde aos filtros.</div>`;
 }
@@ -741,7 +754,9 @@ async function carregarFicha(){
 function renderFicha(){
   const m = membroAtual();
   if(!m){ $('#view-ficha').innerHTML='<div class="empty">Registro não encontrado.</div>'; return; }
-  setTopo(m.nome, "showView('membros')", can()? ibtn('pencil','Editar dados',"state.ficha.editando=true;state.ficha.tab='dados';renderFicha()") : '');
+  setTopo(m.nome, "showView('membros')",
+    ibtn('doc','Gerar relatório do membro','gerarRelatorioMembro()')
+    + (can()? ibtn('pencil','Editar dados',"state.ficha.editando=true;state.ficha.tab='dados';renderFicha()") : ''));
   const f = state.ficha;
   const gestor = m.gestor_registro ? nomeDe(m.gestor_registro) : null;
   const tabs = [['dados','Dados'],['ocorr',`Ocorrências (${f.ocorr.length})`],['acessos','Acessos'],['avals',`Avaliações (${f.avals.length})`]];
@@ -1020,31 +1035,78 @@ async function salvarPess(){
   }catch(e){ falha(e,'Erro ao salvar'); }
 }
 
-/* ---------------- organização (árvore) ---------------- */
+/* ------------- organização (Org Explorer, estilo Microsoft Teams) ------------- */
+let orgFoco = null;
+function orgAtivos(){ return state.membros.filter(m=>m.status==='Ativo'); }
+function orgGestorDe(m, ativos){ return (m.gestor_registro && ativos.find(x=>x.registro===m.gestor_registro)) || null; }
+function orgRaiz(ativos){
+  const raizes = ativos.filter(m=>!orgGestorDe(m, ativos));
+  const nsub = (r)=> ativos.filter(m=>m.gestor_registro===r).length;
+  return (raizes.length?raizes:ativos).slice().sort((a,b)=>nsub(b.registro)-nsub(a.registro))[0];
+}
 function renderOrganizacao(){
-  const ativos = state.membros.filter(m=>m.status==='Ativo');
-  const filhos = new Map();
-  ativos.forEach(m=>{
-    const g = m.gestor_registro && ativos.some(x=>x.registro===m.gestor_registro) ? m.gestor_registro : 0;
-    if(!filhos.has(g)) filhos.set(g, []);
-    filhos.get(g).push(m);
-  });
-  const conta = (reg)=>{ let n=0; (filhos.get(reg)||[]).forEach(f=>{ n += 1 + conta(f.registro); }); return n; };
-  const no = (m)=>{
-    const kids = filhos.get(m.registro)||[];
-    const corpo = `<span class="avatar">${iniciais(m.nome)}</span>
-      <span style="min-width:0"><span class="nm"><a href="#" onclick="event.stopPropagation();abrirFicha(${m.registro});return false" style="color:inherit">${esc(m.nome)}</a></span><br>
-      <span class="mt">${esc(m.cargo||'—')} · ${esc(m.departamento||'—')}${kids.length?` · lidera ${conta(m.registro)}`:''}</span></span>`;
-    if(!kids.length) return `<div class="node" style="padding-left:30px">${corpo}</div>`;
-    return `<details open><summary><div class="node">${ic('caret','caret')}${corpo}</div></summary>
-      <div class="kids">${kids.sort((a,b)=>a.nome.localeCompare(b.nome)).map(no).join('')}</div></details>`;
-  };
-  const raizes = (filhos.get(0)||[]).sort((a,b)=>a.nome.localeCompare(b.nome));
-  $('#view-organizacao').innerHTML = `<div class="card">
-    <p class="small muted" style="line-height:1.6;margin-bottom:14px">Estrutura dos membros ativos por gestor imediato,
-    definida na ficha de cada membro (campo "Gestor imediato"). Membros sem gestor aparecem na raiz.</p>
-    <div class="tree">${raizes.length? raizes.map(no).join('') : '<div class="empty">Nenhum membro ativo cadastrado.</div>'}</div>
+  setTopo(PAGE_TITLES.organizacao, null, '');
+  const ativos = orgAtivos();
+  if(!ativos.length){ $('#view-organizacao').innerHTML='<div class="empty">Nenhum membro ativo cadastrado.</div>'; return; }
+  if(!orgFoco || !ativos.some(m=>m.registro===orgFoco)){
+    const eu = ativos.find(m=>[m.email_nro,m.email_pessoal].some(e=>e && norm(e)===norm(state.perfil.email)));
+    orgFoco = (eu || orgRaiz(ativos)).registro;
+  }
+  desenhaOrg('');
+}
+function focarOrg(reg){ orgFoco = reg; desenhaOrg(''); }
+function cartaoOrg(m, ativos){
+  const lidera = ativos.filter(x=>x.gestor_registro===m.registro).length;
+  return `<button class="org-card" onclick="focarOrg(${m.registro})" title="${esc(m.nome)}">
+    <span class="avatar">${iniciais(m.nome)}</span>
+    <span class="tx"><span class="nm">${esc(m.nome)}</span>
+    <span class="cg">${esc(m.cargo||'—')}${lidera?` · lidera ${lidera}`:''}</span></span></button>`;
+}
+function desenhaOrg(filtro){
+  const ativos = orgAtivos();
+  const foco = ativos.find(m=>m.registro===orgFoco);
+  if(!foco){ orgFoco=null; renderOrganizacao(); return; }
+  // corrente de comando (do topo até o gestor imediato), com proteção contra ciclos
+  const cadeia = []; const vistos = new Set([foco.registro]);
+  let g = orgGestorDe(foco, ativos);
+  while(g && !vistos.has(g.registro) && cadeia.length<12){ cadeia.unshift(g); vistos.add(g.registro); g = orgGestorDe(g, ativos); }
+  const gestorImediato = cadeia.length ? cadeia[cadeia.length-1] : null;
+  const colegas = ativos.filter(m=> m.registro!==foco.registro &&
+      (gestorImediato ? m.gestor_registro===gestorImediato.registro : !orgGestorDe(m, ativos)))
+    .sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+  const sub = ativos.filter(m=>m.gestor_registro===foco.registro)
+    .sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+  const q = norm(filtro);
+  const achados = q ? ativos.filter(m=>norm(m.nome).includes(q) && m.registro!==foco.registro).slice(0,6) : [];
+  $('#view-organizacao').innerHTML = `<div class="org-wrap">
+    <div class="org-busca"><div class="field" style="margin:0">
+      <input id="org-q" placeholder="Buscar por nome…" value="${esc(filtro)}" oninput="desenhaOrg(this.value)"></div>
+      ${achados.length?`<div class="org-res">${achados.map(m=>`<div class="op" onclick="focarOrg(${m.registro})">
+        <span class="avatar" style="width:26px;height:26px;font-size:10px">${iniciais(m.nome)}</span>
+        <span>${esc(m.nome)} <span class="muted small">· ${esc(m.cargo||'')}</span></span></div>`).join('')}</div>`:''}
+    </div>
+    <div class="org-chain">
+      ${cadeia.map(m=>cartaoOrg(m, ativos)+'<span class="org-link"></span>').join('')}
+      <div class="org-card org-focus">
+        <span class="avatar">${iniciais(foco.nome)}</span>
+        <span class="tx" style="flex:1">
+          <span class="nm" style="font-size:14.5px">${esc(foco.nome)}</span>
+          <span class="cg" style="white-space:normal">${esc(foco.cargo||'—')} · ${esc(foco.departamento||'—')}</span>
+          <span class="small" style="display:block;margin-top:2px">${esc(foco.email_nro||foco.email_pessoal||'')}${foco.telefone?' · '+esc(foco.telefone):''}</span>
+          <a href="#" class="small" onclick="abrirFicha(${foco.registro});return false">Abrir ficha completa</a>
+        </span>
+        <span>${pill(foco.status)}</span>
+      </div>
+    </div>
+    <div class="org-bottom">
+      <div class="org-sec"><h4>Colegas de equipe (${colegas.length})</h4>
+        ${colegas.length? colegas.map(m=>cartaoOrg(m, ativos)).join('') : '<div class="empty" style="padding:14px">Ninguém mais responde ao mesmo gestor.</div>'}</div>
+      <div class="org-sec"><h4>Subordinados diretos (${sub.length})</h4>
+        ${sub.length? sub.map(m=>cartaoOrg(m, ativos)).join('') : '<div class="empty" style="padding:14px">Sem subordinados diretos. Defina o "Gestor imediato" na ficha dos liderados.</div>'}</div>
+    </div>
   </div>`;
+  if(q){ const inp = document.getElementById('org-q');
+    if(inp){ inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); } }
 }
 
 /* ---------------- PDF: modelo de documento NRO ---------------- */
@@ -1059,30 +1121,40 @@ function desenhaLogo(doc,x,y,s,cor){
   doc.line(x+s*0.5, y+s*0.42, x+s*0.68, y+s*0.31);
   doc.line(x+s*0.5, y+s*0.58, x+s*0.68, y+s*0.69);
 }
-function pdfCabecalho(doc, titulo, subtitulo){
+function pdfCabecalho(doc, titulo, subtitulo, codigo){
   const W = doc.internal.pageSize.getWidth();
+  // Modelo NRO-PUB-002: logo à esquerda; à direita, alinhado à direita:
+  // Departamento (negrito) / [Título do documento ou registro] / código Rev.
   if(LOGO_PDF){
-    const h = 7.5, w = Math.min(h*LOGO_PDF.prop, 70);
-    doc.addImage(LOGO_PDF.dados, 'PNG', 12, 9.2, w, h);
-    doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(110,110,115);
-    doc.text('Departamento de Pessoal · Escola de Engenharia da UFMG', W-12, 14.5, {align:'right'});
+    const h = 8, w = Math.min(h*LOGO_PDF.prop, 68);
+    doc.addImage(LOGO_PDF.dados, 'PNG', 12, 9, w, h);
   } else {
-    desenhaLogo(doc, 12, 8.5, 9, [29,29,31]);
-    doc.setTextColor(29,29,31); doc.setFont('helvetica','bold'); doc.setFontSize(12.5);
-    doc.text('NeuroDynamics', 24, 13);
-    doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(110,110,115);
-    doc.text('Departamento de Pessoal · Escola de Engenharia da UFMG', 24, 17.3);
+    desenhaLogo(doc, 12, 9, 8, [29,29,31]);
+    doc.setTextColor(29,29,31); doc.setFont('helvetica','bold'); doc.setFontSize(11.5);
+    doc.text('NeuroDynamics', 21.5, 14.6);
   }
-  doc.setDrawColor(0,53,47); doc.setLineWidth(0.7); doc.line(12, 22.5, W-12, 22.5);
-  doc.setTextColor(29,29,31); doc.setFont('helvetica','bold'); doc.setFontSize(12.5);
-  doc.text(titulo, 12, 31);
-  let y = 36;
+  doc.setTextColor(29,29,31); doc.setFontSize(9.5);
+  doc.setFont('helvetica','normal');
+  let tt = titulo;
+  while(tt.length>10 && doc.getTextWidth(tt) > W-108) tt = tt.slice(0,-2);
+  if(tt !== titulo) tt = tt.trim()+'…';
+  doc.setFont('helvetica','bold');
+  doc.text('Departamento de Pessoal', W-12, 10.8, {align:'right'});
+  doc.setFont('helvetica','normal');
+  doc.text(tt, W-12, 15, {align:'right'});
+  doc.text(codigo || 'NRO-SYS-001 Rev. A', W-12, 19.2, {align:'right'});
+  // Título principal no corpo do documento
+  let y = 33;
+  doc.setFont('helvetica','bold'); doc.setFontSize(15);
+  const tl = doc.splitTextToSize(titulo, W-24);
+  doc.text(tl, 12, y); y += tl.length*6.6 + 1.5;
   if(subtitulo){
     doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(96,96,99);
     const ls = doc.splitTextToSize(subtitulo, W-24);
     doc.text(ls, 12, y); y += ls.length*4.2 + 2;
   }
-  return y + 2;
+  doc.setTextColor(29,29,31);
+  return y + 3;
 }
 function pdfRodape(doc, texto){
   const W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
@@ -1124,6 +1196,68 @@ function filtraPorSelecao(sts, grupos){
     (!sts.length || sts.includes(m.status)) &&
     (!grupos.length || (m.grupos||[]).some(g=>grupos.includes(g)))
   ).sort((a,b)=>a.nome.localeCompare(b.nome, 'pt-BR'));
+}
+
+function secaoTabela(doc, y, titulo, head, body, colStyles){
+  const H = doc.internal.pageSize.getHeight();
+  if(y > H-40){ doc.addPage(); y = 16; }
+  doc.setFont('helvetica','bold'); doc.setFontSize(10.5); doc.setTextColor(29,29,31);
+  doc.text(titulo, 12, y);
+  doc.autoTable({ startY:y+2.5, head:head||undefined, body, theme:'striped',
+    styles:{font:'helvetica', fontSize:8.5, cellPadding:1.8, textColor:[29,29,31]},
+    headStyles:{fillColor:[29,29,31], textColor:[245,245,247], fontSize:8.5},
+    alternateRowStyles:{fillColor:[246,246,248]},
+    columnStyles:colStyles||{}, margin:{left:12,right:12} });
+  return doc.lastAutoTable.finalY + 8;
+}
+function gerarRelatorioMembro(){
+  try{
+    const m = membroAtual(); if(!m) return;
+    const f = state.ficha;
+    const temPess = can() && !!f.pess;
+    const doc = pdfNovo();
+    let y = pdfCabecalho(doc, 'FICHA DO MEMBRO — '+m.nome.toUpperCase(),
+      `Registro ${pad3(m.registro)} · ${m.status} · Emitida em ${new Date().toLocaleDateString('pt-BR')}`
+      + (temPess?' · CONFIDENCIAL — contém dados pessoais protegidos pela LGPD':''));
+    const rot = {0:{fontStyle:'bold', cellWidth:58}};
+    const inst = CAMPOS_MEMBRO.filter(c=>c.k!=='nome').map(c=>{
+      let v = m[c.k];
+      if(c.t==='grupos') v = (v||[]).join(', ');
+      else if(c.t==='date') v = v? fmtD(v) : '';
+      else if(c.t==='gestor') v = v? (nomeDe(v)||'') : '';
+      return [c.l.replace(' (separados por vírgula)',''), v||'—'];
+    });
+    y = secaoTabela(doc, y, 'DADOS INSTITUCIONAIS', null, inst, rot);
+    if(f.acessos.length){
+      const porItem = new Map(state.itens.map(i=>[i.id, i]));
+      const corpo = f.acessos.map(a=>{ const it = porItem.get(a.item_id);
+        return [it?it.nome:'—', a.ativo?'Concedido':'Revogado',
+          a.ativo?(a.concedido_em?fmtD(a.concedido_em):'—'):(a.revogado_em?fmtD(a.revogado_em):'—'), a.responsavel||'—'];
+      }).sort((a,b)=>a[0].localeCompare(b[0],'pt-BR'));
+      y = secaoTabela(doc, y, 'ACESSOS', [['Item','Situação','Data','Responsável']], corpo);
+    }
+    if(f.ocorr.length) y = secaoTabela(doc, y, 'OCORRÊNCIAS', [['Data','Tipo','Descrição','Responsável']],
+      f.ocorr.map(o=>[fmtD(o.data), o.tipo, o.descricao||'—', o.responsavel||'—']), {2:{cellWidth:76}});
+    if(f.avals.length) y = secaoTabela(doc, y, 'AVALIAÇÕES PERIÓDICAS',
+      [['Ciclo','Data','Assiduidade','Comprometimento','Depto de Pessoal','Responsável']],
+      f.avals.map(a=>[a.ciclo, fmtD(a.data), a.assiduidade!=null?a.assiduidade+'/5':'—',
+        a.comprometimento!=null?a.comprometimento+'/5':'—',
+        a.encaminhar_pessoal?(a.tratado?'Encaminhada · tratada':'Encaminhada · pendente'):'—', a.responsavel||'—']));
+    if(f.aponts.length) y = secaoTabela(doc, y, 'APONTAMENTOS SEMANAIS RECENTES',
+      [['Data','Grupo','Assiduidade','Entregas','Sinalização']],
+      f.aponts.map(a=>[fmtD(a.data), a.apont?.grupo||'—', a.assiduidade||'—', a.entregas||'—',
+        a.sinalizado?(a.tratado?'Sinalizado · tratado':'Sinalizado · pendente'):'—']));
+    if(temPess){
+      const pess = CAMPOS_PESS.map(c=>{ let v = f.pess[c.k];
+        if(c.t==='date') v = v? fmtD(v) : '';
+        if(c.t==='bool') v = v===true?'Sim':(v===false?'Não':'');
+        return [c.l, v||'—']; });
+      y = secaoTabela(doc, y, 'DADOS PESSOAIS (CONFIDENCIAL — LGPD)', null, pess, rot);
+    }
+    pdfRodape(doc, `NRO-SYS-001 · uso interno${temPess?' · CONFIDENCIAL (LGPD)':''} · gerado por ${quemSouEu()} em ${new Date().toLocaleDateString('pt-BR')}`);
+    doc.save(`NRO-PES_ficha_${pad3(m.registro)}_${hoje()}.pdf`);
+    toast('Relatório do membro gerado.');
+  }catch(e){ falha(e,'Erro ao gerar o relatório'); }
 }
 
 /* ---------------- relatórios ---------------- */
@@ -1903,7 +2037,7 @@ function renderTabelaAud(){
     (!q || [r.campo, r.valor_anterior, r.valor_novo, r.responsavel_email, r.registro_ref, nomePorRef(r.registro_ref)]
       .some(v=> v && norm(v).includes(q))));
   $('#tb-aud').innerHTML = rows.length ? `
-    <table class="tb"><thead><tr><th>Quando</th><th>Responsável</th><th>Tabela</th><th>Registro</th><th>Ação</th><th>Campo</th><th>De</th><th>Para</th></tr></thead>
+    <div class="tb-wrap"><table class="tb tb-fixa"><thead><tr><th>Quando</th><th>Responsável</th><th>Tabela</th><th>Registro</th><th>Ação</th><th>Campo</th><th>De</th><th>Para</th></tr></thead>
     <tbody>${rows.slice(0,200).map(r=>{
       const nm = nomePorRef(r.registro_ref);
       return `<tr><td class="small" style="white-space:nowrap">${fmtDT(r.ocorrido_em)}</td>
@@ -1914,7 +2048,7 @@ function renderTabelaAud(){
       <td class="small">${esc(r.campo||'—')}</td>
       <td class="small" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.valor_anterior)}">${esc(r.valor_anterior)||'—'}</td>
       <td class="small" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.valor_novo)}">${esc(r.valor_novo)||'—'}</td></tr>`;
-    }).join('')}</tbody></table>
+    }).join('')}</tbody></table></div>
     <div class="small muted" style="padding:10px 4px">Exibindo ${Math.min(rows.length,200)} de ${rows.length} eventos (últimos 400 carregados)</div>`
     : '<div class="empty">Nenhum evento encontrado.</div>';
 }
