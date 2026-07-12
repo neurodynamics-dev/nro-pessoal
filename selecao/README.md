@@ -4,11 +4,15 @@ Site público do PS da NeuroDynamics: divulgação, cronograma, edital e
 resultados, inscrição sem login e agendamento das dinâmicas/entrevistas.
 Arquivo único (`index.html`), no mesmo padrão dos demais apps do SOMA.
 
-## Pré-requisito
+## Pré-requisitos
 
-Aplicar a migração **`soma_v6.sql`** (na raiz deste repositório) no SQL
-Editor do Supabase. Sem ela o site continua no ar com o conteúdo de
-reserva (cronograma fixo), mas inscrição/acompanhamento ficam indisponíveis.
+Aplicar as migrações **`soma_v6.sql`** e **`soma_v7.sql`** (na raiz deste
+repositório) no SQL Editor do Supabase. Sem elas o site continua no ar com
+o conteúdo de reserva (cronograma fixo), mas inscrição/acompanhamento
+ficam indisponíveis.
+
+A página "A NeuroDynamics" (textos, fotos e vídeo) é editada no bloco
+`SOBRE`, no topo do `<script>` de `index.html`.
 
 ## Como publicar
 
@@ -30,4 +34,5 @@ exclusivamente pelas funções `security definer` da migração
 (`ps_site`, `ps_inscrever`, `ps_acompanhar`, `ps_horarios`, `ps_agendar`).
 Nenhuma tabela do módulo tem política de leitura/escrita para `anon`;
 o candidato se identifica por **protocolo + e-mail**, sem senha.
-O controle do processo é feito pelo comitê em `soma-selecao.html`.
+O controle do processo é feito pelo Comitê de Seleção na página
+**Seleção** do SOMA · Gestão (papel `selecao` no banco).
