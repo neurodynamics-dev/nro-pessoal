@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#F5F5F7">
-<title>NeuroDynamics · Eventos</title>
+<title>SOMA · App — NeuroDynamics</title>
 <style>
 :root{
   --bg:#F5F5F7; --panel:#FFFFFF; --ink:#1D1D1F; --muted:#6E6E73; --soft:#F0F0F2;
@@ -177,7 +177,7 @@ nav.tabs .wrap{display:flex;align-items:center;gap:10px;max-width:560px;margin:0
 <body>
 
 <div id="view-login" class="center-page hide">
-  <div class="logo"><img src="https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/imagotipo%20preto.png" alt="NeuroDynamics" style="height:26px;max-width:80vw;display:block;margin:0 auto"><small>Eventos &amp; Presença</small></div>
+  <div class="logo"><img src="https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/imagotipo%20preto.png" alt="NeuroDynamics" style="height:26px;max-width:80vw;display:block;margin:0 auto"><small>SOMA · Eventos e Presença</small></div>
   <div class="login-box">
     <div id="login-notice" class="notice hide" style="border-color:var(--syn);background:#FBFCE8">
       Entre para confirmar seu check-in no LABBIO.</div>
@@ -187,7 +187,7 @@ nav.tabs .wrap{display:flex;align-items:center;gap:10px;max-width:560px;margin:0
     <input id="li-senha" type="password" autocomplete="current-password" placeholder="••••••••">
     <button class="btn-primary" id="li-btn" onclick="fazerLogin()">Entrar</button>
     <div class="err" id="li-err"></div>
-    <div class="notice">Use a mesma conta do NRO&#8209;SYS&#8209;001 (sistema de gestão de pessoal).
+    <div class="notice">Use a mesma conta do SOMA · Gestão (sistema de pessoal, no computador).
       Sem acesso? Fale com o Depto. de Pessoal.</div>
   </div>
 </div>
@@ -199,7 +199,7 @@ nav.tabs .wrap{display:flex;align-items:center;gap:10px;max-width:560px;margin:0
 
 <div id="app" class="hide">
   <header class="top">
-    <div class="brand"><img src="https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/imagotipo%20preto.png" alt="NeuroDynamics" style="height:18px;display:block"><small>Eventos &amp; Presença</small></div>
+    <div class="brand"><img src="https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/imagotipo%20preto.png" alt="NeuroDynamics" style="height:18px;display:block"><small>SOMA · Eventos e Presença</small></div>
     <div class="userchip"><b id="u-nome">—</b><button onclick="sair()">sair</button></div>
   </header>
   <main>
@@ -216,7 +216,7 @@ nav.tabs .wrap{display:flex;align-items:center;gap:10px;max-width:560px;margin:0
 <div class="sheet-veil" id="veil" onclick="fecharSheet()"></div>
 <div class="sheet" id="sheet">
   <h2>Novo evento</h2>
-  <div class="sub">Cria o evento no NRO&#8209;SYS&#8209;001 (com checklist de preparação) e convida os participantes, que respondem pelo app.</div>
+  <div class="sub">Cria o evento no SOMA (com checklist de preparação) e convida os participantes, que respondem pelo app.</div>
   <label>Tipo</label>
   <div class="chips" id="ev-tipos"></div>
   <label>Título</label>
@@ -249,7 +249,7 @@ nav.tabs .wrap{display:flex;align-items:center;gap:10px;max-width:560px;margin:0
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 /* ============================================================
-   CONFIG — os MESMOS dados do NRO-SYS-001
+   CONFIG — os MESMOS dados do SOMA · Gestão
    ============================================================ */
 const CONFIG = {
   SUPABASE_URL: 'https://rxzmkyjttzzpwtodqkve.supabase.co',
@@ -293,7 +293,7 @@ function statusHTML(s){
 }
 let STATUS_MAP = {};
 
-/* Tipos e checklists — idênticos ao NRO-SYS-001 v3 (desktop) */
+/* Tipos e checklists — idênticos ao SOMA · Gestão (desktop) */
 const EVENTO_TIPOS = ['Reunião geral','Teste','Reunião de gerência','Confraternização',
   'Reunião com stakeholder','Visita de externos','Viagem','Outro'];
 const CHECKLISTS = {

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Gestão de Pessoal · NeuroDynamics</title>
+<title>SOMA · Gestão — NeuroDynamics</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D1D1F'/%3E%3Ccircle cx='11' cy='16' r='5' fill='%23F5F5F7'/%3E%3Ccircle cx='23' cy='9.5' r='2.8' fill='%23F5F5F7'/%3E%3Ccircle cx='23' cy='22.5' r='2.8' fill='%23F5F5F7'/%3E%3Cpath d='M15 13.8 20.6 10.6M15 18.2 20.6 21.4' stroke='%23CEDC00' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -150,6 +150,17 @@ table.tb{width:100%;border-collapse:collapse}
 .filters .field.grow{flex:1;min-width:200px}
 .muted{color:var(--muted)}
 .small{font-size:12.5px}
+.cal-grade{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.cal-sem{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:2px 4px}
+.cal-cel{min-height:96px;border:1px solid var(--line);border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:4px;overflow:hidden}
+.cal-cel.fora{border:none;background:none}
+.cal-cel.hoje{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+.cal-dia{font-size:12px;font-weight:700;color:var(--muted)}
+.cal-cel.hoje .cal-dia{color:var(--green)}
+.cal-chip{display:block;width:100%;text-align:left;font-size:11px;font-weight:600;color:var(--ink);
+  background:color-mix(in srgb, var(--cc) 12%, white);border-left:3px solid var(--cc);
+  border-radius:6px;padding:3px 6px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-chip:hover{background:color-mix(in srgb, var(--cc) 22%, white)}
 .empty{padding:32px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.6}
 .banner{border-radius:12px;padding:12px 15px;font-size:13px;margin-bottom:14px;line-height:1.55;border:1px solid}
 .banner.red{background:#FBF1F0;border-color:#EBC8C3;color:#8E2F23}
@@ -264,7 +275,7 @@ table.tb{width:100%;border-collapse:collapse}
 <div id="login-view">
   <div class="lg-left">
     <div class="lg-logo"><span class="logo-slot"></span></div>
-    <div class="lg-rodape">Sistema de Gestão de Recursos Humanos – Departamento de Pessoal da NeuroDynamics 2026</div>
+    <div class="lg-rodape">SOMA · Sistema de Operações, Membros e Atividades — NeuroDynamics 2026</div>
   </div>
   <div class="lg-panel">
     <h1>Login</h1>
@@ -305,6 +316,7 @@ table.tb{width:100%;border-collapse:collapse}
       <section id="view-ficha" hidden></section>
       <section id="view-organizacao" hidden></section>
       <section id="view-relatorios" hidden></section>
+      <section id="view-calendario" hidden></section>
       <section id="view-operacoes" hidden></section>
       <section id="view-apontamento" hidden></section>
       <section id="view-eventos" hidden></section>
@@ -358,6 +370,7 @@ const ICONS = {
   fwd:'<path d="M9.5 5.5 16 12l-6.5 6.5"/>', caret:'<path d="M9.5 6.5 15 12l-5.5 5.5"/>',
   plus:'<path d="M12 5v14M5 12h14"/>', pencil:'<path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17z"/><path d="M13.5 6.5l3 3"/>',
   trash:'<path d="M4 7h16M9 7V5h6v2M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/>',
+  cal:'<rect x="4" y="5.5" width="16" height="15" rx="2"/><path d="M4 10.5h16M8.5 3.5v4M15.5 3.5v4"/>',
   x:'<path d="M6 6l12 12M18 6 6 18"/>', check:'<path d="M5 12.5 10 17.5 19 7"/>',
   search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
   users:'<circle cx="9" cy="8.5" r="3.5"/><path d="M2.8 19.5c.7-3.2 3.2-5 6.2-5s5.5 1.8 6.2 5"/><circle cx="17" cy="9.5" r="2.6"/><path d="M15.6 14.7c2.7.2 4.8 1.8 5.5 4.4"/>',
@@ -439,14 +452,15 @@ const CHECKLISTS = {
     'Enviar lembrete com instruções de acesso','Registrar ata ou resumo']
 };
 const PAGE_TITLES = {dashboard:'Visão geral', membros:'Membros', ficha:'Ficha do membro', organizacao:'Organização',
-  relatorios:'Relatórios', operacoes:'Operações', apontamento:'Apontamento semanal', eventos:'Eventos', evento:'Evento',
+  relatorios:'Relatórios', calendario:'Calendário', operacoes:'Operações', apontamento:'Apontamento semanal', eventos:'Eventos', evento:'Evento',
   pessoal:'Painel do Depto de Pessoal', acessos:'Catálogo de acessos', importar:'Importar planilha', auditoria:'Trilha de auditoria'};
 
 const state = {
   perfil:null, membros:[], itens:[], tipos:[], view:'dashboard',
   filtros:{q:'', status:'', dep:'', grupo:''},
   ficha:{reg:null, tab:'dados', ocorr:[], acessos:[], avals:[], aponts:[], pess:null, editando:false},
-  apont:null, eventos:[], evento:null
+  apont:null, eventos:[], evento:null,
+  cal:{ano:new Date().getFullYear(), mes:new Date().getMonth(), eventos:[], marcos:[]}
 };
 let db = null, booted = false;
 
@@ -545,6 +559,7 @@ const NAV = [
   ['membros','Membros','users',false],
   ['organizacao','Organização','tree',false],
   ['relatorios','Relatórios','doc',false],
+  ['calendario','Calendário','cal',false],
   ['operacoes','Operações','grid',false],
   ['pessoal','Painel do Pessoal','chat',true],
   ['auditoria','Auditoria','shield',true]
@@ -589,7 +604,7 @@ function showView(v){
   document.querySelectorAll('.content > section').forEach(s=>s.hidden = (s.id !== 'view-'+v));
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
   setTopo(PAGE_TITLES[v]||'', null, '');
-  ({dashboard:renderDashboard, membros:renderMembros, organizacao:renderOrganizacao, relatorios:renderRelatorios,
+  ({dashboard:renderDashboard, membros:renderMembros, organizacao:renderOrganizacao, relatorios:renderRelatorios, calendario:renderCalendario,
     operacoes:renderOperacoes, apontamento:renderApontamento, eventos:renderEventos, evento:()=>{}, ficha:()=>{},
     pessoal:renderPessoal, acessos:renderCatalogo, importar:renderImportar, auditoria:renderAuditoria}[v]||(()=>{}))();
   window.scrollTo(0,0);
@@ -794,7 +809,7 @@ function renderFicha(){
   if(can()) tabs.push(['pess','Dados pessoais']);
   $('#view-ficha').innerHTML = `
     <div class="card" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-      ${avatarFoto(m,'width:52px;height:52px;font-size:17px')}
+      <span onclick="alternarCampoFoto()" style="cursor:${f.editando&&f.tab==='dados'?'pointer':'default'};line-height:0" title="${f.editando&&f.tab==='dados'?'Clique para alterar o link da foto':''}">${avatarFoto(m,'width:52px;height:52px;font-size:17px')}</span>
       <div style="flex:1;min-width:220px">
         <div style="font-size:17px;font-weight:600;letter-spacing:-.2px">${esc(m.nome)}</div>
         <div class="small muted" style="margin-top:2px"><span class="reg">REG ${String(m.registro).padStart(3,'0')}</span>
@@ -808,20 +823,27 @@ function renderFicha(){
     <div id="ficha-body"></div>${datalistsHTML()}`;
   ({dados:renderTabDados, ocorr:renderTabOcorr, acessos:renderTabAcessos, avals:renderTabAvals, pess:renderTabPess}[f.tab])();
 }
+function alternarCampoFoto(){
+  if(!can() || !state.ficha.editando || state.ficha.tab!=='dados') return;
+  const w = $('#field-foto_url'); if(!w) return;
+  const abrir = w.style.display==='none';
+  w.style.display = abrir ? '' : 'none';
+  if(abrir){ const i = $('#f-foto_url'); if(i){ i.focus(); i.scrollIntoView({block:'center',behavior:'smooth'}); } }
+}
 function renderTabDados(){
   const m = membroAtual();
   if(state.ficha.editando && can()){
     $('#ficha-body').innerHTML = `<div class="card"><h3>Editar dados institucionais</h3>
-      <div class="form-grid">${CAMPOS_MEMBRO.map(c=>`<div class="field ${c.full?'full':''}"><label>${c.l}</label>${campoInput(c, m[c.k], m.registro)}</div>`).join('')}</div>
+      <div class="form-grid">${CAMPOS_MEMBRO.map(c=>`<div class="field ${c.full?'full':''}"${c.k==='foto_url'?' id="field-foto_url" style="display:none"':''}><label>${c.l}</label>${campoInput(c, m[c.k], m.registro)}</div>`).join('')}</div>
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px">
         <button class="btn" onclick="state.ficha.editando=false;renderFicha()">Cancelar</button>
         <button class="btn btn-primary" onclick="salvarMembro()">${ic('check')} Salvar</button></div>
-      <p class="small muted" style="margin-top:12px">Toda alteração fica na trilha de auditoria com responsável e data.
+      <p class="small muted" style="margin-top:12px">Para alterar o link da foto, clique no avatar acima. Toda alteração fica na trilha de auditoria com responsável e data.
       Mudanças de status, cargo, departamento, grupos e gestor também geram ocorrências.</p></div>`;
     return;
   }
   $('#ficha-body').innerHTML = `<div class="card"><div class="dl">
-    ${CAMPOS_MEMBRO.filter(c=>c.k!=='nome'&&c.k!=='status').map(c=>{
+    ${CAMPOS_MEMBRO.filter(c=>c.k!=='nome'&&c.k!=='status'&&c.k!=='foto_url').map(c=>{
       let v = m[c.k];
       if(c.t==='grupos') v = (v&&v.length)? v.join(', ') : null;
       else if(c.t==='date') v = v? fmtD(v) : null;
@@ -862,7 +884,7 @@ function modalMembro(){
   abreModal(`<h3>Novo membro</h3>
     <div class="form-grid">
       <div class="field"><label>Nº de registro</label><input id="f-registro" type="number" value="${prox}"></div>
-      ${CAMPOS_MEMBRO.map(c=>`<div class="field ${c.full?'full':''}"><label>${c.l}</label>${campoInput(c, c.k==='status'?'Ativo':(c.k==='data_ingresso'?hoje():null), null)}</div>`).join('')}
+      ${CAMPOS_MEMBRO.map(c=>`<div class="field ${c.full?'full':''}"${c.k==='foto_url'?' style="display:none"':''}><label>${c.l}</label>${campoInput(c, c.k==='status'?'Ativo':(c.k==='data_ingresso'?hoje():null), null)}</div>`).join('')}
     </div>${datalistsHTML()}
     <div class="actions"><button class="btn" onclick="fechaModal()">Cancelar</button>
     <button class="btn btn-primary" onclick="criarMembro()">Cadastrar</button></div>`);
@@ -1173,7 +1195,7 @@ function pdfCabecalho(doc, titulo, subtitulo, codigo){
   doc.text('Departamento de Pessoal', W-12, 10.8, {align:'right'});
   doc.setFont('helvetica','normal');
   doc.text(tt, W-12, 15, {align:'right'});
-  doc.text(codigo || 'NRO-SYS-001 Rev. A', W-12, 19.2, {align:'right'});
+  doc.text(codigo || 'SOMA 5.0', W-12, 19.2, {align:'right'});
   // Título principal no corpo do documento
   let y = 33;
   doc.setFont('helvetica','bold'); doc.setFontSize(15);
@@ -1192,7 +1214,7 @@ function pdfRodape(doc, texto){
   const total = doc.getNumberOfPages();
   for(let i=1;i<=total;i++){
     doc.setPage(i); doc.setFontSize(7.5); doc.setTextColor(110,110,115);
-    doc.text(texto || `NRO-SYS-001 · uso interno · gerado por ${quemSouEu()} em ${new Date().toLocaleDateString('pt-BR')}`, 12, H-8);
+    doc.text(texto || `SOMA · uso interno · gerado por ${quemSouEu()} em ${new Date().toLocaleDateString('pt-BR')}`, 12, H-8);
     doc.text(`Página ${i} de ${total}`, W-12, H-8, {align:'right'});
   }
 }
@@ -1300,7 +1322,7 @@ async function gerarRelatorioMembro(){
         return [c.l, v||'—']; });
       y = secaoTabela(doc, y, 'DADOS PESSOAIS (CONFIDENCIAL — LGPD)', null, pess, rot);
     }
-    pdfRodape(doc, `NRO-SYS-001 · uso interno${temPess?' · CONFIDENCIAL (LGPD)':''} · gerado por ${quemSouEu()} em ${new Date().toLocaleDateString('pt-BR')}`);
+    pdfRodape(doc, `SOMA · uso interno${temPess?' · CONFIDENCIAL (LGPD)':''} · gerado por ${quemSouEu()} em ${new Date().toLocaleDateString('pt-BR')}`);
     doc.save(`NRO-PES_ficha_${pad3(m.registro)}_${hoje()}.pdf`);
     toast('Relatório do membro gerado.');
   }catch(e){ falha(e,'Erro ao gerar o relatório'); }
@@ -1568,6 +1590,129 @@ async function salvarReuniaoDP(){
   }catch(e){ falha(e,'Erro ao registrar'); }
 }
 
+/* ---------------- calendário ---------------- */
+const TIPOS_MARCO = {
+  ferias:            {l:'Férias',            cor:'#4C6FBF'},
+  processo_seletivo: {l:'Processo seletivo', cor:'#7C5CBF'},
+  prazo:             {l:'Prazo',             cor:'#B7791F'},
+  outro:             {l:'Outro',             cor:'#8E8E93'}
+};
+async function renderCalendario(){
+  const c = state.cal;
+  const primeiro = new Date(c.ano, c.mes, 1), ultimo = new Date(c.ano, c.mes+1, 0);
+  const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  setTopo('Calendário', null, can()?`<button class="btn btn-primary" onclick="modalMarco()">${ic('plus')} Novo marco</button>`:'');
+  $('#view-calendario').innerHTML = '<div class="card"><div class="empty">Carregando…</div></div>';
+  try{
+    const [ev, mk] = await Promise.all([
+      db.from('eventos').select('id,numero,titulo,data,hora_inicio,status')
+        .neq('status','Cancelado').gte('data', iso(primeiro)).lte('data', iso(ultimo)).order('hora_inicio'),
+      db.from('calendario_itens').select('*')
+        .lte('data_inicio', iso(ultimo)).gte('data_fim', iso(primeiro)).order('data_inicio')
+    ]);
+    if(ev.error) throw ev.error; if(mk.error) throw mk.error;
+    c.eventos = ev.data||[]; c.marcos = mk.data||[];
+  }catch(e){
+    $('#view-calendario').innerHTML = `<div class="card"><div class="empty">Erro ao carregar o calendário: ${esc(e.message)}<br>
+      <span class="small">Se a tabela calendario_itens não existir, rode a migração SOMA 5.0.</span></div></div>`;
+    return;
+  }
+  const nomeMes = primeiro.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  const hj = hoje();
+  const porDia = {};
+  c.eventos.forEach(e=>{ (porDia[e.data]=porDia[e.data]||[]).push({t:'ev', o:e}); });
+  c.marcos.forEach(m=>{
+    const di = new Date(m.data_inicio+'T12:00'), df = new Date(m.data_fim+'T12:00');
+    for(let d=new Date(Math.max(di,primeiro)); d<=df && d<=ultimo; d.setDate(d.getDate()+1))
+      (porDia[iso(d)]=porDia[iso(d)]||[]).push({t:'mk', o:m});
+  });
+  const semana = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  let cels = '';
+  for(let i=0;i<primeiro.getDay();i++) cels += '<div class="cal-cel fora"></div>';
+  for(let dia=1; dia<=ultimo.getDate(); dia++){
+    const dIso = iso(new Date(c.ano, c.mes, dia));
+    const itens = (porDia[dIso]||[]).slice(0,4);
+    const extra = (porDia[dIso]||[]).length - itens.length;
+    cels += `<div class="cal-cel ${dIso===hj?'hoje':''}"><span class="cal-dia">${dia}</span>
+      ${itens.map(x => x.t==='ev'
+        ? `<button class="cal-chip" style="--cc:var(--green)" title="EVT-${pad3(x.o.numero)}" onclick="abrirEvento('${x.o.id}')">${x.o.hora_inicio?x.o.hora_inicio.slice(0,5)+' ':''}${esc(x.o.titulo)}</button>`
+        : `<button class="cal-chip" style="--cc:${TIPOS_MARCO[x.o.tipo]?.cor||'#8E8E93'}" onclick="verMarco('${x.o.id}')">${esc(x.o.titulo)}</button>`
+      ).join('')}
+      ${extra>0?`<span class="small muted">+${extra}</span>`:''}</div>`;
+  }
+  $('#view-calendario').innerHTML = `<div class="card">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="btn" onclick="mudarMes(-1)">‹</button>
+      <b style="min-width:190px;text-align:center;text-transform:capitalize">${nomeMes}</b>
+      <button class="btn" onclick="mudarMes(1)">›</button>
+      <button class="btn" onclick="state.cal.ano=new Date().getFullYear();state.cal.mes=new Date().getMonth();renderCalendario()">Hoje</button>
+      <span style="flex:1"></span>
+      <span class="small muted">${['<span style="color:var(--green)">●</span> Eventos']
+        .concat(Object.values(TIPOS_MARCO).map(t=>`<span style="color:${t.cor}">●</span> ${t.l}`)).join(' &nbsp; ')}</span>
+    </div>
+    <div class="cal-grade">${semana.map(s=>`<div class="cal-sem">${s}</div>`).join('')}${cels}</div>
+  </div>`;
+}
+function mudarMes(n){
+  const c = state.cal; c.mes += n;
+  if(c.mes<0){ c.mes=11; c.ano--; } if(c.mes>11){ c.mes=0; c.ano++; }
+  renderCalendario();
+}
+function modalMarco(){
+  const membros = state.membros.filter(m=>['Ativo','Em pausa / avaliação','Sob demanda'].includes(m.status))
+    .map(m=>`<option value="${m.registro}">${esc(m.nome)}</option>`).join('');
+  abreModal(`<h3>Novo marco no calendário</h3>
+    <div class="field"><label>Tipo</label><select id="mk-tipo" onchange="$('#mk-membro-wrap').style.display=this.value==='ferias'?'':'none'">
+      ${Object.entries(TIPOS_MARCO).map(([k,t])=>`<option value="${k}">${t.l}</option>`).join('')}</select></div>
+    <div class="field" id="mk-membro-wrap"><label>Membro (para férias)</label>
+      <select id="mk-membro"><option value="">—</option>${membros}</select></div>
+    <div class="field"><label>Título</label><input id="mk-titulo" placeholder="ex.: Entrevistas do PS 2026/2 (vazio: gera automático)"></div>
+    <div class="field"><label>Início</label><input type="date" id="mk-ini" value="${hoje()}"></div>
+    <div class="field"><label>Fim (vazio = mesmo dia)</label><input type="date" id="mk-fim"></div>
+    <div class="field full"><label>Observação (opcional)</label><input id="mk-obs"></div>
+    <div class="actions"><button class="btn" onclick="fechaModal()">Cancelar</button>
+    <button class="btn btn-primary" onclick="salvarMarco()">${ic('check')} Salvar</button></div>`, true);
+}
+async function salvarMarco(){
+  const tipo = $('#mk-tipo').value, reg = $('#mk-membro').value ? parseInt($('#mk-membro').value,10) : null;
+  const ini = $('#mk-ini').value, fim = $('#mk-fim').value || ini;
+  let titulo = $('#mk-titulo').value.trim();
+  if(!ini){ toast('Informe a data de início.', true); return; }
+  if(fim < ini){ toast('O fim precisa ser igual ou depois do início.', true); return; }
+  if(!titulo) titulo = tipo==='ferias' && reg ? `Férias — ${nomeDe(reg)}` : TIPOS_MARCO[tipo].l;
+  try{
+    const {error} = await db.from('calendario_itens').insert({
+      titulo, tipo, registro: tipo==='ferias' ? reg : null,
+      data_inicio: ini, data_fim: fim,
+      observacao: $('#mk-obs').value.trim()||null, criado_por: quemSouEu()
+    });
+    if(error) throw error;
+    fechaModal(); toast('Marco adicionado ao calendário.'); renderCalendario();
+  }catch(e){ falha(e,'Erro ao salvar o marco'); }
+}
+function verMarco(id){
+  const m = state.cal.marcos.find(x=>x.id===id); if(!m) return;
+  const t = TIPOS_MARCO[m.tipo]||{l:m.tipo,cor:'#8E8E93'};
+  abreModal(`<h3><span style="color:${t.cor}">●</span> ${esc(m.titulo)}</h3>
+    <div class="dl">
+      <div class="it"><dt>Tipo</dt><dd>${t.l}</dd></div>
+      ${m.registro?`<div class="it"><dt>Membro</dt><dd>${esc(nomeDe(m.registro))}</dd></div>`:''}
+      <div class="it"><dt>Período</dt><dd>${fmtD(m.data_inicio)}${m.data_fim!==m.data_inicio?' a '+fmtD(m.data_fim):''}</dd></div>
+      ${m.observacao?`<div class="it"><dt>Observação</dt><dd>${esc(m.observacao)}</dd></div>`:''}
+      <div class="it"><dt>Criado por</dt><dd>${esc(m.criado_por||'—')}</dd></div>
+    </div>
+    <div class="actions"><button class="btn" onclick="fechaModal()">Fechar</button>
+    ${can()?`<button class="btn btn-danger" onclick="excluirMarco('${m.id}')">${ic('trash')} Excluir</button>`:''}</div>`, true);
+}
+async function excluirMarco(id){
+  if(!confirm('Excluir este marco do calendário?')) return;
+  try{
+    const {error} = await db.from('calendario_itens').delete().eq('id', id);
+    if(error) throw error;
+    fechaModal(); toast('Marco excluído.'); renderCalendario();
+  }catch(e){ falha(e,'Erro ao excluir'); }
+}
+
 /* ---------------- apontamento semanal ---------------- */
 function renderApontamento(){
   setTopo(PAGE_TITLES.apontamento, "showView('operacoes')", '');
@@ -1590,6 +1735,7 @@ function iniciarApontamento(){
   const g = $('#ap-grupo').value;
   const itens = state.membros
     .filter(m=>['Ativo','Em pausa / avaliação'].includes(m.status) && (m.grupos||[]).includes(g))
+    .filter(m=>m.registro !== state.perfil?.registro)
     .sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'))
     .map(m=>({registro:m.registro, nome:m.nome, cargo:m.cargo, status:m.status,
       assiduidade:'SUFICIENTE', entregas:'SUFICIENTE', sinalizado:false, justificativa:null, abrirOcorrencia:false}));
@@ -1915,7 +2061,7 @@ function gerarAta(){
     doc.setDrawColor(29,29,31); doc.setLineWidth(.3); doc.line(12, fy, 95, fy);
     doc.setFontSize(9); doc.setFont('helvetica','normal');
     doc.text(`${ev.owner_registro?(nomeDe(ev.owner_registro)||''):''} — Organizador`, 12, fy+5);
-    pdfRodape(doc, `NRO-SYS-001 · Ata do evento EVT-${pad3(ev.numero)} · gerada por ${quemSouEu()} em ${new Date().toLocaleDateString('pt-BR')}`);
+    pdfRodape(doc, `SOMA · Ata do evento EVT-${pad3(ev.numero)} · gerada por ${quemSouEu()} em ${new Date().toLocaleDateString('pt-BR')}`);
     doc.save(`NRO-EVT-${pad3(ev.numero)}_ATA_${hoje()}.pdf`);
     toast('Ata gerada.');
   }catch(e){ falha(e,'Erro ao gerar a ata'); }
