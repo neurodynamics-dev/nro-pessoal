@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Processo Seletivo NeuroDynamics — inscrições, cronograma, edital, resultados e agendamento das etapas.">
+<meta name="description" content="Processo Seletivo NeuroDynamics: inscrições, cronograma, edital, resultados e agendamento das fases.">
 <meta name="theme-color" content="#060A09">
-<title>Processo Seletivo 2026 — NeuroDynamics</title>
+<title>Processo Seletivo 2026 | NeuroDynamics</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300352F'/%3E%3Ccircle cx='11' cy='16' r='5' fill='%23F5F5F7'/%3E%3Ccircle cx='23' cy='9.5' r='2.8' fill='%23F5F5F7'/%3E%3Ccircle cx='23' cy='22.5' r='2.8' fill='%23F5F5F7'/%3E%3Cpath d='M15 13.8 20.6 10.6M15 18.2 20.6 21.4' stroke='%23CEDC00' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#060A09; --panel:#0D1513; --ink:#F5F5F7; --muted:#9FAAA6; --dim:#6E7A76;
@@ -18,12 +18,14 @@
   --roxo:#C084FC; --ambar:#FBBF24; --azul:#60A5FA; --bad:#F1806F; --ok:#4ADE97;
   --card:rgba(255,255,255,.045); --glass:rgba(10,17,15,.72);
   --r:20px; --max:1180px;
-  --f:'Sora',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  --fd:'Archivo',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  --f:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,Helvetica,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--f);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+h1,h2,h3,h4{font-family:var(--fd);letter-spacing:-.01em}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;cursor:pointer;color:inherit;border:none;background:none}
 input,select,textarea{font-family:inherit;font-size:15px;color:var(--ink)}
@@ -66,7 +68,7 @@ header.rolou{background:var(--glass);backdrop-filter:blur(16px) saturate(1.4);
 .hd-in{max-width:var(--max);margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:26px}
 .hd-logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .hd-logo img{height:22px;width:auto;filter:brightness(0) invert(1)}
-.hd-logo .ps-tag{font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--syn);
+.hd-logo .ps-tag{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--syn);
   border:1px solid rgba(206,220,0,.35);border-radius:999px;padding:2.5px 9px;white-space:nowrap}
 nav.hd-nav{display:flex;gap:4px;margin-left:auto}
 nav.hd-nav a{font-size:13.5px;font-weight:500;color:var(--muted);padding:7px 13px;border-radius:10px;
@@ -74,7 +76,7 @@ nav.hd-nav a{font-size:13.5px;font-weight:500;color:var(--muted);padding:7px 13p
 nav.hd-nav a:hover{color:var(--ink);background:rgba(255,255,255,.06)}
 nav.hd-nav a.on{color:var(--ink);background:rgba(255,255,255,.08)}
 .cta{display:inline-flex;align-items:center;gap:8px;background:var(--syn);color:var(--deep);
-  font-weight:700;font-size:13.5px;border-radius:12px;padding:9px 18px;white-space:nowrap;
+  font-family:var(--fd);font-weight:700;font-size:13.5px;border-radius:12px;padding:9px 18px;white-space:nowrap;
   transition:transform .15s,box-shadow .15s;box-shadow:0 4px 22px rgba(206,220,0,.22)}
 .cta:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(206,220,0,.34)}
 .cta.ghost{background:rgba(255,255,255,.06);color:var(--ink);border:1px solid var(--line2);box-shadow:none}
@@ -83,7 +85,7 @@ nav.hd-nav a.on{color:var(--ink);background:rgba(255,255,255,.08)}
 #hamb{display:none;width:40px;height:40px;border-radius:11px;border:1px solid var(--line2);
   align-items:center;justify-content:center;margin-left:auto}
 #menu-mob{display:none}
-@media (max-width:900px){
+@media (max-width:940px){
   nav.hd-nav,.hd-cta{display:none}
   #hamb{display:inline-flex}
   #menu-mob.aberto{display:block;position:fixed;top:64px;left:12px;right:12px;z-index:39;
@@ -97,84 +99,67 @@ nav.hd-nav a.on{color:var(--ink);background:rgba(255,255,255,.08)}
 /* ============ LAYOUT ============ */
 main{max-width:var(--max);margin:0 auto;padding:0 22px}
 section{margin:0 0 90px}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--fd);font-size:11.5px;font-weight:700;
   letter-spacing:.16em;text-transform:uppercase;color:var(--syn)}
 .eyebrow::before{content:'';width:22px;height:1.5px;background:var(--syn)}
-h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin:10px 0 8px}
+h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;line-height:1.15;margin:10px 0 8px}
 .sec-sub{color:var(--muted);max-width:620px;margin-bottom:34px}
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
 .reveal.viu{opacity:1;transform:none}
 
 /* ============ HERO ============ */
-#hero{min-height:calc(100svh - 0px);display:flex;flex-direction:column;justify-content:center;
+#hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   padding:120px 0 40px;position:relative}
-#hero h1{font-size:clamp(40px,7.2vw,84px);font-weight:800;letter-spacing:-.035em;line-height:1.03;
+#hero h1{font-size:clamp(40px,7.2vw,84px);font-weight:700;letter-spacing:-.02em;line-height:1.03;
   margin:18px 0 20px;max-width:900px}
 #hero h1 em{font-style:normal;background:linear-gradient(94deg,var(--syn) 10%,#7BE8C4 90%);
   -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero-sub{font-size:clamp(15px,1.6vw,18px);color:var(--muted);max-width:600px;margin-bottom:34px}
+.hero-sub{font-size:clamp(15px,1.6vw,18px);color:var(--muted);max-width:620px;margin-bottom:34px}
 .hero-acts{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:44px}
 .cnt-wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.cnt-label{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.cnt-label{font-family:var(--fd);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
 .cnt{display:flex;gap:9px}
 .cnt .b{background:var(--card);border:1px solid var(--line);border-radius:14px;min-width:66px;
   padding:10px 8px 8px;text-align:center;backdrop-filter:blur(6px)}
-.cnt .n{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1}
+.cnt .n{font-family:var(--fd);font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
 .cnt .l{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-top:5px}
 .status-chip{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line2);
   border-radius:999px;padding:7px 15px;font-size:12.5px;font-weight:600;color:var(--muted)}
 .status-chip .dot{width:8px;height:8px;border-radius:50%;background:var(--syn);
   box-shadow:0 0 0 0 rgba(206,220,0,.5);animation:pulsa 2s infinite}
 @keyframes pulsa{0%{box-shadow:0 0 0 0 rgba(206,220,0,.45)}70%{box-shadow:0 0 0 9px rgba(206,220,0,0)}100%{box-shadow:0 0 0 0 rgba(206,220,0,0)}}
-.hero-scroll{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);color:var(--dim);
-  font-size:11px;letter-spacing:.18em;text-transform:uppercase;display:flex;flex-direction:column;
-  align-items:center;gap:8px;animation:desce 2.4s ease-in-out infinite}
-@keyframes desce{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
 
-/* ============ DECK (cards estilo Netflix) ============ */
+/* ============ DECK (fases em destaque) ============ */
 .deck{display:flex;gap:14px;height:470px}
 .dcard{position:relative;flex:1;min-width:0;border-radius:var(--r);overflow:hidden;cursor:pointer;
   border:1px solid var(--line);transition:flex .75s cubic-bezier(.22,1,.36,1);
   background:var(--gcard);isolation:isolate}
-.dcard::before{content:'';position:absolute;inset:0;z-index:-1;opacity:.9;background:var(--gcard)}
 .dcard::after{content:'';position:absolute;inset:0;background:
   radial-gradient(120% 90% at 85% -10%, rgba(255,255,255,.13), transparent 55%),
   linear-gradient(180deg, transparent 30%, rgba(0,0,0,.42) 100%)}
 .dcard.on{flex:3.4;border-color:var(--line2)}
-.dcard .num{position:absolute;top:16px;right:20px;font-size:64px;font-weight:800;line-height:1;
-  color:rgba(255,255,255,.12);letter-spacing:-.04em;z-index:1;transition:color .5s}
+.dcard .num{position:absolute;top:16px;right:20px;font-family:var(--fd);font-size:64px;font-weight:700;line-height:1;
+  color:rgba(255,255,255,.12);z-index:1;transition:color .5s}
 .dcard.on .num{color:rgba(255,255,255,.2)}
 .dcard .mini{position:absolute;left:0;right:0;bottom:0;padding:20px;z-index:2;
   display:flex;flex-direction:column;gap:10px;transition:opacity .35s}
 .dcard .mini .ic{width:26px;height:26px;color:rgba(255,255,255,.9)}
-.dcard .mini .t{font-size:13.5px;font-weight:700;line-height:1.3;color:#fff;
-  writing-mode:initial}
+.dcard .mini .t{font-family:var(--fd);font-size:13.5px;font-weight:700;line-height:1.3;color:#fff}
 .dcard.on .mini{opacity:0;pointer-events:none}
 .dcard .body{position:absolute;inset:0;padding:30px;z-index:2;display:flex;flex-direction:column;
   justify-content:flex-end;gap:12px;opacity:0;transform:translateY(14px);
   transition:opacity .45s ease .25s,transform .45s ease .25s;pointer-events:none}
 .dcard.on .body{opacity:1;transform:none;pointer-events:auto}
-.dcard .body .fase-pill{align-self:flex-start;font-size:10.5px;font-weight:700;letter-spacing:.14em;
+.dcard .body .fase-pill{align-self:flex-start;font-family:var(--fd);font-size:10.5px;font-weight:700;letter-spacing:.14em;
   text-transform:uppercase;background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.22);
   color:#fff;border-radius:999px;padding:4px 12px;backdrop-filter:blur(4px)}
-.dcard .body h3{font-size:clamp(22px,2.6vw,32px);font-weight:700;letter-spacing:-.02em;line-height:1.1;color:#fff}
-.dcard .body .dt{font-size:13px;font-weight:700;color:var(--syn)}
-.dcard.claro .body .dt{color:#00352F}
-.dcard .body p{font-size:13.5px;color:rgba(255,255,255,.82);max-width:420px;line-height:1.55}
-.dcard .body .go{align-self:flex-start;display:inline-flex;align-items:center;gap:7px;
-  font-size:13px;font-weight:700;color:#fff;border-bottom:1.5px solid rgba(255,255,255,.4);padding-bottom:2px}
-.dcard.claro .body h3,.dcard.claro .body p,.dcard.claro .body .go{color:#00352F}
-.dcard.claro .body p{color:rgba(0,53,47,.8)}
-.dcard.claro .body .go{border-bottom-color:rgba(0,53,47,.4)}
-.dcard.claro .num{color:rgba(0,53,47,.14)}
-.dcard.claro.on .num{color:rgba(0,53,47,.22)}
-.dcard.claro .mini .ic,.dcard.claro .mini .t{color:#00352F}
-.dcard.claro .body .fase-pill{background:rgba(0,53,47,.14);border-color:rgba(0,53,47,.3);color:#00352F}
+.dcard .body h3{font-size:clamp(22px,2.6vw,32px);font-weight:700;line-height:1.1;color:#fff}
+.dcard .body .dt{font-family:var(--fd);font-size:13px;font-weight:700;color:var(--syn)}
+.dcard .body p{font-size:13.5px;color:rgba(255,255,255,.85);max-width:440px;line-height:1.6}
 .dcard .prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.14);z-index:3;opacity:0;transition:opacity .3s}
 .dcard.on .prog{opacity:1}
 .dcard .prog i{display:block;height:100%;width:0;background:var(--syn)}
-.dcard.claro .prog i{background:#00352F}
-.dcard.on .prog i{animation:barra var(--dur,6s) linear forwards}
+.dcard.on .prog i{animation:barra var(--dur,7s) linear forwards}
 @keyframes barra{from{width:0}to{width:100%}}
 .deck.pausado .dcard.on .prog i{animation-play-state:paused}
 @media (max-width:860px){
@@ -185,18 +170,38 @@ h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.02em;li
   .dcard .num{font-size:44px;top:12px}
 }
 
-/* ============ COMO FUNCIONA ============ */
+/* ============ PASSOS ============ */
 .passos{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:passo}
 .passo{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px 22px;
   position:relative;backdrop-filter:blur(6px);transition:transform .2s,border-color .2s}
 .passo:hover{transform:translateY(-4px);border-color:var(--line2)}
-.passo .pn{counter-increment:passo;font-size:12px;font-weight:700;color:var(--syn);letter-spacing:.1em}
+.passo .pn{counter-increment:passo;font-family:var(--fd);font-size:12px;font-weight:700;color:var(--syn);letter-spacing:.1em}
 .passo .pn::before{content:'0' counter(passo)}
 .passo .ic{width:30px;height:30px;color:var(--ink);margin:16px 0 12px}
-.passo h3{font-size:16px;font-weight:700;letter-spacing:-.01em;margin-bottom:7px}
+.passo h3{font-size:16px;font-weight:700;margin-bottom:7px}
 .passo p{font-size:13px;color:var(--muted);line-height:1.55}
 @media (max-width:900px){.passos{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:560px){.passos{grid-template-columns:1fr}}
+
+/* ============ SOBRE (A NeuroDynamics) ============ */
+.sobre-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.sobre-grid{grid-template-columns:1fr}}
+.sobre-bloco{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px 24px}
+.sobre-bloco h3{font-size:17px;font-weight:700;margin-bottom:9px}
+.sobre-bloco p{font-size:13.5px;color:var(--muted);line-height:1.65}
+.sobre-texto{font-size:clamp(16px,1.9vw,20px);line-height:1.7;color:var(--ink);max-width:820px}
+.sobre-texto + .sobre-texto{margin-top:18px}
+.video-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--line2);background:var(--panel)}
+.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.foto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.foto{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--card);position:relative}
+.foto img{width:100%;height:240px;object-fit:cover;display:block}
+.foto .lg{position:absolute;left:0;right:0;bottom:0;padding:24px 16px 12px;font-size:12.5px;color:#fff;
+  background:linear-gradient(transparent, rgba(0,0,0,.72))}
+.areas-chips{display:flex;flex-wrap:wrap;gap:9px}
+.areas-chips span{border:1px solid var(--line2);border-radius:999px;padding:8px 16px;font-size:13px;
+  font-weight:600;color:var(--muted);background:rgba(255,255,255,.03)}
 
 /* ============ TIMELINE ============ */
 .tl{position:relative;margin-top:14px;padding-left:34px}
@@ -211,30 +216,30 @@ h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.02em;li
 .tl-it.agora .no{border-color:var(--syn)}
 .tl-it.agora .no::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--syn);
   animation:pulsa 2s infinite}
-.tl-it .dt-badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;
+.tl-it .dt-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--fd);font-size:12px;font-weight:700;
   font-variant-numeric:tabular-nums;color:var(--muted);background:var(--card);border:1px solid var(--line);
   border-radius:8px;padding:3px 10px;margin-bottom:7px}
 .tl-it.agora .dt-badge{color:var(--syn);border-color:rgba(206,220,0,.4)}
-.tl-it h3{font-size:17px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.tl-it .tag{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:999px;
+.tl-it h3{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tl-it .tag{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:999px;
   padding:2.5px 10px;background:color-mix(in srgb,var(--tc) 16%,transparent);color:var(--tc);
   border:1px solid color-mix(in srgb,var(--tc) 35%,transparent)}
-.tl-it .agora-lbl{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:var(--deep);
+.tl-it .agora-lbl{font-family:var(--fd);font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--deep);
   background:var(--syn);border-radius:999px;padding:2.5px 10px;text-transform:uppercase}
 .tl-it p{font-size:13.5px;color:var(--muted);margin-top:5px;max-width:560px}
 .tl-it.feito h3{color:var(--muted)}
 
-/* ============ CARDS GERAIS / PUBLICAÇÕES ============ */
+/* ============ CARDS / PUBLICAÇÕES ============ */
 .pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;
   backdrop-filter:blur(6px)}
 .pub-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
 .pub{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;cursor:pointer;
   transition:transform .18s,border-color .18s;display:flex;flex-direction:column;gap:10px}
 .pub:hover{transform:translateY(-3px);border-color:var(--line2)}
-.pub .tp{align-self:flex-start;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+.pub .tp{align-self:flex-start;font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
   border-radius:999px;padding:3px 11px;background:color-mix(in srgb,var(--tc) 16%,transparent);
   color:var(--tc);border:1px solid color-mix(in srgb,var(--tc) 35%,transparent)}
-.pub h3{font-size:16.5px;font-weight:700;letter-spacing:-.01em;line-height:1.3}
+.pub h3{font-size:16.5px;font-weight:700;line-height:1.3}
 .pub .dt{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
 .pub p{font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .pub .abrir{margin-top:auto;font-size:12.5px;font-weight:700;color:var(--syn);display:inline-flex;align-items:center;gap:6px}
@@ -247,13 +252,13 @@ h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.02em;li
 /* ============ FORMULÁRIOS ============ */
 .fwrap{max-width:680px;margin:0 auto}
 .steps{display:flex;gap:8px;margin:26px 0 30px}
-.steps .st{flex:1;height:4px;border-radius:4px;background:var(--line2);position:relative;overflow:hidden}
+.steps .st{flex:1;height:4px;border-radius:4px;background:var(--line2)}
 .steps .st.ok{background:var(--syn)}
 .steps .st.on{background:linear-gradient(90deg,var(--syn) 55%,var(--line2) 55%)}
-.st-title{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--syn);margin-bottom:4px}
+.st-title{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--syn);margin-bottom:4px}
 .fcard{background:var(--panel);border:1px solid var(--line2);border-radius:var(--r);padding:30px;
   box-shadow:0 24px 70px rgba(0,0,0,.35)}
-.fcard h3{font-size:21px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.fcard h3{font-size:21px;font-weight:700;margin-bottom:4px}
 .fcard .hint{font-size:13px;color:var(--muted);margin-bottom:22px}
 .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
 .fgrid .full{grid-column:1/-1}
@@ -290,8 +295,8 @@ h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.02em;li
 .rev-bloco .dl dd{color:var(--ink);word-break:break-word}
 .protocolo-box{background:linear-gradient(120deg,rgba(206,220,0,.14),rgba(11,125,110,.12));
   border:1px solid rgba(206,220,0,.4);border-radius:18px;padding:26px;text-align:center;margin:22px 0}
-.protocolo-box .p-lbl{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.protocolo-box .p-num{font-size:clamp(30px,6vw,44px);font-weight:800;letter-spacing:.04em;color:var(--syn);
+.protocolo-box .p-lbl{font-family:var(--fd);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.protocolo-box .p-num{font-family:var(--fd);font-size:clamp(30px,6vw,44px);font-weight:700;letter-spacing:.04em;color:var(--syn);
   font-variant-numeric:tabular-nums;margin:8px 0}
 .aviso{border-radius:14px;padding:14px 17px;font-size:13.5px;line-height:1.6;border:1px solid;margin-bottom:16px}
 .aviso.err{background:rgba(241,128,111,.09);border-color:rgba(241,128,111,.35);color:#F5B0A5}
@@ -299,7 +304,7 @@ h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.02em;li
 .aviso.info{background:rgba(96,165,250,.08);border-color:rgba(96,165,250,.3);color:#A9CDF8}
 
 /* ============ ACOMPANHAR ============ */
-.stepper{display:flex;gap:0;margin:30px 0 8px;overflow-x:auto;padding-bottom:6px}
+.stepper{display:flex;margin:30px 0 8px;overflow-x:auto;padding-bottom:6px}
 .sp{flex:1;min-width:110px;text-align:center;position:relative;padding-top:26px}
 .sp::before{content:'';position:absolute;top:9px;left:0;right:0;height:2px;background:var(--line2)}
 .sp:first-child::before{left:50%}
@@ -310,17 +315,17 @@ h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.02em;li
 .sp.ok .pt{background:var(--syn);border-color:var(--syn)}
 .sp.on .pt{border-color:var(--syn);box-shadow:0 0 0 4px rgba(206,220,0,.18)}
 .sp.falha .pt{background:var(--bad);border-color:var(--bad)}
-.sp .lb{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.sp .lb{font-family:var(--fd);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
 .sp.ok .lb,.sp.on .lb{color:var(--ink)}
 .sit-card{border-radius:var(--r);padding:26px;border:1px solid var(--line2);margin:20px 0;
   background:var(--card)}
 .sit-card.ok{border-color:rgba(74,222,151,.35);background:rgba(74,222,151,.06)}
 .sit-card.acao{border-color:rgba(206,220,0,.4);background:rgba(206,220,0,.06)}
 .sit-card.fim{border-color:rgba(241,128,111,.3);background:rgba(241,128,111,.05)}
-.sit-card h3{font-size:19px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+.sit-card h3{font-size:19px;font-weight:700;margin-bottom:6px}
 .sit-card p{color:var(--muted);font-size:14px}
 
-/* ============ AGENDAMENTO (Calendly-like) ============ */
+/* ============ AGENDAMENTO ============ */
 .ag-grid{display:grid;grid-template-columns:250px 1fr;gap:18px;margin-top:18px}
 @media (max-width:720px){.ag-grid{grid-template-columns:1fr}}
 .ag-dias{display:flex;flex-direction:column;gap:9px;max-height:420px;overflow-y:auto;padding-right:4px}
@@ -328,7 +333,7 @@ h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.02em;li
   padding:12px 15px;text-align:left;transition:all .15s;background:rgba(255,255,255,.03)}
 .ag-dia:hover{border-color:var(--dim)}
 .ag-dia.on{border-color:var(--syn);background:rgba(206,220,0,.07)}
-.ag-dia .dnum{font-size:22px;font-weight:800;letter-spacing:-.02em;min-width:34px;text-align:center}
+.ag-dia .dnum{font-family:var(--fd);font-size:22px;font-weight:700;min-width:34px;text-align:center}
 .ag-dia .dinfo{line-height:1.35}
 .ag-dia .dsem{font-size:12.5px;font-weight:700;text-transform:capitalize}
 .ag-dia .dqt{font-size:11.5px;color:var(--muted)}
@@ -338,7 +343,7 @@ h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.02em;li
 .ag-hora:hover{border-color:var(--dim)}
 .ag-hora.on{border-color:var(--syn);background:rgba(206,220,0,.1)}
 .ag-hora.cheio{opacity:.38;pointer-events:none;text-decoration:line-through}
-.ag-hora .h{font-size:15.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.ag-hora .h{font-family:var(--fd);font-size:15.5px;font-weight:700;font-variant-numeric:tabular-nums}
 .ag-hora .v{font-size:11px;color:var(--muted);margin-top:3px}
 .ag-hora .v .meu-tag{color:var(--syn);font-weight:700}
 .ag-conf{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
@@ -347,7 +352,7 @@ h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.02em;li
 .ag-conf .info{font-size:14px}
 .ag-conf .info b{color:var(--syn)}
 
-/* ============ FAQ ============ */
+/* ============ FAQ / BAND / FOOTER ============ */
 .faq{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--card)}
 .faq details{border-bottom:1px solid var(--line)}
 .faq details:last-child{border-bottom:none}
@@ -358,14 +363,12 @@ h2.sec{font-size:clamp(26px,3.6vw,38px);font-weight:700;letter-spacing:-.02em;li
 .faq summary .mais{width:22px;height:22px;flex-shrink:0;color:var(--syn);transition:transform .25s}
 .faq details[open] summary .mais{transform:rotate(45deg)}
 .faq .resp{padding:0 22px 20px;color:var(--muted);font-size:13.5px;max-width:760px}
-
-/* ============ CTA FINAL / FOOTER ============ */
 .band{background:linear-gradient(115deg,var(--deep) 0%,var(--green) 55%,#0B7D6E 100%);
   border-radius:26px;padding:clamp(34px,6vw,64px);position:relative;overflow:hidden;
   border:1px solid rgba(206,220,0,.25)}
 .band::after{content:'';position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;
   background:radial-gradient(circle,rgba(206,220,0,.35),transparent 70%);filter:blur(30px)}
-.band h2{font-size:clamp(26px,4vw,44px);font-weight:800;letter-spacing:-.025em;line-height:1.1;max-width:560px;margin-bottom:12px}
+.band h2{font-size:clamp(26px,4vw,44px);font-weight:700;line-height:1.1;max-width:560px;margin-bottom:12px}
 .band p{color:rgba(245,245,247,.8);max-width:480px;margin-bottom:26px}
 footer{border-top:1px solid var(--line);margin-top:100px}
 .ft-in{max-width:var(--max);margin:0 auto;padding:36px 22px;display:flex;align-items:center;
@@ -380,8 +383,7 @@ footer{border-top:1px solid var(--line);margin-top:100px}
   display:flex;align-items:flex-start;justify-content:center;padding:7vh 16px;overflow-y:auto}
 .modal{background:var(--panel);border:1px solid var(--line2);border-radius:22px;width:100%;max-width:640px;
   padding:30px;box-shadow:0 30px 90px rgba(0,0,0,.6)}
-.modal h3{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px;padding-right:40px}
-.modal .fechar{position:absolute;margin:0}
+.modal h3{font-size:20px;font-weight:700;margin-bottom:6px;padding-right:40px}
 .modal-top{position:relative}
 .modal-top .fechar{position:absolute;top:-6px;right:-6px;width:36px;height:36px;border-radius:10px;
   border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;color:var(--muted)}
@@ -420,8 +422,9 @@ footer{border-top:1px solid var(--line);margin-top:100px}
     </a>
     <nav class="hd-nav" id="nav-links">
       <a href="#/" data-r="">Início</a>
+      <a href="#/sobre" data-r="sobre">A NeuroDynamics</a>
       <a href="#/cronograma" data-r="cronograma">Cronograma</a>
-      <a href="#/publicacoes" data-r="publicacoes">Edital &amp; Resultados</a>
+      <a href="#/publicacoes" data-r="publicacoes">Edital e resultados</a>
       <a href="#/acompanhar" data-r="acompanhar">Acompanhar</a>
     </nav>
     <a class="cta hd-cta" href="#/inscricao">Inscreva-se</a>
@@ -429,8 +432,9 @@ footer{border-top:1px solid var(--line);margin-top:100px}
   </div>
   <div id="menu-mob">
     <a href="#/">Início</a>
+    <a href="#/sobre">A NeuroDynamics</a>
     <a href="#/cronograma">Cronograma</a>
-    <a href="#/publicacoes">Edital &amp; Resultados</a>
+    <a href="#/publicacoes">Edital e resultados</a>
     <a href="#/acompanhar">Acompanhar inscrição</a>
     <a class="cta" href="#/inscricao">Inscreva-se</a>
   </div>
@@ -442,14 +446,15 @@ footer{border-top:1px solid var(--line);margin-top:100px}
   <div class="ft-in">
     <div style="display:flex;align-items:center;gap:12px">
       <img id="logo-ft" src="" alt="NeuroDynamics">
-      <span class="tx">Processo Seletivo · <span id="ft-ano">2026</span></span>
+      <span class="tx">Processo Seletivo <span id="ft-ano">2026</span></span>
     </div>
     <div class="ft-links">
+      <a href="#/sobre">A NeuroDynamics</a>
       <a href="#/cronograma">Cronograma</a>
       <a href="#/publicacoes">Edital</a>
       <a href="#/acompanhar">Acompanhar</a>
     </div>
-    <span class="tx">© NeuroDynamics — SOMA</span>
+    <span class="tx">© NeuroDynamics</span>
   </div>
 </footer>
 
@@ -467,11 +472,37 @@ const CONFIG = {
 };
 const LOGO_URL = 'https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/imagotipo%20preto.png';
 
+/* ============================================================
+   SOBRE — conteúdo da página "A NeuroDynamics".
+   EDITE os textos, fotos e vídeo abaixo. Nada além deste bloco
+   precisa ser alterado para atualizar a página institucional.
+   - fotos: lista de {url, legenda}; deixe [] para ocultar a seção.
+   - video_youtube: só o ID do vídeo (o que vem depois de v= na
+     URL do YouTube); deixe '' para ocultar a seção.
+   ============================================================ */
+const SOBRE = {
+  intro: [
+    'A NeuroDynamics é uma equipe de estudantes da Escola de Engenharia da UFMG que desenvolve tecnologia em engenharia biomédica, com base no LABBIO, o Laboratório de Bioengenharia da universidade.',
+    'Aqui, a formação acontece na prática: projetos reais, prazos reais e responsabilidade desde o primeiro dia, com o acompanhamento de quem já passou pelo mesmo caminho.'
+  ],
+  fazemos: [
+    ['Projetos', 'Desenvolvemos projetos de engenharia de ponta a ponta, da concepção e simulação à fabricação, eletrônica e software, passando por testes e documentação.'],
+    ['Pesquisa', 'Trabalhamos lado a lado com a pesquisa acadêmica do LABBIO, transformando conhecimento científico em protótipos e resultados concretos.'],
+    ['Pessoas', 'Somos uma organização gerida pelos próprios estudantes, com processos claros de gestão, avaliação e desenvolvimento de cada membro.']
+  ],
+  modelo: [
+    'O trabalho é organizado em departamentos e projetos. Cada membro pertence a um departamento, participa de projetos multidisciplinares e tem um gestor imediato que acompanha seu desenvolvimento.',
+    'O ritmo é o de um ambiente profissional: reuniões gerais, entregas acordadas, avaliações periódicas e espaço para crescer, errar e aprender. A dedicação é compatível com a graduação, e a rotina é combinada com cada equipe.'
+  ],
+  video_youtube: '',
+  fotos: []
+};
+
 /* Conteúdo de reserva: mantém o site no ar mesmo antes da
-   migração SOMA 6.0 (ou se o banco estiver fora). */
+   migração do banco (ou se ele estiver fora). */
 const FALLBACK = {
   edicao:{ nome:'Processo Seletivo 2026', slug:'ps-2026',
-    descricao:'A NeuroDynamics abre as portas para novos talentos. Um processo em três fases — dinâmicas em grupo, entrevistas individuais e período trainee — para quem quer construir tecnologia de ponta com a gente.',
+    descricao:'Estão chegando as inscrições para a próxima turma da NeuroDynamics. O processo tem três fases: dinâmica em grupo, entrevista individual e período trainee.',
     edital_url:null, inscricoes_inicio:'2026-08-03', inscricoes_fim:'2026-08-23',
     inscricoes_abertas:null,
     areas:['Mecânica','Eletrônica','Software','Simulação','Gestão e Operações','Comunicação e Marketing'] },
@@ -502,9 +533,9 @@ const $ = s=>document.querySelector(s);
 const esc = v=> v==null ? '' : String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const MES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 const dLocal = s=>{ const [a,m,d]=String(s).slice(0,10).split('-').map(Number); return new Date(a,m-1,d); };
-const fmtD = s=> s ? String(s).slice(0,10).split('-').reverse().join('/') : '—';
+const fmtD = s=> s ? String(s).slice(0,10).split('-').reverse().join('/') : '';
 const fmtCurto = s=>{ const d=dLocal(s); return `${String(d.getDate()).padStart(2,'0')} ${MES[d.getMonth()]}`; };
-const fmtRange = (i,f)=> !f||f===i ? fmtCurto(i) : `${String(dLocal(i).getDate()).padStart(2,'0')}–${fmtCurto(f)}`;
+const fmtRange = (i,f)=> !f||f===i ? fmtCurto(i) : `${String(dLocal(i).getDate()).padStart(2,'0')} a ${fmtCurto(f)}`;
 const fmtLongo = s=> dLocal(s).toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
 const hojeStr = ()=>{ const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 function toast(msg, err){ const t=document.createElement('div'); t.className='toast'+(err?' err':''); t.textContent=msg;
@@ -526,31 +557,30 @@ const ICONS = {
   down:'<path d="M12 4v11M6.5 10.5 12 16l5.5-5.5M5 20h14"/>',
   plus:'<path d="M12 5v14M5 12h14"/>',
   copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 14.5V6a2 2 0 0 1 2-2h8.5"/>',
-  search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
-  pin:'<path d="M12 21s-6.5-5.4-6.5-10.2A6.5 6.5 0 0 1 12 4.3a6.5 6.5 0 0 1 6.5 6.5C18.5 15.6 12 21 12 21z"/><circle cx="12" cy="10.8" r="2.3"/>'
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>'
 };
 const icone = (n,cls)=>`<svg class="ic${cls?' '+cls:''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]||''}</svg>`;
-async function copiar(t){ try{ await navigator.clipboard.writeText(t); toast('Copiado!'); }
+async function copiar(t){ try{ await navigator.clipboard.writeText(t); toast('Copiado.'); }
   catch(e){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy'); ta.remove(); toast('Copiado!'); } }
+    ta.select(); document.execCommand('copy'); ta.remove(); toast('Copiado.'); } }
 
 const FASE_COR = {divulgacao:'#94A3B8', inscricao:'#60A5FA', dinamica:'#2DD4BF',
   entrevista:'#C084FC', trainee:'#FBBF24', resultado:'#CEDC00', outro:'#94A3B8'};
 const FASE_LBL = {divulgacao:'Divulgação', inscricao:'Inscrições', dinamica:'Dinâmica',
-  entrevista:'Entrevista', trainee:'Trainee', resultado:'Resultado', outro:'—'};
+  entrevista:'Entrevista', trainee:'Trainee', resultado:'Resultado', outro:''};
 const TIPO_PUB = {edital:['Edital','#CEDC00'], aviso:['Aviso','#60A5FA'],
-  deferimento:['Inscrições deferidas','#2DD4BF'], resultado_dinamica:['Resultado — 1ª etapa','#2DD4BF'],
-  resultado_entrevista:['Resultado — 2ª etapa','#C084FC'], resultado_final:['Resultado final','#CEDC00']};
+  deferimento:['Inscrições deferidas','#2DD4BF'], resultado_dinamica:['Resultado da 1ª fase','#2DD4BF'],
+  resultado_entrevista:['Resultado da 2ª fase','#C084FC'], resultado_final:['Resultado final','#CEDC00']};
 
 /* ---------------- dados ---------------- */
 async function carregarSite(){
   try{
     const {data, error} = await sb.rpc('ps_site');
     if(error) throw error;
-    if(data){ state.site = data; state.online = true; }
-    else { state.site = FALLBACK; state.online = true; }   // banco ok, sem edição publicada
+    state.site = data || FALLBACK;
+    state.online = true;
   }catch(e){
-    console.warn('Sem conexão com o SOMA — usando conteúdo local.', e);
+    console.warn('Sem conexão com o sistema. Usando conteúdo local.', e);
     state.site = FALLBACK; state.online = false;
   }
 }
@@ -568,7 +598,7 @@ function inscricoesAbertas(){
 }
 
 /* ---------------- roteador ---------------- */
-const rotas = {'':pagHome, 'cronograma':pagCronograma, 'publicacoes':pagPublicacoes,
+const rotas = {'':pagHome, 'sobre':pagSobre, 'cronograma':pagCronograma, 'publicacoes':pagPublicacoes,
   'inscricao':pagInscricao, 'acompanhar':pagAcompanhar};
 function rota(){ return location.hash.replace(/^#\/?/,'').split('?')[0]; }
 function navegar(){
@@ -588,33 +618,21 @@ function observar(){
 }
 
 /* ============================================================
-   PÁGINA: HOME
+   PÁGINA: INÍCIO
    ============================================================ */
 const DECK = ()=>{
-  const insc = etapaPorFase('inscricao'), din = etapaPorFase('dinamica'),
-        ent = etapaPorFase('entrevista'), tr = etapaPorFase('trainee'),
-        fim = etapaPorFase('resultado', true);
+  const din = etapaPorFase('dinamica'), ent = etapaPorFase('entrevista'),
+        tr = etapaPorFase('trainee'), fim = etapaPorFase('resultado', true);
   return [
-    {g:'linear-gradient(150deg,#00594F 0%,#00352F 90%)', ic:'doc', fase:'Fase 0 · Inscrições',
-     t:'Inscreva-se', dt: insc ? fmtRange(insc.data_inicio, insc.data_fim) : '03–23 ago',
-     p:'Formulário 100% online, sem burocracia e sem precisar de conta. Conte sua história, mostre seus interesses e garanta seu protocolo de acompanhamento.',
-     cta:['Fazer inscrição','#/inscricao']},
-    {g:'linear-gradient(150deg,#0B7D6E 0%,#063A33 90%)', ic:'users', fase:'Fase 1 · Dinâmicas',
-     t:'Dinâmicas em grupo', dt: din ? fmtRange(din.data_inicio, din.data_fim) : '26–29 ago',
-     p:'Desafios em equipe para vermos você em ação: colaboração, comunicação e raciocínio na prática. Você escolhe o horário que preferir direto pelo site.',
-     cta:['Ver cronograma','#/cronograma']},
-    {g:'linear-gradient(150deg,#4C3A78 0%,#1E1533 90%)', ic:'chat', fase:'Fase 2 · Entrevistas',
-     t:'Entrevista individual', dt: ent ? fmtRange(ent.data_inicio, ent.data_fim) : '01–05 set',
-     p:'Uma conversa de verdade com o comitê de seleção — sobre você, suas motivações e o que quer construir na NeuroDynamics.',
-     cta:['Como funciona','#/cronograma']},
-    {g:'linear-gradient(150deg,#8A6A12 0%,#3A2C08 90%)', ic:'rocket', fase:'Fase 3 · Trainee',
-     t:'Período trainee', dt: tr ? fmtCurto(tr.data_inicio)+' → 28 nov' : '09 set → 28 nov',
-     p:'Mão na massa nos projetos reais da equipe, com o Desafio Trainee, mentoria e avaliações parciais até a apresentação final.',
-     cta:['Ver etapas','#/cronograma']},
-    {g:'linear-gradient(150deg,#CEDC00 0%,#8FA000 90%)', claro:true, ic:'flag', fase:'Publicações',
-     t:'Resultados', dt: fim ? fmtCurto(fim.data_inicio) : '30 nov',
-     p:'Edital, deferimentos e resultados de todas as etapas publicados aqui, em um lugar só. Acompanhe sua inscrição com protocolo + e-mail.',
-     cta:['Edital & resultados','#/publicacoes']}
+    {g:'linear-gradient(150deg,#0B7D6E 0%,#063A33 90%)', ic:'users', fase:'Fase 1',
+     t:'Dinâmica em grupo', dt: din ? fmtRange(din.data_inicio, din.data_fim) : '26 a 29 ago',
+     p:'Uma atividade em grupo com um desafio prático. Queremos ver como você trabalha em equipe: como escuta, colabora e constrói junto. O horário é agendado aqui no site, com a inscrição deferida.'},
+    {g:'linear-gradient(150deg,#4C3A78 0%,#1E1533 90%)', ic:'chat', fase:'Fase 2',
+     t:'Entrevista individual', dt: ent ? fmtRange(ent.data_inicio, ent.data_fim) : '01 a 05 set',
+     p:'Uma conversa individual com o comitê de seleção sobre sua trajetória, seus interesses e sua disponibilidade. Também é o momento de tirar suas dúvidas sobre a equipe.'},
+    {g:'linear-gradient(150deg,#00594F 0%,#00352F 90%)', ic:'rocket', fase:'Fase 3',
+     t:'Período trainee', dt: (tr?fmtCurto(tr.data_inicio):'09 set') + ' a ' + (fim?fmtCurto(fim.data_inicio):'30 nov'),
+     p:'Os aprovados entram na equipe como trainees e desenvolvem, em grupo, um desafio multidisciplinar que passa pelas áreas da NeuroDynamics, com acompanhamento dos membros do início ao fim. Ao término, os aprovados são efetivados.'}
   ];
 };
 
@@ -626,14 +644,15 @@ function pagHome(){
   const statusTxt = abertas ? 'Inscrições abertas' : antes ? 'Inscrições em breve' : 'Inscrições encerradas';
   const proximas = etapas().filter(x=> (x.data_fim||x.data_inicio) >= h).slice(0,4);
   const ultimasPubs = pubs().slice(0,3);
+  const ano = (e.nome.match(/\d{4}/)||['2026'])[0];
 
   $('#main').innerHTML = `
   <section id="hero">
-    <span class="status-chip reveal viu"><span class="dot"></span>${esc(statusTxt)} · ${esc(e.nome)}</span>
-    <h1 class="reveal viu">Engenharia que<br>começa em <em>você</em>.</h1>
+    <span class="status-chip reveal viu"><span class="dot"></span>${esc(statusTxt)}</span>
+    <h1 class="reveal viu">Processo Seletivo<br><em>${esc(ano)}</em></h1>
     <p class="hero-sub reveal viu">${esc(e.descricao||'')}</p>
     <div class="hero-acts reveal viu">
-      ${abertas||antes ? `<a class="cta lg" href="#/inscricao">Inscreva-se agora ${icone('arrow')}</a>`
+      ${abertas||antes ? `<a class="cta lg" href="#/inscricao">Inscreva-se ${icone('arrow')}</a>`
                        : `<a class="cta lg" href="#/acompanhar">Acompanhar inscrição ${icone('arrow')}</a>`}
       <a class="cta ghost lg" href="${e.edital_url ? esc(e.edital_url) : '#/publicacoes'}"
          ${e.edital_url?'target="_blank" rel="noopener"':''}>Ler o edital</a>
@@ -642,13 +661,12 @@ function pagHome(){
       <span class="cnt-label" id="cnt-label"></span>
       <div class="cnt" id="cnt"></div>
     </div>
-    <div class="hero-scroll">explore ${icone('down')}</div>
   </section>
 
   <section>
     <span class="eyebrow reveal">O processo</span>
-    <h2 class="sec reveal">Quatro fases. Uma jornada.</h2>
-    <p class="sec-sub reveal">Clique em cada fase para conhecer — ou deixe que elas se apresentem.</p>
+    <h2 class="sec reveal">Três fases</h2>
+    <p class="sec-sub reveal">Depois da inscrição, o processo tem três fases. Clique em cada uma para conhecer os detalhes.</p>
     <div class="deck reveal" id="deck"
          onmouseenter="this.classList.add('pausado')" onmouseleave="this.classList.remove('pausado')"></div>
   </section>
@@ -658,23 +676,30 @@ function pagHome(){
     <h2 class="sec reveal">Como participar</h2>
     <div class="passos">
       <div class="passo reveal"><span class="pn"></span>${icone('doc')}
-        <h3>Inscreva-se</h3><p>Preencha o formulário entre ${fmtCurto(e.inscricoes_inicio)} e ${fmtCurto(e.inscricoes_fim)} e guarde seu protocolo — ele é sua chave em todo o processo.</p></div>
+        <h3>Inscreva-se</h3><p>Preencha o formulário entre ${fmtCurto(e.inscricoes_inicio)} e ${fmtCurto(e.inscricoes_fim)}. Ao final, você recebe um protocolo. Guarde esse número: é com ele que você acompanha o processo.</p></div>
       <div class="passo reveal"><span class="pn"></span>${icone('cal')}
-        <h3>Agende suas etapas</h3><p>Com a inscrição deferida, escolha aqui no site o melhor horário para a dinâmica e, depois, para a entrevista.</p></div>
+        <h3>Agende sua dinâmica</h3><p>Com a inscrição deferida, escolha aqui no site o horário da sua dinâmica em grupo. Depois, se aprovado, você agenda também a entrevista.</p></div>
       <div class="passo reveal"><span class="pn"></span>${icone('users')}
-        <h3>Mostre quem você é</h3><p>Participe da dinâmica em grupo e da entrevista individual. Sem pegadinhas: queremos conhecer você de verdade.</p></div>
+        <h3>Participe das fases</h3><p>Dinâmica em grupo e entrevista individual. Não é preciso experiência prévia: queremos conhecer você e seu potencial.</p></div>
       <div class="passo reveal"><span class="pn"></span>${icone('rocket')}
-        <h3>Viva o trainee</h3><p>Aprovado? Você entra no período trainee, com projetos reais e mentoria, até a efetivação como membro.</p></div>
+        <h3>Viva o trainee</h3><p>Na última fase, você desenvolve com os outros trainees um desafio multidisciplinar dentro da equipe. Ao final, vem a efetivação.</p></div>
     </div>
   </section>
 
   <section>
+    <span class="eyebrow reveal">Quem somos</span>
+    <h2 class="sec reveal">A NeuroDynamics</h2>
+    <p class="sec-sub reveal">${esc(SOBRE.intro[0]||'')}</p>
+    <a class="cta ghost reveal" href="#/sobre">Conheça a equipe ${icone('arrow')}</a>
+  </section>
+
+  <section>
     <span class="eyebrow reveal">Cronograma</span>
-    <h2 class="sec reveal">Próximos marcos</h2>
+    <h2 class="sec reveal">Próximas datas</h2>
     <div class="pcard reveal" style="padding:26px 26px 12px">
       <div class="tl" style="--pct:0%">
         ${proximas.length ? proximas.map(x=>tlItem(x,h)).join('') :
-          '<p class="sec-sub" style="margin:0 0 16px">Edição concluída. Confira o histórico completo no cronograma.</p>'}
+          '<p class="sec-sub" style="margin:0 0 16px">Edição concluída. Veja o histórico completo no cronograma.</p>'}
       </div>
       <div style="padding:6px 0 16px"><a class="cta ghost" href="#/cronograma">Cronograma completo ${icone('arrow')}</a></div>
     </div>
@@ -682,10 +707,10 @@ function pagHome(){
 
   <section>
     <span class="eyebrow reveal">Publicações</span>
-    <h2 class="sec reveal">Edital &amp; resultados</h2>
+    <h2 class="sec reveal">Edital e resultados</h2>
     ${ultimasPubs.length ? `<div class="pub-lista reveal">${ultimasPubs.map(pubCard).join('')}</div>
       <div style="margin-top:18px" class="reveal"><a class="cta ghost" href="#/publicacoes">Todas as publicações ${icone('arrow')}</a></div>`
-    : `<div class="vazio reveal">Nenhuma publicação por enquanto. <b>O edital sai até ${fmtCurto(etapaPorFase('divulgacao')?.data_inicio||'2026-07-17')}</b> — e todos os resultados aparecerão aqui.</div>`}
+    : `<div class="vazio reveal">Nenhuma publicação por enquanto. <b>O edital sai até ${fmtCurto(etapaPorFase('divulgacao')?.data_inicio||'2026-07-17')}</b> e todos os resultados serão divulgados nesta página.</div>`}
   </section>
 
   <section>
@@ -696,9 +721,9 @@ function pagHome(){
 
   <section class="reveal">
     <div class="band">
-      <h2>Pronto para construir o que ainda não existe?</h2>
-      <p>As inscrições do ${esc(e.nome)} vão de ${fmtCurto(e.inscricoes_inicio)} a ${fmtCurto(e.inscricoes_fim)}. Sem login, sem burocracia — só você e a sua história.</p>
-      <a class="cta lg" href="#/inscricao">Quero me inscrever ${icone('arrow')}</a>
+      <h2>Vem construir com a gente.</h2>
+      <p>As inscrições do ${esc(e.nome)} vão de ${fmtCurto(e.inscricoes_inicio)} a ${fmtCurto(e.inscricoes_fim)}. O formulário leva cerca de dez minutos.</p>
+      <a class="cta lg" href="#/inscricao">Fazer minha inscrição ${icone('arrow')}</a>
     </div>
   </section>`;
 
@@ -708,17 +733,17 @@ function pagHome(){
 
 const FAQ = [
   ['Quem pode participar?',
-   'Estudantes de graduação interessados em fazer parte da equipe. Não exigimos curso ou período específicos — os requisitos completos estão no edital, que prevalece sobre este site.'],
+   'Estudantes de graduação interessados em fazer parte da equipe. Não exigimos curso nem período específicos. Os requisitos completos estão no edital, que prevalece sobre este site.'],
   ['Preciso ter experiência prévia?',
-   'Não. Avaliamos potencial, comprometimento e vontade de aprender. O período trainee existe justamente para te dar a base necessária, com mentoria dos membros.'],
+   'Não. Avaliamos potencial, comprometimento e vontade de aprender. O período trainee existe justamente para dar a base necessária, com o acompanhamento dos membros da equipe.'],
   ['Preciso criar uma conta no site?',
-   'Não. A inscrição gera um <b>protocolo</b>; com ele e o seu e-mail você acompanha o status, agenda dinâmica e entrevista e vê seus resultados — sem senha nenhuma.'],
-  ['Como funcionam as etapas?',
-   'Após a análise das inscrições, os candidatos deferidos participam de uma dinâmica em grupo (1ª etapa) e, se aprovados, de uma entrevista individual (2ª etapa). Quem passa entra no período trainee, encerrado com uma apresentação final e o resultado definitivo.'],
+   'Não. Ao se inscrever, você recebe um <b>protocolo</b>. Com ele e o e-mail cadastrado, você acompanha sua situação, agenda a dinâmica e a entrevista e consulta os resultados.'],
+  ['Como funcionam as fases?',
+   'Após a análise das inscrições, os candidatos deferidos participam de uma dinâmica em grupo. Os aprovados seguem para uma entrevista individual e, na sequência, para o período trainee, que termina com uma apresentação final e o resultado definitivo.'],
   ['O que é o período trainee?',
-   'Cerca de três meses dentro da equipe, com o Desafio Trainee, participação nos projetos e duas avaliações parciais. É a fase de mão na massa — e de descobrir se é aqui que você quer estar.'],
+   'É a fase em que você já atua dentro da equipe. Os trainees desenvolvem em grupo um desafio multidisciplinar, que passa pelas diferentes áreas da NeuroDynamics, com o acompanhamento dos membros até a apresentação final.'],
   ['Como fico sabendo dos resultados?',
-   'Todos os resultados são publicados na página <b>Edital &amp; Resultados</b>, e você também pode consultar sua situação individual em <b>Acompanhar</b>, com protocolo + e-mail.']
+   'Os resultados de todas as fases são publicados na página <b>Edital e resultados</b>. Você também pode consultar sua situação individual em <b>Acompanhar</b>, informando protocolo e e-mail.']
 ];
 
 function tlItem(x, h){
@@ -728,7 +753,7 @@ function tlItem(x, h){
     <span class="no">${done?`<svg viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19 7"/></svg>`:''}</span>
     <span class="dt-badge">${fmtRange(x.data_inicio, x.data_fim)}</span>
     <h3>${esc(x.titulo)}
-      <span class="tag" style="--tc:${FASE_COR[x.fase]||'#94A3B8'}">${FASE_LBL[x.fase]||''}</span>
+      ${FASE_LBL[x.fase]?`<span class="tag" style="--tc:${FASE_COR[x.fase]||'#94A3B8'}">${FASE_LBL[x.fase]}</span>`:''}
       ${agora?'<span class="agora-lbl">agora</span>':''}</h3>
     ${x.descricao?`<p>${esc(x.descricao)}</p>`:''}
   </div>`;
@@ -738,7 +763,7 @@ function montarDeck(){
   const deck = DECK();
   const el = $('#deck'); if(!el) return;
   el.innerHTML = deck.map((c,i)=>`
-    <div class="dcard${c.claro?' claro':''}" style="--gcard:${c.g};--dur:6.5s" data-i="${i}" onclick="deckIr(${i},true)">
+    <div class="dcard" style="--gcard:${c.g};--dur:7s" data-i="${i}" onclick="deckIr(${i},true)">
       <span class="num">${String(i+1).padStart(2,'0')}</span>
       <div class="mini">${icone(c.ic)}<span class="t">${esc(c.t)}</span></div>
       <div class="body">
@@ -746,7 +771,6 @@ function montarDeck(){
         <h3>${esc(c.t)}</h3>
         <span class="dt">${esc(c.dt)}</span>
         <p>${esc(c.p)}</p>
-        <a class="go" href="${c.cta[1]}" onclick="event.stopPropagation()">${esc(c.cta[0])} →</a>
       </div>
       <div class="prog"><i></i></div>
     </div>`).join('');
@@ -755,7 +779,7 @@ function montarDeck(){
     if(el.classList.contains('pausado')) return;
     const atual = Number(el.querySelector('.dcard.on')?.dataset.i||0);
     deckIr((atual+1)%deck.length,false);
-  }, 6500);
+  }, 7000);
 }
 function deckIr(i, manual){
   const el = $('#deck'); if(!el) return;
@@ -769,7 +793,7 @@ function deckIr(i, manual){
       if(el.classList.contains('pausado')) return;
       const atual = Number(el.querySelector('.dcard.on')?.dataset.i||0);
       deckIr((atual+1)%el.children.length,false);
-    }, 6500);
+    }, 7000);
   }
 }
 
@@ -781,9 +805,9 @@ function montarCountdown(){
     const abre = dLocal(e.inscricoes_inicio);
     const fecha = dLocal(e.inscricoes_fim); fecha.setHours(23,59,59);
     let alvo, lbl;
-    if(agora < abre){ alvo=abre; lbl='para a abertura das inscrições'; }
-    else if(agora <= fecha){ alvo=fecha; lbl='para o fim das inscrições'; }
-    else { $('#cnt-label').textContent='Inscrições encerradas — acompanhe os resultados.'; el.innerHTML=''; return; }
+    if(agora < abre){ alvo=abre; lbl='Abertura das inscrições'; }
+    else if(agora <= fecha){ alvo=fecha; lbl='Encerramento das inscrições'; }
+    else { $('#cnt-label').textContent='Inscrições encerradas. Acompanhe os resultados.'; el.innerHTML=''; return; }
     $('#cnt-label').textContent = lbl;
     let s = Math.max(0, Math.floor((alvo-agora)/1000));
     const d = Math.floor(s/86400); s-=d*86400;
@@ -794,6 +818,61 @@ function montarCountdown(){
   }
   tique();
   state.cntTimer = setInterval(tique, 1000);
+}
+
+/* ============================================================
+   PÁGINA: A NEURODYNAMICS
+   ============================================================ */
+function pagSobre(){
+  const e = ed();
+  $('#main').innerHTML = `
+  <div class="pg-head">
+    <span class="eyebrow">Quem somos</span>
+    <h2 class="sec">A NeuroDynamics</h2>
+  </div>
+  <section>
+    ${SOBRE.intro.map(t=>`<p class="sobre-texto reveal">${esc(t)}</p>`).join('')}
+  </section>
+  ${SOBRE.video_youtube ? `
+  <section class="reveal">
+    <div class="video-wrap">
+      <iframe src="https://www.youtube-nocookie.com/embed/${esc(SOBRE.video_youtube)}"
+        title="NeuroDynamics" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy"></iframe>
+    </div>
+  </section>`:''}
+  <section>
+    <span class="eyebrow reveal">O que fazemos</span>
+    <h2 class="sec reveal">Engenharia na prática</h2>
+    <div class="sobre-grid">
+      ${SOBRE.fazemos.map(([t,p])=>`<div class="sobre-bloco reveal"><h3>${esc(t)}</h3><p>${esc(p)}</p></div>`).join('')}
+    </div>
+  </section>
+  ${SOBRE.fotos.length ? `
+  <section>
+    <span class="eyebrow reveal">No dia a dia</span>
+    <h2 class="sec reveal">A equipe em ação</h2>
+    <div class="foto-grid">
+      ${SOBRE.fotos.map(f=>`<figure class="foto reveal"><img src="${esc(f.url)}" alt="${esc(f.legenda||'NeuroDynamics')}" loading="lazy">
+        ${f.legenda?`<figcaption class="lg">${esc(f.legenda)}</figcaption>`:''}</figure>`).join('')}
+    </div>
+  </section>`:''}
+  <section>
+    <span class="eyebrow reveal">Modelo de trabalho</span>
+    <h2 class="sec reveal">Como a equipe se organiza</h2>
+    ${SOBRE.modelo.map(t=>`<p class="sobre-texto reveal" style="font-size:15.5px;color:var(--muted)">${esc(t)}</p>`).join('')}
+    <div style="margin-top:26px" class="reveal">
+      <p class="sec-sub" style="margin-bottom:14px">Áreas da equipe:</p>
+      <div class="areas-chips">${(e.areas||[]).map(a=>`<span>${esc(a)}</span>`).join('')}</div>
+    </div>
+  </section>
+  <section class="reveal">
+    <div class="band">
+      <h2>Gostou do que viu?</h2>
+      <p>O caminho para entrar na equipe começa pela inscrição no processo seletivo.</p>
+      <a class="cta lg" href="#/inscricao">Inscreva-se ${icone('arrow')}</a>
+    </div>
+  </section>`;
 }
 
 /* ============================================================
@@ -817,7 +896,7 @@ function pagCronograma(){
   </section>
   <section class="reveal viu">
     <div class="band">
-      <h2>Não perca os prazos.</h2>
+      <h2>Fique de olho nos prazos.</h2>
       <p>Inscreva-se dentro do período e acompanhe cada publicação por aqui.</p>
       <a class="cta lg" href="#/inscricao">Fazer minha inscrição ${icone('arrow')}</a>
     </div>
@@ -825,7 +904,7 @@ function pagCronograma(){
 }
 
 /* ============================================================
-   PÁGINA: PUBLICAÇÕES (edital + resultados)
+   PÁGINA: EDITAL E RESULTADOS
    ============================================================ */
 function pubCard(p){
   const [lbl,cor] = TIPO_PUB[p.tipo]||['Publicação','#94A3B8'];
@@ -844,13 +923,13 @@ function pagPublicacoes(){
   $('#main').innerHTML = `
   <div class="pg-head">
     <span class="eyebrow">Comunicação oficial</span>
-    <h2 class="sec">Edital &amp; resultados</h2>
-    <p class="sec-sub">Tudo o que for oficial do ${esc(e.nome)} sai aqui: edital, deferimento das inscrições e os resultados de cada etapa.</p>
+    <h2 class="sec">Edital e resultados</h2>
+    <p class="sec-sub">Tudo o que for oficial do ${esc(e.nome)} sai aqui: o edital, o deferimento das inscrições e os resultados de cada fase.</p>
   </div>
   <section>
-    ${!state.online?`<div class="aviso info">Não foi possível conectar ao sistema agora — as publicações podem estar desatualizadas. Recarregue a página em instantes.</div>`:''}
+    ${!state.online?`<div class="aviso info">Não foi possível conectar ao sistema agora. As publicações podem estar desatualizadas; recarregue a página em instantes.</div>`:''}
     ${lista.length?`<div class="pub-lista">${lista.map(pubCard).join('')}</div>`
-      :`<div class="vazio">Nenhuma publicação até o momento.<br><b>O edital será publicado até ${fmtCurto(etapaPorFase('divulgacao')?.data_inicio||'2026-07-17')}.</b> Volte em breve!</div>`}
+      :`<div class="vazio">Nenhuma publicação até o momento.<br><b>O edital será publicado até ${fmtCurto(etapaPorFase('divulgacao')?.data_inicio||'2026-07-17')}.</b></div>`}
   </section>`;
 }
 window.abrirPub = function(id){
@@ -858,17 +937,17 @@ window.abrirPub = function(id){
   const [lbl,cor] = TIPO_PUB[p.tipo]||['Publicação','#94A3B8'];
   const res = p.resultados;
   abreModal(`
-    <span class="tp pub-modal-tag" style="--tc:${cor};display:inline-block;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:999px;padding:3px 11px;background:color-mix(in srgb,${cor} 16%,transparent);color:${cor};border:1px solid color-mix(in srgb,${cor} 35%,transparent);margin-bottom:10px">${lbl}</span>
+    <span style="--tc:${cor};display:inline-block;font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:999px;padding:3px 11px;background:color-mix(in srgb,${cor} 16%,transparent);color:${cor};border:1px solid color-mix(in srgb,${cor} 35%,transparent);margin-bottom:10px">${lbl}</span>
     <h3>${esc(p.titulo)}</h3>
     <div style="font-size:12px;color:var(--dim)">${p.publicado_em?'Publicado em '+new Date(p.publicado_em).toLocaleString('pt-BR'):''}</div>
     ${p.corpo?`<div class="corpo-pub">${esc(p.corpo)}</div>`:''}
     ${p.url_anexo?`<a class="cta" style="margin:8px 0 14px" href="${esc(p.url_anexo)}" target="_blank" rel="noopener">${icone('down')} Abrir documento</a>`:''}
     ${res?`
       <h3 style="font-size:15px;margin-top:16px">Lista (${res.length})</h3>
-      <input class="res-busca" placeholder="Buscar por nome ou protocolo…" oninput="filtraRes(this.value)">
+      <input class="res-busca" placeholder="Buscar por nome ou protocolo" oninput="filtraRes(this.value)">
       <div style="max-height:320px;overflow-y:auto">
       <table class="res-tab"><thead><tr><th>Protocolo</th><th>Nome</th></tr></thead>
-      <tbody id="res-body">${res.map(r=>`<tr data-t="${esc((r.nome+' '+r.protocolo).toLowerCase())}"><td class="prot">${esc(r.protocolo||'—')}</td><td>${esc(r.nome)}</td></tr>`).join('')}</tbody></table>
+      <tbody id="res-body">${res.map(r=>`<tr data-t="${esc((r.nome+' '+r.protocolo).toLowerCase())}"><td class="prot">${esc(r.protocolo||'')}</td><td>${esc(r.nome)}</td></tr>`).join('')}</tbody></table>
       ${res.length===0?'<div class="vazio" style="margin-top:10px">A lista será divulgada em breve.</div>':''}</div>`:''}
   `);
 };
@@ -878,7 +957,7 @@ window.filtraRes = function(q){
 };
 
 /* ============================================================
-   PÁGINA: INSCRIÇÃO (wizard sem login)
+   PÁGINA: INSCRIÇÃO
    ============================================================ */
 const form = { passo:0, dados:{ areas_interesse:[] } };
 const PASSOS = ['Sobre você','Vida acadêmica','Motivação','Termos','Revisão'];
@@ -892,9 +971,11 @@ function pagInscricao(){
   } else if(!abertas && h < e.inscricoes_inicio){
     corpo = `<div class="fcard" style="text-align:center">
       <h3>As inscrições ainda não abriram</h3>
-      <p class="hint" style="margin-bottom:20px">O período de inscrição vai de <b style="color:var(--ink)">${fmtD(e.inscricoes_inicio)}</b> a <b style="color:var(--ink)">${fmtD(e.inscricoes_fim)}</b>. Prepare seu material e volte aqui!</p>
+      <p class="hint" style="margin-bottom:20px">O período de inscrição vai de <b style="color:var(--ink)">${fmtD(e.inscricoes_inicio)}</b> a <b style="color:var(--ink)">${fmtD(e.inscricoes_fim)}</b>. Enquanto isso, leia o edital e conheça a equipe.</p>
       <div class="cnt-wrap" style="justify-content:center"><span class="cnt-label" id="cnt-label"></span><div class="cnt" id="cnt"></div></div>
-      <div style="margin-top:24px"><a class="cta ghost" href="#/cronograma">Ver o cronograma completo</a></div>
+      <div style="margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a class="cta ghost" href="#/sobre">A NeuroDynamics</a>
+        <a class="cta ghost" href="#/cronograma">Cronograma</a></div>
     </div>`;
   } else if(!abertas){
     corpo = `<div class="fcard" style="text-align:center">
@@ -909,7 +990,7 @@ function pagInscricao(){
   <div class="pg-head" style="text-align:center">
     <span class="eyebrow" style="justify-content:center">${esc(e.nome)}</span>
     <h2 class="sec">Formulário de inscrição</h2>
-    <p class="sec-sub" style="margin:0 auto 10px">Leva menos de 10 minutos. Sem conta, sem senha — no final você recebe um protocolo para acompanhar tudo.</p>
+    <p class="sec-sub" style="margin:0 auto 10px">Leva cerca de dez minutos. Ao final, você recebe o protocolo para acompanhar o processo.</p>
   </div>
   <section class="fwrap">${corpo}</section>`;
   if(abertas && state.online){ form.passo=0; renderPasso(); }
@@ -923,7 +1004,7 @@ function stepsHTML(){
 const fld = (id,lbl,req,inner)=>`<div class="fld ${id?'f-'+id:''}">
   <label>${lbl}${req?' <b>*</b>':''}</label>${inner}<div class="err-msg">Campo obrigatório.</div></div>`;
 const inp = (id,ph,type)=>`<input id="f_${id}" type="${type||'text'}" placeholder="${ph||''}" value="${esc(form.dados[id]||'')}">`;
-const sel = (id,ops)=>`<select id="f_${id}">${['<option value="">Selecione…</option>',...ops.map(o=>
+const sel = (id,ops)=>`<select id="f_${id}">${['<option value="">Selecione</option>',...ops.map(o=>
   `<option ${form.dados[id]===o?'selected':''}>${esc(o)}</option>`)].join('')}</select>`;
 const txa = (id,ph)=>`<textarea id="f_${id}" placeholder="${ph||''}">${esc(form.dados[id]||'')}</textarea>`;
 
@@ -937,10 +1018,10 @@ function renderPasso(){
       ${fld('email','E-mail',true,inp('email','voce@exemplo.com','email'))}
       ${fld('telefone','WhatsApp / telefone',true,inp('telefone','(31) 9 9999-9999','tel'))}
       ${fld('data_nascimento','Data de nascimento',false,inp('data_nascimento','','date'))}
-      ${fld('cidade_origem','Cidade de origem',false,inp('cidade_origem','Belo Horizonte — MG'))}
+      ${fld('cidade_origem','Cidade de origem',false,inp('cidade_origem','Belo Horizonte, MG'))}
       ${fld('genero','Gênero',false,sel('genero',['Feminino','Masculino','Não binário','Outro','Prefiro não responder']))}
       ${fld('autodeclaracao_racial','Autodeclaração racial',false,sel('autodeclaracao_racial',['Amarela','Branca','Indígena','Parda','Preta','Prefiro não responder']))}
-      <div class="full">${fld('acessibilidade','Acessibilidade',false,inp('acessibilidade','Alguma necessidade específica para participar das etapas?'))}</div>
+      <div class="full">${fld('acessibilidade','Acessibilidade',false,inp('acessibilidade','Alguma necessidade específica para participar das fases?'))}</div>
     </div>`;
   if(p===1) html = `
     <div class="fgrid">
@@ -948,10 +1029,10 @@ function renderPasso(){
       ${fld('curso','Curso',true,inp('curso','Ex.: Engenharia Mecânica'))}
       ${fld('matricula','Nº de matrícula',false,inp('matricula',''))}
       ${fld('periodo','Período atual',true,sel('periodo',['1º','2º','3º','4º','5º','6º','7º','8º','9º','10º ou mais']))}
-      <div class="full">${fld('background','Experiências e projetos',false,txa('background','Iniciação científica, equipes de competição, projetos pessoais, trabalho… o que você já construiu?'))}</div>
-      ${fld('github','GitHub',false,inp('github','github.com/você','url'))}
-      ${fld('linkedin','LinkedIn',false,inp('linkedin','linkedin.com/in/você','url'))}
-      ${fld('lattes','Currículo Lattes',false,inp('lattes','lattes.cnpq.br/…','url'))}
+      <div class="full">${fld('background','Experiências e projetos',false,txa('background','Iniciação científica, equipes de competição, projetos pessoais, trabalho. Conte o que você já fez.'))}</div>
+      ${fld('github','GitHub',false,inp('github','github.com/voce','url'))}
+      ${fld('linkedin','LinkedIn',false,inp('linkedin','linkedin.com/in/voce','url'))}
+      ${fld('lattes','Currículo Lattes',false,inp('lattes','lattes.cnpq.br/...','url'))}
       ${fld('portfolio','Portfólio / site',false,inp('portfolio','','url'))}
     </div>`;
   if(p===2) html = `
@@ -962,7 +1043,7 @@ function renderPasso(){
       <div class="err-msg" id="areas-err">Escolha ao menos uma área.</div>
     </div>
     <div class="fgrid">
-      <div class="full">${fld('motivacao','Por que você quer entrar na NeuroDynamics?',true,txa('motivacao','Conte em poucas linhas o que te move — e o que você espera viver aqui. (mín. 100 caracteres)'))}</div>
+      <div class="full">${fld('motivacao','Por que você quer entrar na NeuroDynamics?',true,txa('motivacao','Conte em poucas linhas por que quer participar e o que espera do processo (mínimo de 100 caracteres).'))}</div>
       ${fld('disponibilidade','Disponibilidade semanal',true,sel('disponibilidade',['Até 6h','6 a 10h','10 a 15h','Mais de 15h']))}
       ${fld('como_soube','Como soube do processo?',false,sel('como_soube',['Instagram','Indicação de amigo(a)','Professores','Eventos','Cartazes','Outro']))}
     </div>`;
@@ -972,7 +1053,7 @@ function renderPasso(){
     <label class="check-l"><input type="checkbox" id="f_aceite_lgpd" ${d.aceite_lgpd?'checked':''}>
       <span>Autorizo o tratamento dos meus dados pessoais pela NeuroDynamics <b>exclusivamente para a condução deste processo seletivo</b>, nos termos da LGPD (Lei 13.709/2018). Os dados de candidatos não aprovados serão eliminados ao final do processo. <b>*</b></span></label>
     <label class="check-l"><input type="checkbox" id="f_autorizacao_imagem" ${d.autorizacao_imagem?'checked':''}>
-      <span>Autorizo o uso da minha imagem em registros das etapas presenciais para comunicação institucional da equipe. <i>(opcional)</i></span></label>
+      <span>Autorizo o uso da minha imagem em registros das fases presenciais para a comunicação institucional da equipe. <i>(opcional)</i></span></label>
     <div class="err-msg" id="aceites-err" style="color:var(--bad);font-size:12px">É preciso aceitar o edital e o termo de dados para continuar.</div>`;
   if(p===4){
     const b=(t,rows)=>`<div class="rev-bloco"><h4>${t}</h4><dl class="dl">${rows.filter(r=>r[1]).map(r=>`<div><dt>${r[0]}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl></div>`;
@@ -980,17 +1061,17 @@ function renderPasso(){
       ${b('Sobre você',[['Nome',d.nome],['E-mail',d.email],['Telefone',d.telefone],['Nascimento',d.data_nascimento?fmtD(d.data_nascimento):''],['Cidade',d.cidade_origem],['Gênero',d.genero]])}
       ${b('Vida acadêmica',[['Instituição',d.instituicao],['Curso',d.curso],['Período',d.periodo],['Matrícula',d.matricula],['GitHub',d.github],['LinkedIn',d.linkedin]])}
       ${b('Motivação',[['Áreas',d.areas_interesse.join(', ')],['Disponibilidade',d.disponibilidade],['Como soube',d.como_soube],['Motivação',d.motivacao]])}
-      <div class="aviso info">Confira tudo com calma — depois de enviada, a inscrição não pode ser editada pelo site. Qualquer correção, fale com a equipe pelos canais oficiais.</div>`;
+      <div class="aviso info">Confira tudo com calma. Depois de enviada, a inscrição não pode ser editada pelo site; qualquer correção deve ser pedida pelos canais oficiais da equipe.</div>`;
   }
   w.innerHTML = `${stepsHTML()}
     <div class="fcard">
       <div class="st-title">Passo ${p+1} de ${PASSOS.length}</div>
       <h3>${PASSOS[p]}</h3>
-      <p class="hint">${['Dados básicos de contato.','Onde você estuda e o que já fez.','O que te trouxe até aqui.','Os combinados importantes.','Revise e envie.'][p]}</p>
+      <p class="hint">${['Seus dados de contato.','Onde você estuda e o que já fez.','O que te interessa na equipe.','Os termos do processo.','Revise e envie.'][p]}</p>
       <div id="passo-err"></div>
       ${html}
       <div class="facts">
-        ${p>0?`<button class="cta ghost" onclick="passoAnterior()">← Voltar</button>`:`<span></span>`}
+        ${p>0?`<button class="cta ghost" onclick="passoAnterior()">Voltar</button>`:`<span></span>`}
         ${p<4?`<button class="cta" onclick="proximoPasso()">Continuar ${icone('arrow')}</button>`
              :`<button class="cta lg" id="btn-enviar" onclick="enviarInscricao()">Enviar inscrição ${icone('check')}</button>`}
       </div>
@@ -1033,7 +1114,7 @@ window.proximoPasso = function(){
     erro |= aErr;
     erro |= marca('motivacao', !d.motivacao || d.motivacao.length<100);
     if(d.motivacao && d.motivacao.length<100){
-      const el=document.querySelector('.f-motivacao .err-msg'); if(el) el.textContent='Conte um pouco mais — mínimo de 100 caracteres.';
+      const el=document.querySelector('.f-motivacao .err-msg'); if(el) el.textContent='Conte um pouco mais: o mínimo é de 100 caracteres.';
     }
     erro |= marca('disponibilidade', !d.disponibilidade);
   }
@@ -1047,7 +1128,7 @@ window.proximoPasso = function(){
   renderPasso();
 }
 window.enviarInscricao = async function(){
-  const btn = $('#btn-enviar'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Enviando…';
+  const btn = $('#btn-enviar'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Enviando';
   try{
     const {data, error} = await sb.rpc('ps_inscrever', {p: form.dados});
     if(error) throw error;
@@ -1059,14 +1140,14 @@ window.enviarInscricao = async function(){
             display:flex;align-items:center;justify-content:center;margin:0 auto 18px">
             <svg viewBox="0 0 24 24" style="width:34px;height:34px;stroke:var(--syn);stroke-width:2.5;fill:none;stroke-linecap:round"><path d="M5 12.5 10 17.5 19 7"/></svg>
           </div>
-          <h3>Inscrição enviada! 🎉</h3>
-          <p class="hint">Boas-vindas ao ${esc(ed().nome)}, ${esc(form.dados.nome.split(' ')[0])}. Este é o seu protocolo — <b style="color:var(--ink)">guarde-o com carinho</b>: é com ele (e seu e-mail) que você acompanha tudo.</p>
+          <h3>Inscrição enviada</h3>
+          <p class="hint">Recebemos sua inscrição no ${esc(ed().nome)}, ${esc(form.dados.nome.split(' ')[0])}. Este é o seu protocolo. <b style="color:var(--ink)">Guarde este número</b>: com ele e o seu e-mail você acompanha todo o processo.</p>
           <div class="protocolo-box">
             <div class="p-lbl">Seu protocolo</div>
             <div class="p-num">${esc(data.protocolo)}</div>
             <button class="cta ghost" onclick="copiar('${esc(data.protocolo)}')">${icone('copy')} Copiar</button>
           </div>
-          <div class="aviso info" style="text-align:left">Próximo passo: aguarde a <b>divulgação das inscrições deferidas</b> (${fmtD(etapaPorFase('resultado')?.data_inicio||'2026-08-24')}). Se deferida, você volta aqui para <b>agendar sua dinâmica em grupo</b>.</div>
+          <div class="aviso info" style="text-align:left">Próximo passo: aguardar a <b>divulgação das inscrições deferidas</b> (${fmtD(etapaPorFase('resultado')?.data_inicio||'2026-08-24')}). Se a sua for deferida, você volta aqui para <b>agendar a dinâmica em grupo</b>.</div>
           <a class="cta lg" href="#/acompanhar">Acompanhar minha inscrição ${icone('arrow')}</a>
         </div>`;
       form.passo=0; form.dados={areas_interesse:[]};
@@ -1078,7 +1159,7 @@ window.enviarInscricao = async function(){
     else mostraErroEnvio('Não foi possível enviar agora. Tente novamente em instantes.');
   }catch(e){
     console.error(e);
-    mostraErroEnvio('Falha de conexão com o sistema. Verifique sua internet e tente de novo — sua resposta ficou salva neste navegador.');
+    mostraErroEnvio('Falha de conexão com o sistema. Verifique sua internet e tente de novo. Suas respostas continuam preenchidas.');
   }
   if(btn.isConnected){ btn.disabled=false; btn.innerHTML='Enviar inscrição '+icone('check'); }
 };
@@ -1088,20 +1169,20 @@ function mostraErroEnvio(msg){
 }
 
 /* ============================================================
-   PÁGINA: ACOMPANHAR + AGENDAMENTO
+   PÁGINA: ACOMPANHAR E AGENDAR
    ============================================================ */
 const SIT = {
-  inscrito:            {t:'Inscrição recebida', p:'Sua inscrição está em análise pelo comitê de seleção. O resultado do deferimento sai conforme o cronograma.', cls:''},
-  indeferido:          {t:'Inscrição indeferida', p:'Sua inscrição não foi deferida nesta edição. Agradecemos muito o interesse — esperamos você no próximo processo!', cls:'fim'},
-  deferido:            {t:'Inscrição deferida! 🎉', p:'Você está na primeira etapa. Agende abaixo o seu horário para a dinâmica em grupo.', cls:'acao'},
-  reprovado_dinamica:  {t:'Não aprovado(a) na 1ª etapa', p:'Você não seguiu para a próxima fase desta edição. Obrigado por participar — tente de novo no próximo processo!', cls:'fim'},
-  aprovado_dinamica:   {t:'Aprovado(a) na 1ª etapa! 🎉', p:'Mandou bem na dinâmica! Agora agende sua entrevista individual abaixo.', cls:'acao'},
-  reprovado_entrevista:{t:'Não aprovado(a) na 2ª etapa', p:'Você não seguiu para o período trainee desta edição. Agradecemos a participação!', cls:'fim'},
-  aprovado_entrevista: {t:'Aprovado(a) na 2ª etapa! 🎉', p:'Você está dentro do período trainee. Aguarde as orientações de início — e prepare-se para colocar a mão na massa.', cls:'ok'},
-  trainee:             {t:'Período trainee em andamento', p:'Acompanhe o Desafio Trainee, as avaliações parciais e a apresentação final pelo cronograma.', cls:'ok'},
-  reprovado_final:     {t:'Resultado final', p:'Você não foi efetivado(a) nesta edição. Valorizamos demais sua dedicação ao longo do trainee — as portas seguem abertas.', cls:'fim'},
-  aprovado_final:      {t:'Aprovado(a) no resultado final! 🏆', p:'Parabéns! Você concluiu o processo seletivo com sucesso. A equipe entrará em contato para a efetivação.', cls:'ok'},
-  integrado:           {t:'Você agora é NeuroDynamics! 🏆', p:'Efetivação concluída. Boas-vindas oficiais à equipe!', cls:'ok'},
+  inscrito:            {t:'Inscrição recebida', p:'Sua inscrição está em análise pelo comitê de seleção. O resultado do deferimento sai na data prevista no cronograma.', cls:''},
+  indeferido:          {t:'Inscrição indeferida', p:'Sua inscrição não foi deferida nesta edição. Agradecemos o interesse e esperamos você no próximo processo.', cls:'fim'},
+  deferido:            {t:'Inscrição deferida', p:'Você está na primeira fase. Agende abaixo o horário da sua dinâmica em grupo.', cls:'acao'},
+  reprovado_dinamica:  {t:'Resultado da primeira fase', p:'Você não seguiu para a próxima fase desta edição. Obrigado por participar, e até o próximo processo.', cls:'fim'},
+  aprovado_dinamica:   {t:'Aprovação na primeira fase', p:'Você foi aprovado na dinâmica em grupo. Agende abaixo o horário da sua entrevista individual.', cls:'acao'},
+  reprovado_entrevista:{t:'Resultado da segunda fase', p:'Você não seguiu para o período trainee desta edição. Agradecemos a participação.', cls:'fim'},
+  aprovado_entrevista: {t:'Aprovação na segunda fase', p:'Você foi aprovado na entrevista e fará parte do período trainee. Aguarde as orientações de início.', cls:'ok'},
+  trainee:             {t:'Período trainee em andamento', p:'Bom trabalho no desafio. As datas das avaliações e da apresentação final estão no cronograma.', cls:'ok'},
+  reprovado_final:     {t:'Resultado final', p:'Você não foi efetivado nesta edição. Valorizamos muito sua dedicação ao longo do trainee, e as portas seguem abertas.', cls:'fim'},
+  aprovado_final:      {t:'Aprovação no resultado final', p:'Parabéns! Você concluiu o processo seletivo com sucesso. A equipe entrará em contato para a efetivação.', cls:'ok'},
+  integrado:           {t:'Efetivação concluída', p:'Você agora é parte da NeuroDynamics. Boas-vindas!', cls:'ok'},
   desistente:          {t:'Inscrição cancelada', p:'Esta inscrição foi encerrada a pedido. Se isso for um engano, fale com a equipe pelos canais oficiais.', cls:'fim'}
 };
 const FASE_IDX = {inscrito:0, indeferido:0, deferido:1, reprovado_dinamica:1, aprovado_dinamica:2,
@@ -1113,14 +1194,14 @@ function pagAcompanhar(){
   <div class="pg-head" style="text-align:center">
     <span class="eyebrow" style="justify-content:center">Área do candidato</span>
     <h2 class="sec">Acompanhe sua inscrição</h2>
-    <p class="sec-sub" style="margin:0 auto 10px">Informe o protocolo recebido na inscrição e o e-mail cadastrado. Nada de senha.</p>
+    <p class="sec-sub" style="margin:0 auto 10px">Informe o protocolo recebido na inscrição e o e-mail cadastrado.</p>
   </div>
   <section class="fwrap">
     <div class="fcard">
       <div id="ac-err"></div>
       <div class="fgrid">
-        ${fldSimples('ac-prot','Protocolo', `<input id="ac-prot" placeholder="PS26-0000" value="${esc(salvo?.protocolo||'')}" style="text-transform:uppercase">`)}
-        ${fldSimples('ac-email','E-mail', `<input id="ac-email" type="email" placeholder="voce@exemplo.com" value="${esc(salvo?.email||'')}">`)}
+        <div class="fld"><label>Protocolo</label><input id="ac-prot" placeholder="PS26-0000" value="${esc(salvo?.protocolo||'')}" style="text-transform:uppercase"></div>
+        <div class="fld"><label>E-mail</label><input id="ac-email" type="email" placeholder="voce@exemplo.com" value="${esc(salvo?.email||'')}"></div>
       </div>
       <div class="facts"><span></span>
         <button class="cta" id="ac-btn" onclick="consultar()">Consultar ${icone('search')}</button></div>
@@ -1130,17 +1211,16 @@ function pagAcompanhar(){
   document.getElementById('ac-email').addEventListener('keydown',e=>{ if(e.key==='Enter') consultar(); });
   if(salvo?.protocolo && salvo?.email) consultar();
 }
-const fldSimples = (id,lbl,inner)=>`<div class="fld"><label>${lbl}</label>${inner}</div>`;
 
 window.consultar = async function(){
   const prot = $('#ac-prot').value.trim(), email = $('#ac-email').value.trim();
-  if(!prot||!email){ $('#ac-err').innerHTML='<div class="aviso err">Preencha protocolo e e-mail.</div>'; return; }
+  if(!prot||!email){ $('#ac-err').innerHTML='<div class="aviso err">Preencha o protocolo e o e-mail.</div>'; return; }
   const btn = $('#ac-btn'); btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
   try{
     const {data, error} = await sb.rpc('ps_acompanhar', {p_protocolo:prot, p_email:email});
     if(error) throw error;
     if(data.status!=='ok'){
-      $('#ac-err').innerHTML='<div class="aviso err">Inscrição não encontrada. Confira o protocolo e o e-mail — exatamente como cadastrados.</div>';
+      $('#ac-err').innerHTML='<div class="aviso err">Inscrição não encontrada. Confira o protocolo e o e-mail, exatamente como cadastrados.</div>';
       $('#ac-resultado').innerHTML='';
     } else {
       $('#ac-err').innerHTML='';
@@ -1166,15 +1246,15 @@ function renderSituacao(){
   $('#ac-resultado').innerHTML = `
     <div class="pcard">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-        <div><div style="font-size:12px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;font-weight:700">Candidato(a)</div>
-          <div style="font-size:20px;font-weight:700;letter-spacing:-.01em">${esc(a.nome)}</div></div>
+        <div><div style="font-family:var(--fd);font-size:12px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;font-weight:700">Candidato</div>
+          <div style="font-family:var(--fd);font-size:20px;font-weight:700">${esc(a.nome)}</div></div>
         <span class="status-chip" style="cursor:pointer" onclick="copiar('${esc(a.protocolo)}')" title="Copiar">${esc(a.protocolo)} ${icone('copy')}</span>
       </div>
       <div class="stepper">${fases.map((f,i)=>{
         const cls = i<idx ? 'ok' : i===idx ? (falhas.includes(a.situacao)?'falha':'on') : '';
         return `<div class="sp ${cls}"><span class="pt"></span><span class="lb">${f}</span></div>`;}).join('')}</div>
       <div class="sit-card ${s.cls}"><h3>${s.t}</h3><p>${s.p}</p></div>
-      ${outros.map(x=>`<div class="aviso ok">${icone('check')} <b>${x.fase==='dinamica'?'Dinâmica':'Entrevista'}</b> — ${fmtLongo(x.data)}, ${x.hora_inicio}–${x.hora_fim}${x.local?' · '+esc(x.local):''}</div>`).join('')}
+      ${outros.map(x=>`<div class="aviso ok">${icone('check')} <b>${x.fase==='dinamica'?'Dinâmica':'Entrevista'}</b>: ${fmtLongo(x.data)}, ${x.hora_inicio} às ${x.hora_fim}${x.local?', '+esc(x.local):''}</div>`).join('')}
       ${agFase ? renderBlocoAgenda(agFase, agAtual) : ''}
     </div>
     <div id="agendador" style="margin-top:18px"></div>`;
@@ -1184,28 +1264,28 @@ function renderBlocoAgenda(fase, atual){
   if(atual) return `
     <div class="ag-conf">
       <div class="info">${icone('cal')} <b>${nomeF[0].toUpperCase()+nomeF.slice(1)} agendada:</b><br>
-        ${fmtLongo(atual.data)} · <b>${atual.hora_inicio}–${atual.hora_fim}</b>${atual.local?' · '+esc(atual.local):''}</div>
+        ${fmtLongo(atual.data)}, <b>${atual.hora_inicio} às ${atual.hora_fim}</b>${atual.local?', '+esc(atual.local):''}</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="cta ghost" onclick="baixarICS('${fase}','${atual.data}','${atual.hora_inicio}','${atual.hora_fim}','${esc(atual.local||'')}')">${icone('down')} .ics</button>
+        <button class="cta ghost" onclick="baixarICS('${fase}','${atual.data}','${atual.hora_inicio}','${atual.hora_fim}','${esc(atual.local||'')}')">${icone('down')} Salvar na agenda</button>
         <button class="cta ghost" onclick="abrirAgendador()">Reagendar</button>
       </div>
     </div>`;
   return `
     <div class="ag-conf">
-      <div class="info">${icone('cal')} <b>Ação necessária:</b> agende sua ${nomeF}.</div>
+      <div class="info">${icone('cal')} <b>Próximo passo:</b> agendar sua ${nomeF}.</div>
       <button class="cta" onclick="abrirAgendador()">Escolher horário ${icone('arrow')}</button>
     </div>`;
 }
 
 window.abrirAgendador = async function(){
   const box = $('#agendador');
-  box.innerHTML = `<div class="carregando"><span class="spin"></span> Buscando horários…</div>`;
+  box.innerHTML = `<div class="carregando"><span class="spin"></span> Buscando horários</div>`;
   try{
     const {data, error} = await sb.rpc('ps_horarios', {p_protocolo:state.ident.protocolo, p_email:state.ident.email});
     if(error) throw error;
-    if(data.status!=='ok'){ box.innerHTML = `<div class="aviso info">Nenhuma etapa disponível para agendamento agora.</div>`; return; }
+    if(data.status!=='ok'){ box.innerHTML = `<div class="aviso info">Nenhuma fase disponível para agendamento agora.</div>`; return; }
     const slots = data.slots||[];
-    if(!slots.length){ box.innerHTML = `<div class="vazio">Os horários de ${data.fase==='dinamica'?'dinâmica':'entrevista'} ainda não foram abertos.<br><b>Volte em breve</b> — eles aparecem aqui assim que o comitê publicar a agenda.</div>`; return; }
+    if(!slots.length){ box.innerHTML = `<div class="vazio">Os horários de ${data.fase==='dinamica'?'dinâmica':'entrevista'} ainda não foram abertos.<br><b>Volte em breve</b>: eles aparecem aqui assim que a agenda for publicada.</div>`; return; }
     state.agenda = {fase:data.fase, slots, dia:null, slot:null};
     renderAgendador();
     box.scrollIntoView({behavior:'smooth', block:'start'});
@@ -1222,20 +1302,20 @@ function renderAgendador(){
   <div class="fcard">
     <div class="st-title">Agendamento</div>
     <h3>${nomeF}</h3>
-    <p class="hint">Escolha o dia e o horário que funcionam melhor para você. Dá para reagendar depois, se precisar.</p>
+    <p class="hint">Escolha o dia e o horário que funcionam melhor para você. Se precisar, dá para reagendar depois.</p>
     <div class="ag-grid">
       <div class="ag-dias">${dias.map(d=>{
         const dt = dLocal(d); const livres = porDia[d].filter(s=>s.vagas>0||s.meu).length;
         return `<button class="ag-dia ${ag.dia===d?'on':''}" onclick="agDia('${d}')">
           <span class="dnum">${dt.getDate()}</span>
           <span class="dinfo"><span class="dsem">${dt.toLocaleDateString('pt-BR',{weekday:'long'})}</span><br>
-          <span class="dqt">${MES[dt.getMonth()]} · ${livres} horário${livres===1?'':'s'}</span></span></button>`;}).join('')}</div>
+          <span class="dqt">${MES[dt.getMonth()]}, ${livres} horário${livres===1?'':'s'}</span></span></button>`;}).join('')}</div>
       <div>
         <div class="ag-horas">${porDia[ag.dia].map(s=>{
           const cheio = s.vagas<=0 && !s.meu;
           return `<button class="ag-hora ${ag.slot===s.id?'on':''} ${cheio?'cheio':''}" onclick="agSlot('${s.id}')">
             <div class="h">${s.hora_inicio}</div>
-            <div class="v">${s.meu?'<span class="meu-tag">seu horário atual</span>':cheio?'lotado':`${s.hora_fim ? 'até '+s.hora_fim : ''}${s.local?' · '+esc(s.local):''}`}</div>
+            <div class="v">${s.meu?'<span class="meu-tag">seu horário atual</span>':cheio?'lotado':`até ${s.hora_fim}${s.local?', '+esc(s.local):''}`}</div>
           </button>`;}).join('')}</div>
         <div id="ag-confirma"></div>
       </div>
@@ -1248,7 +1328,7 @@ window.agSlot = function(id){
   const s = state.agenda.slots.find(x=>x.id===id);
   $('#ag-confirma').innerHTML = `
     <div class="ag-conf" style="margin-top:14px">
-      <div class="info"><b>${fmtLongo(s.data)}</b> · ${s.hora_inicio}–${s.hora_fim}${s.local?' · '+esc(s.local):''}</div>
+      <div class="info"><b>${fmtLongo(s.data)}</b>, ${s.hora_inicio} às ${s.hora_fim}${s.local?', '+esc(s.local):''}</div>
       <button class="cta" id="ag-btn" onclick="confirmarAg()">${s.meu?'Manter este horário':'Confirmar horário'} ${icone('check')}</button>
     </div>`;
 };
@@ -1258,24 +1338,24 @@ window.confirmarAg = async function(){
     const {data, error} = await sb.rpc('ps_agendar', {p_protocolo:state.ident.protocolo, p_email:state.ident.email, p_slot:state.agenda.slot});
     if(error) throw error;
     if(data.status==='ok'){
-      toast('Horário confirmado!');
+      toast('Horário confirmado.');
       $('#agendador').innerHTML='';
       await consultar();
       window.scrollTo({top:0,behavior:'smooth'});
     }
-    else if(data.status==='lotado'){ toast('Ops — esse horário acabou de lotar. Escolha outro.', true); abrirAgendador(); }
+    else if(data.status==='lotado'){ toast('Esse horário acabou de lotar. Escolha outro.', true); abrirAgendador(); }
     else { toast('Horário indisponível. Escolha outro.', true); abrirAgendador(); }
   }catch(e){ console.error(e); toast('Falha ao agendar. Tente de novo.', true);
     btn.disabled=false; btn.innerHTML='Confirmar horário '+icone('check'); }
 };
 window.baixarICS = function(fase, data, hi, hf, local){
-  const t = fase==='dinamica' ? 'Dinâmica em grupo — NeuroDynamics' : 'Entrevista — NeuroDynamics';
+  const t = fase==='dinamica' ? 'Dinâmica em grupo, NeuroDynamics' : 'Entrevista, NeuroDynamics';
   const d = data.replace(/-/g,'');
   const ics = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//NeuroDynamics//PS//PT','BEGIN:VEVENT',
     `UID:${Date.now()}@selecao.neurodynamics.dev`,
     `DTSTART:${d}T${hi.replace(':','')}00`,`DTEND:${d}T${hf.replace(':','')}00`,
     `SUMMARY:${t}`, local?`LOCATION:${local}`:'',
-    'DESCRIPTION:Processo Seletivo NeuroDynamics — chegue com 10 minutos de antecedência.',
+    'DESCRIPTION:Processo Seletivo NeuroDynamics. Chegue com 10 minutos de antecedência.',
     'END:VEVENT','END:VCALENDAR'].filter(Boolean).join('\r\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));

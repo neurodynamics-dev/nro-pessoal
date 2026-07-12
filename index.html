@@ -258,6 +258,57 @@ table.tb{width:100%;border-collapse:collapse}
 .dropzone b{color:var(--ink)}
 .log{background:var(--soft);border-radius:10px;padding:12px 14px;font-family:ui-monospace,'SF Mono','Courier New',monospace;
   font-size:12px;line-height:1.7;max-height:260px;overflow-y:auto;white-space:pre-wrap}
+/* ============ MÓDULO SELEÇÃO (Processo Seletivo) ============ */
+.modal.larga{max-width:840px}
+.btn.sm{padding:5px 11px;font-size:12px;border-radius:8px}
+.banner.lima{background:#F7FAE0;border-color:#DDE6A3;color:#4A5310}
+.sel-bar{position:sticky;bottom:14px;z-index:6;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:#1D1D1F;color:#F5F5F7;border-radius:14px;padding:10px 16px;box-shadow:0 10px 30px rgba(0,0,0,.3);margin-top:14px}
+.sel-bar .qt{font-weight:700;font-size:13px;margin-right:4px}
+.sel-bar select{background:#2C2C2E;color:#F5F5F7;border:1px solid #48484A;border-radius:9px;padding:7px 10px;font-size:12.5px}
+.sel-bar .btn{background:var(--syn);border-color:var(--syn);color:var(--deep);box-shadow:none}
+.sel-bar .linkzim{background:none;border:none;color:#98989D;font-size:12px;text-decoration:underline}
+.fase-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.fase-chips button{border:1px solid var(--line2);background:#fff;border-radius:999px;padding:7px 15px;
+  font-size:12.5px;font-weight:600;color:var(--muted)}
+.fase-chips button.on{background:var(--deep);border-color:var(--deep);color:#fff}
+.aval-cand{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin-bottom:10px}
+.aval-cand .nm{font-weight:600;font-size:13.5px}
+.aval-cand .mt{font-size:12px;color:var(--muted)}
+.nota-badge{display:inline-flex;align-items:center;gap:5px;background:var(--soft);border-radius:8px;
+  padding:3px 10px;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+.crit-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;
+  border-bottom:1px solid #F1F1F4;flex-wrap:wrap}
+.crit-row .lb{font-size:13.5px;font-weight:500}
+.seg15{display:inline-flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden;background:#fff}
+.seg15 button{border:none;background:transparent;width:40px;padding:8px 0;font-size:13px;font-weight:600;color:var(--muted);
+  border-right:1px solid var(--line)}
+.seg15 button:last-child{border-right:none}
+.seg15 button.on{background:var(--deep);color:#fff}
+.rec-seg{display:flex;gap:8px;flex-wrap:wrap}
+.rec-seg button{flex:1;min-width:110px;border:1px solid var(--line2);background:#fff;border-radius:10px;
+  padding:9px 8px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.rec-seg button.on-ap{background:#E7F4EE;border-color:var(--ok);color:var(--ok)}
+.rec-seg button.on-du{background:#FBF3E3;border-color:var(--warn);color:var(--warn)}
+.rec-seg button.on-re{background:#FBEBE9;border-color:var(--bad);color:var(--bad)}
+.slot-dia{margin-bottom:18px}
+.slot-dia h4{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.slot-chips{display:flex;gap:9px;flex-wrap:wrap}
+.slot-chip{border:1px solid var(--line2);background:#fff;border-radius:11px;padding:9px 13px;text-align:left;
+  min-width:130px;box-shadow:var(--sh)}
+.slot-chip:hover{border-color:var(--green)}
+.slot-chip .h{font-weight:700;font-size:13.5px;font-variant-numeric:tabular-nums}
+.slot-chip .o{font-size:11.5px;color:var(--muted);margin-top:2px}
+.slot-chip.cheio{background:#F7FAE0;border-color:#DDE6A3}
+.slot-chip.inativo{opacity:.5}
+.pub-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.pub-row .tt{font-weight:600;font-size:13.5px}
+.pub-row .mt{font-size:12px;color:var(--muted)}
+.badge-pub{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:3px 10px}
+.badge-pub.sim{background:#E7F4EE;color:var(--ok)}
+.badge-pub.nao{background:var(--soft);color:var(--muted)}
 @media (max-width:860px){
   #app{flex-direction:column}
   .sidebar,#app.rail .sidebar{width:100%;height:auto;position:static}
@@ -325,6 +376,7 @@ table.tb{width:100%;border-collapse:collapse}
       <section id="view-acessos" hidden></section>
       <section id="view-importar" hidden></section>
       <section id="view-auditoria" hidden></section>
+      <section id="view-selecao" hidden></section>
     </div>
   </main>
 </div>
@@ -453,7 +505,8 @@ const CHECKLISTS = {
 };
 const PAGE_TITLES = {dashboard:'Visão geral', membros:'Membros', ficha:'Ficha do membro', organizacao:'Organização',
   relatorios:'Relatórios', calendario:'Calendário', operacoes:'Operações', apontamento:'Apontamento semanal', eventos:'Eventos', evento:'Evento',
-  pessoal:'Painel do Depto de Pessoal', acessos:'Catálogo de acessos', importar:'Importar planilha', auditoria:'Trilha de auditoria'};
+  pessoal:'Painel do Depto de Pessoal', acessos:'Catálogo de acessos', importar:'Importar planilha', auditoria:'Trilha de auditoria',
+  selecao:'Seleção'};
 
 const state = {
   perfil:null, membros:[], itens:[], tipos:[], view:'dashboard',
@@ -561,6 +614,7 @@ const NAV = [
   ['relatorios','Relatórios','doc',false],
   ['calendario','Calendário','cal',false],
   ['operacoes','Operações','grid',false],
+  ['selecao','Seleção','flag','sel'],
   ['pessoal','Painel do Pessoal','chat',true],
   ['auditoria','Auditoria','shield',true]
 ];
@@ -575,8 +629,8 @@ async function entrar(){
     const uav = $('#user-avatar');
     uav.style.position='relative'; uav.style.overflow='hidden';
     uav.innerHTML = avatarConteudo({registro: perfil.registro, nome: perfil.nome || perfil.email});
-    $('#user-papel').textContent = {admin:'Administração', pessoal:'Depto de Pessoal', leitura:'Consulta'}[perfil.papel] || perfil.papel;
-    $('#nav').innerHTML = NAV.filter(([,,,adm])=>!adm||can()).map(([v,l,i])=>
+    $('#user-papel').textContent = {admin:'Administração', pessoal:'Depto de Pessoal', selecao:'Comitê de Seleção', leitura:'Consulta'}[perfil.papel] || perfil.papel;
+    $('#nav').innerHTML = NAV.filter(([,,,acc])=>!acc || (acc==='sel' ? podeSelecao() : can())).map(([v,l,i])=>
       `<button data-view="${v}" onclick="showView('${v}')">${ic(i)}<span class="lb">${l}</span></button>`).join('');
     await carregarBase();
     $('#login-view').hidden = true; $('#app').hidden = false;
@@ -606,7 +660,8 @@ function showView(v){
   setTopo(PAGE_TITLES[v]||'', null, '');
   ({dashboard:renderDashboard, membros:renderMembros, organizacao:renderOrganizacao, relatorios:renderRelatorios, calendario:renderCalendario,
     operacoes:renderOperacoes, apontamento:renderApontamento, eventos:renderEventos, evento:()=>{}, ficha:()=>{},
-    pessoal:renderPessoal, acessos:renderCatalogo, importar:renderImportar, auditoria:renderAuditoria}[v]||(()=>{}))();
+    pessoal:renderPessoal, acessos:renderCatalogo, importar:renderImportar, auditoria:renderAuditoria,
+    selecao:renderSelecao}[v]||(()=>{}))();
   window.scrollTo(0,0);
 }
 
@@ -2425,6 +2480,833 @@ async function executarImport(){
     toast('Importação concluída.');
   }catch(e){ diz('✖ ERRO: '+(e?.message||e)); falha(e,'A importação foi interrompida'); }
   $('#imp-go').disabled = false;
+}
+
+/* ============================================================
+   MÓDULO SELEÇÃO — Processo Seletivo (SOMA 7.0)
+   Visível para os papéis admin, pessoal e selecao (Comitê).
+   Requer as migrações soma_v6.sql e soma_v7.sql.
+   ============================================================ */
+const SITE_PS = 'https://selecao.neurodynamics.dev';
+const podeSelecao = ()=> ['admin','pessoal','selecao'].includes(state.perfil?.papel);
+const PS_ST = {
+  inscrito:['Inscrito — em análise','dt-info'], indeferido:['Indeferido','dt-bad'],
+  deferido:['Deferido','dt-ok'],
+  reprovado_dinamica:['Reprovado · dinâmica','dt-bad'], aprovado_dinamica:['Aprovado · dinâmica','dt-ok'],
+  reprovado_entrevista:['Reprovado · entrevista','dt-bad'], aprovado_entrevista:['Aprovado · entrevista','dt-ok'],
+  trainee:['Trainee','dt-warn'], reprovado_final:['Reprovado · final','dt-bad'],
+  aprovado_final:['Aprovado · final','dt-ok'], integrado:['Integrado','dt-ok'],
+  desistente:['Desistente','dt-gray']
+};
+const PS_MOVS = [
+  ['deferido','Deferir inscrição'], ['indeferido','Indeferir inscrição'],
+  ['aprovado_dinamica','Aprovar na 1ª fase (dinâmica)'], ['reprovado_dinamica','Reprovar na 1ª fase (dinâmica)'],
+  ['aprovado_entrevista','Aprovar na 2ª fase (entrevista)'], ['reprovado_entrevista','Reprovar na 2ª fase (entrevista)'],
+  ['trainee','Iniciar período trainee'],
+  ['aprovado_final','Aprovar no resultado final'], ['reprovado_final','Reprovar no resultado final'],
+  ['desistente','Marcar como desistente']
+];
+const PS_FASES_AVAL = {
+  dinamica:{lbl:'Dinâmica em grupo', el:['deferido','aprovado_dinamica','reprovado_dinamica'],
+    crit:['Comunicação','Trabalho em equipe','Proatividade','Resolução de problemas','Alinhamento com a equipe']},
+  entrevista:{lbl:'Entrevista individual', el:['aprovado_dinamica','aprovado_entrevista','reprovado_entrevista'],
+    crit:['Motivação','Disponibilidade e comprometimento','Background técnico','Fit cultural','Clareza e comunicação']},
+  desafio:{lbl:'Desafio trainee', el:['trainee','aprovado_final','reprovado_final','integrado'],
+    crit:['Qualidade técnica','Cumprimento de prazos','Autonomia','Trabalho em grupo','Documentação']},
+  parcial_1:{lbl:'1ª avaliação parcial', el:['trainee','aprovado_final','reprovado_final','integrado'],
+    crit:['Assiduidade','Comprometimento','Evolução técnica','Trabalho em equipe']},
+  parcial_2:{lbl:'2ª avaliação parcial', el:['trainee','aprovado_final','reprovado_final','integrado'],
+    crit:['Assiduidade','Comprometimento','Evolução técnica','Trabalho em equipe']},
+  apresentacao_final:{lbl:'Apresentação final', el:['trainee','aprovado_final','reprovado_final','integrado'],
+    crit:['Domínio técnico','Clareza da apresentação','Resultados entregues','Postura profissional']}
+};
+const PS_REC = {aprovar:'Aprovar', em_duvida:'Em dúvida', reprovar:'Reprovar'};
+const PS_TIPO_PUB = {edital:'Edital', aviso:'Aviso', deferimento:'Inscrições deferidas',
+  resultado_dinamica:'Resultado — 1ª fase', resultado_entrevista:'Resultado — 2ª fase',
+  resultado_final:'Resultado final'};
+const PS_SETS = {
+  deferimento:['deferido','reprovado_dinamica','aprovado_dinamica','reprovado_entrevista','aprovado_entrevista','trainee','reprovado_final','aprovado_final','integrado'],
+  resultado_dinamica:['aprovado_dinamica','reprovado_entrevista','aprovado_entrevista','trainee','reprovado_final','aprovado_final','integrado'],
+  resultado_entrevista:['aprovado_entrevista','trainee','reprovado_final','aprovado_final','integrado'],
+  resultado_final:['aprovado_final','integrado']
+};
+const PS_FASES_ETAPA = ['divulgacao','inscricao','dinamica','entrevista','trainee','resultado','outro'];
+const PS_TABS = [['geral','Visão geral'],['candidatos','Candidatos'],['avaliacao','Avaliação'],
+  ['agenda','Agenda'],['publicacoes','Publicações'],['config','Configurações']];
+
+const PS = { pronto:false, erro:null, tab:'geral', edicoes:[], ed:null,
+  candidatos:[], etapas:[], slots:[], agends:[], pubs:[], avals:[], perfis:[],
+  filtros:{q:'',status:''}, selecionados:new Set(), faseAval:'dinamica', faseAgenda:'dinamica' };
+
+const psPill = st=>{ const [l,d]=PS_ST[st]||[st,'dt-gray']; return `<span class="pill"><span class="dt ${d}"></span>${esc(l)}</span>`; };
+const psHm = t=> t ? String(t).slice(0,5) : '';
+const psCand = id=> PS.candidatos.find(c=>c.id===id);
+const psAvalsDe = (id,fase)=> PS.avals.filter(a=>a.candidato_id===id && (!fase||a.fase===fase));
+const psAgendDe = (id,fase)=> PS.agends.find(a=>a.candidato_id===id && a.fase===fase);
+function psMedia(l){ const ns=l.map(a=>Number(a.nota)).filter(n=>!isNaN(n)&&n>0);
+  return ns.length ? (ns.reduce((s,n)=>s+n,0)/ns.length) : null; }
+function psModal(html){ $('#modal-root').innerHTML =
+  `<div class="overlay" onclick="if(event.target===this) fechaModal()"><div class="modal larga">${html}</div></div>`; }
+const psFmtDT = d=> d ? fmtDT(d) : '—';
+
+async function psCarregar(){
+  const {data:eds, error:e0} = await db.from('ps_edicoes').select('*').order('criado_em',{ascending:false});
+  if(e0) throw e0;
+  PS.edicoes = eds||[];
+  if(!PS.ed || !PS.edicoes.some(x=>x.id===PS.ed.id)) PS.ed = PS.edicoes[0]||null;
+  if(!PS.ed){ PS.pronto=true; return; }
+  const id = PS.ed.id;
+  const consultas = [
+    db.from('ps_candidatos').select('*').eq('edicao_id', id).order('numero'),
+    db.from('ps_etapas').select('*').eq('edicao_id', id).order('ordem'),
+    db.from('ps_slots').select('*').eq('edicao_id', id).order('data').order('hora_inicio'),
+    db.from('ps_agendamentos').select('*, slot:ps_slots!inner(*)').eq('slot.edicao_id', id),
+    db.from('ps_publicacoes').select('*').eq('edicao_id', id).order('criado_em',{ascending:false}),
+    db.from('ps_avaliacoes').select('*, ps_candidatos!inner(edicao_id)').eq('ps_candidatos.edicao_id', id)
+  ];
+  if(can()) consultas.push(db.from('perfis').select('id,email,nome,papel').order('email'));
+  const rs = await Promise.all(consultas);
+  for(const r of rs) if(r.error) throw r.error;
+  PS.candidatos = rs[0].data||[]; PS.etapas = rs[1].data||[]; PS.slots = rs[2].data||[];
+  PS.agends = rs[3].data||[]; PS.pubs = rs[4].data||[];
+  PS.avals = (rs[5].data||[]).map(x=>{ delete x.ps_candidatos; return x; });
+  PS.perfis = rs[6]?.data||[];
+  PS.selecionados = new Set();
+  PS.pronto = true;
+}
+async function psRecarregar(){ PS.pronto=false; PS.erro=null; await renderSelecao(); }
+async function psTrocarEdicao(id){ PS.ed = PS.edicoes.find(x=>x.id===id)||PS.ed; PS.pronto=false; renderSelecao(); }
+function psTab(t){ PS.tab=t; renderSelecao(); }
+
+async function renderSelecao(){
+  const v = $('#view-selecao');
+  if(!podeSelecao()){
+    v.innerHTML = `<div class="card"><h3>Acesso restrito</h3><p class="small muted" style="line-height:1.7">
+      Esta página é do <b>Comitê de Seleção</b>. Peça a um administrador para atribuir o papel
+      <b>selecao</b> ao seu perfil (Seleção → Configurações).</p></div>`;
+    return;
+  }
+  if(!PS.pronto && !PS.erro){
+    v.innerHTML = '<div class="empty">Carregando o processo seletivo…</div>';
+    try{ await psCarregar(); }catch(e){ console.error(e); PS.erro = e; }
+  }
+  if(PS.erro){
+    v.innerHTML = `<div class="card"><h3>Módulo não disponível</h3>
+      <p class="small muted" style="line-height:1.7">Não foi possível carregar os dados do processo seletivo
+      (${esc(PS.erro.message||'erro')}). Confira se as migrações <b>soma_v6.sql</b> e <b>soma_v7.sql</b>
+      foram aplicadas no Supabase.</p>
+      <button class="btn" onclick="psRecarregar()">Tentar de novo</button></div>`;
+    return;
+  }
+  if(!PS.ed){
+    v.innerHTML = `<div class="card"><h3>Nenhuma edição encontrada</h3>
+      <p class="small muted" style="margin-bottom:12px">A migração soma_v6.sql cria o Processo Seletivo 2026
+      automaticamente. Você também pode criar uma edição agora.</p>
+      <button class="btn btn-primary" onclick="psNovaEdicao()">${ic('plus')} Criar edição</button></div>`;
+    return;
+  }
+  if(state.view==='selecao'){
+    $('#page-actions').innerHTML = PS.edicoes.length>1
+      ? `<select onchange="psTrocarEdicao(this.value)" style="border:1px solid var(--line2);border-radius:10px;padding:8px 11px;background:#fff;font-size:13px">
+          ${PS.edicoes.map(e=>`<option value="${e.id}" ${e.id===PS.ed.id?'selected':''}>${esc(e.nome)}</option>`).join('')}</select>`
+      : `<span class="pill">${esc(PS.ed.nome)}</span>`;
+  }
+  v.innerHTML = `
+    <div class="tabs">${PS_TABS.map(([t,l])=>
+      `<button class="${PS.tab===t?'active':''}" onclick="psTab('${t}')">${l}</button>`).join('')}</div>
+    <div id="sel-corpo"></div>`;
+  ({geral:psGeral, candidatos:psCandidatos, avaliacao:psAvaliacao, agenda:psAgenda,
+    publicacoes:psPublicacoes, config:psConfig}[PS.tab]||psGeral)();
+}
+
+/* ---------- Seleção · visão geral ---------- */
+function psGeral(){
+  const cs = PS.candidatos;
+  const n = st=> cs.filter(c=>c.status===st).length;
+  const nIn = sts=> cs.filter(c=>sts.includes(c.status)).length;
+  const total = cs.length, max = Math.max(1, total);
+  const funil = [
+    ['Inscritos', total],
+    ['Deferidos', nIn(PS_SETS.deferimento)],
+    ['Aprovados na dinâmica', nIn(PS_SETS.resultado_dinamica)],
+    ['Aprovados na entrevista', nIn(PS_SETS.resultado_entrevista)],
+    ['Aprovados no final', nIn(PS_SETS.resultado_final)],
+    ['Integrados', n('integrado')]
+  ];
+  const h = hoje();
+  const etapaAgora = PS.etapas.find(e=> h>=e.data_inicio && h<=(e.data_fim||e.data_inicio));
+  const proxEtapa = PS.etapas.find(e=> e.data_inicio > h);
+  const semDin = cs.filter(c=>c.status==='deferido' && !psAgendDe(c.id,'dinamica')).length;
+  const semEnt = cs.filter(c=>c.status==='aprovado_dinamica' && !psAgendDe(c.id,'entrevista')).length;
+  const rascunhos = PS.pubs.filter(p=>!p.publicado).length;
+  const proxSlots = PS.slots.filter(s=>s.ativo && s.data>=h).slice(0,6);
+  const ocup = s=> PS.agends.filter(a=>a.slot_id===s.id).length;
+  $('#sel-corpo').innerHTML = `
+  ${etapaAgora ? `<div class="banner lima"><b>Agora no cronograma:</b> ${esc(etapaAgora.titulo)}
+      (${fmtD(etapaAgora.data_inicio)}${etapaAgora.data_fim&&etapaAgora.data_fim!==etapaAgora.data_inicio?' a '+fmtD(etapaAgora.data_fim):''}).</div>`
+    : proxEtapa ? `<div class="banner neutral"><b>Próximo marco:</b> ${esc(proxEtapa.titulo)} em ${fmtD(proxEtapa.data_inicio)}.</div>` : ''}
+  <div class="grid-cards">
+    <div class="stat"><div class="n">${total}</div><div class="l">Inscrições recebidas</div></div>
+    <div class="stat"><div class="n">${n('inscrito')}</div><div class="l">Aguardando análise</div></div>
+    <div class="stat"><div class="n">${n('deferido')}</div><div class="l">Na fase de dinâmicas</div></div>
+    <div class="stat"><div class="n">${n('aprovado_dinamica')}</div><div class="l">Na fase de entrevistas</div></div>
+    <div class="stat"><div class="n">${n('trainee')+n('aprovado_entrevista')}</div><div class="l">Trainees</div></div>
+    <div class="stat"><div class="n">${n('aprovado_final')+n('integrado')}</div><div class="l">Aprovados no final</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">
+    <div class="card"><h3>Funil do processo</h3>
+      ${funil.map(([l,vl])=>`<div class="bar-row"><span class="lb">${l}</span>
+        <span class="tr"><span class="fl" style="width:${Math.round(vl/max*100)}%"></span></span>
+        <span class="vl">${vl}</span></div>`).join('')}
+    </div>
+    <div class="card"><h3>Pendências</h3>
+      ${[[n('inscrito'),'inscrições aguardando deferimento','candidatos'],
+         [semDin,'deferidos sem dinâmica agendada','agenda'],
+         [semEnt,'aprovados sem entrevista agendada','agenda'],
+         [rascunhos,'publicações em rascunho','publicacoes']]
+        .filter(([q])=>q>0)
+        .map(([q,t,tb])=>`<div class="bar-row"><span style="flex:1">${q} ${t}</span>
+          <button class="btn sm" onclick="psTab('${tb}')">Ver</button></div>`).join('')
+        || '<div class="empty" style="padding:18px">Nenhuma pendência. Tudo em dia! ✅</div>'}
+    </div>
+    <div class="card"><h3>Próximos horários</h3>
+      ${proxSlots.length ? proxSlots.map(s=>`<div class="bar-row">
+          <span style="flex:1"><b>${fmtD(s.data)}</b> ${psHm(s.hora_inicio)}–${psHm(s.hora_fim)}
+            <span class="muted">(${s.fase==='dinamica'?'dinâmica':'entrevista'}${s.local?', '+esc(s.local):''})</span></span>
+          <span class="vl">${ocup(s)}/${s.capacidade}</span></div>`).join('')
+        : '<div class="empty" style="padding:18px">Nenhum horário futuro aberto.<br>Abra janelas na aba Agenda.</div>'}
+    </div>
+  </div>
+  <div class="card"><h3>Site público</h3>
+    <p class="small muted" style="line-height:1.7">Inscrições, acompanhamento e agendamento dos candidatos acontecem em
+    <a href="${SITE_PS}" target="_blank" rel="noopener">${SITE_PS.replace('https://','')}</a>.
+    Os candidatos só enxergam cada resultado depois que a publicação correspondente for <b>publicada</b> na aba Publicações.</p></div>`;
+}
+
+/* ---------- Seleção · candidatos ---------- */
+function psFiltrados(){
+  const f = PS.filtros; let lista = PS.candidatos;
+  if(f.status) lista = lista.filter(c=>c.status===f.status);
+  if(f.q){ const q=f.q.toLowerCase();
+    lista = lista.filter(c=>(c.nome+' '+c.email+' '+(c.protocolo||'')+' '+(c.curso||'')).toLowerCase().includes(q)); }
+  return lista;
+}
+function psCandidatos(){
+  const f = PS.filtros, lista = psFiltrados();
+  $('#sel-corpo').innerHTML = `
+  <div class="filters">
+    <div class="field grow"><label>Buscar</label>
+      <input value="${esc(f.q)}" placeholder="Nome, e-mail, protocolo ou curso…"
+        oninput="PS.filtros.q=this.value; psFiltra()"></div>
+    <div class="field"><label>Status</label>
+      <select onchange="PS.filtros.status=this.value; psFiltra()">
+        <option value="">Todos</option>
+        ${Object.keys(PS_ST).map(s=>`<option value="${s}" ${f.status===s?'selected':''}>${PS_ST[s][0]}</option>`).join('')}
+      </select></div>
+    <button class="btn" onclick="psExportCSV()">${ic('down')} Exportar CSV</button>
+  </div>
+  <div class="card" style="padding:8px 12px">
+    <table class="tb"><thead><tr>
+      <th style="width:34px"><input type="checkbox" onchange="psSelTodos(this.checked)" ${lista.length&&lista.every(c=>PS.selecionados.has(c.id))?'checked':''}></th>
+      <th>Protocolo</th><th>Nome</th><th>Curso / período</th><th>Status</th><th>Dinâmica</th><th>Entrevista</th><th>Média</th>
+    </tr></thead>
+    <tbody>${lista.map(psLinhaCand).join('') ||
+      `<tr><td colspan="8"><div class="empty">Nenhum candidato ${PS.candidatos.length?'com esses filtros':'inscrito ainda'}.</div></td></tr>`}</tbody>
+    </table>
+  </div>
+  <div id="ps-selbar"></div>`;
+  psSelBar();
+}
+function psLinhaCand(c){
+  const ad = psAgendDe(c.id,'dinamica'), ae = psAgendDe(c.id,'entrevista');
+  const md = psMedia(psAvalsDe(c.id));
+  const agTxt = a=> a&&a.slot ? `${fmtD(a.slot.data)} ${psHm(a.slot.hora_inicio)}` : '<span class="muted">—</span>';
+  return `<tr class="click" onclick="psAbrirFicha('${c.id}')">
+    <td onclick="event.stopPropagation()"><input type="checkbox" ${PS.selecionados.has(c.id)?'checked':''} onchange="psSelUm('${c.id}',this.checked)"></td>
+    <td class="reg">${esc(c.protocolo||'—')}</td>
+    <td><b>${esc(c.nome)}</b><br><span class="small muted">${esc(c.email)}</span></td>
+    <td class="small">${esc(c.curso||'—')}${c.periodo?`, ${esc(c.periodo)}`:''}</td>
+    <td>${psPill(c.status)}</td>
+    <td class="small">${agTxt(ad)}</td>
+    <td class="small">${agTxt(ae)}</td>
+    <td>${md!=null?`<span class="nota-badge">★ ${md.toFixed(1)}</span>`:'<span class="muted small">—</span>'}</td>
+  </tr>`;
+}
+const psFiltra = (function(){ let t; return function(){ clearTimeout(t); t=setTimeout(psCandidatos,200); }; })();
+function psSelTodos(on){ psFiltrados().forEach(c=> on?PS.selecionados.add(c.id):PS.selecionados.delete(c.id)); psCandidatos(); }
+function psSelUm(id,on){ on?PS.selecionados.add(id):PS.selecionados.delete(id); psSelBar(); }
+function psSelBar(){
+  const slot = $('#ps-selbar'); if(!slot) return;
+  if(!PS.selecionados.size){ slot.innerHTML=''; return; }
+  slot.innerHTML = `<div class="sel-bar">
+    <span class="qt">${PS.selecionados.size} selecionado${PS.selecionados.size>1?'s':''}</span>
+    <select id="ps-mov">${PS_MOVS.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select>
+    <button class="btn" onclick="psMoverLote()">Aplicar</button>
+    <button class="linkzim" onclick="PS.selecionados.clear(); psCandidatos()">limpar seleção</button>
+  </div>`;
+}
+async function psMoverLote(){
+  const alvo = $('#ps-mov').value;
+  const [,lbl] = PS_MOVS.find(m=>m[0]===alvo);
+  const ids = [...PS.selecionados];
+  if(!await confirma(`Aplicar "<b>${lbl}</b>" a <b>${ids.length}</b> candidato(s)?<br>
+    <span class="small muted">O candidato só vê o novo resultado quando a publicação da fase for publicada.</span>`)) return;
+  try{
+    const {error} = await db.from('ps_candidatos').update({status:alvo}).in('id', ids);
+    if(error) throw error;
+    toast('Movimentação aplicada.');
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha na movimentação'); }
+}
+function psExportCSV(){
+  const cols = ['protocolo','status','nome','email','telefone','curso','instituicao','periodo',
+    'areas_interesse','disponibilidade','como_soube','criado_em'];
+  const linhas = [cols.join(';')].concat(PS.candidatos.map(c=>
+    cols.map(k=>{ let vl=c[k]; if(Array.isArray(vl)) vl=vl.join(', ');
+      return '"'+String(vl??'').replace(/"/g,'""')+'"'; }).join(';')));
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+linhas.join('\n')],{type:'text/csv;charset=utf-8'}));
+  a.download='candidatos-'+(PS.ed.slug||'ps')+'.csv'; a.click(); URL.revokeObjectURL(a.href);
+}
+
+/* ---------- Seleção · ficha do candidato ---------- */
+function psAbrirFicha(id){
+  const c = psCand(id); if(!c) return;
+  const grupos = {};
+  psAvalsDe(id).forEach(a=>{ (grupos[a.fase]=grupos[a.fase]||[]).push(a); });
+  const linksRow = [['Lattes',c.lattes],['GitHub',c.github],['LinkedIn',c.linkedin],['Instagram',c.instagram],['Portfólio',c.portfolio]]
+    .filter(x=>x[1]).map(([l,u])=>{ const url=/^https?:/.test(u)?u:'https://'+u;
+      return `<a class="chip" href="${esc(url)}" target="_blank" rel="noopener">${l} ↗</a>`; }).join('') || '<span class="muted small">—</span>';
+  const ags = PS.agends.filter(a=>a.candidato_id===id);
+  const podeIntegrar = ['trainee','aprovado_final'].includes(c.status);
+  const proxReg = Math.max(0,...state.membros.map(m=>m.registro))+1;
+  const deptos = [...new Set(state.membros.map(m=>m.departamento).filter(Boolean))].sort();
+  psModal(`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <div style="display:flex;gap:12px;align-items:center">
+        <span class="avatar" style="width:44px;height:44px;font-size:14px">${esc(iniciais(c.nome))}</span>
+        <div><div style="font-size:17px;font-weight:700">${esc(c.nome)}</div>
+        <div class="small muted"><span class="reg">${esc(c.protocolo||'—')}</span> · inscrição em ${psFmtDT(c.criado_em)}</div></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${psPill(c.status)}
+        ${ibtn('x','Fechar','fechaModal()','sm ghost')}</div>
+    </div>
+    <div class="tabs">
+      <button class="active" onclick="psFichaTab(this,'dados')">Dados</button>
+      <button onclick="psFichaTab(this,'avals')">Avaliações (${psAvalsDe(id).length})</button>
+      <button onclick="psFichaTab(this,'acoes')">Ações</button>
+    </div>
+    <div id="pstab-dados">
+      <dl class="dl">
+        ${[['E-mail',c.email],['Telefone',c.telefone],['Nascimento',c.data_nascimento?fmtD(c.data_nascimento):null],
+           ['Cidade de origem',c.cidade_origem],['Gênero',c.genero],['Autodeclaração racial',c.autodeclaracao_racial],
+           ['Acessibilidade',c.acessibilidade],['Instituição',c.instituicao],['Curso',c.curso],
+           ['Matrícula',c.matricula],['Período',c.periodo],['Disponibilidade',c.disponibilidade],
+           ['Como soube',c.como_soube],['Autorização de imagem',c.autorizacao_imagem?'Sim':'Não']]
+          .map(([l,vl])=>`<div class="it"><dt>${l}</dt><dd>${esc(vl||'—')}</dd></div>`).join('')}
+      </dl>
+      <div style="margin-top:14px" class="dl"><div class="it"><dt>Áreas de interesse</dt>
+        <dd>${(c.areas_interesse||[]).map(a=>`<span class="chip">${esc(a)}</span>`).join('')||'—'}</dd></div>
+        <div class="it" style="grid-column:1/-1"><dt>Links</dt><dd>${linksRow}</dd></div></div>
+      ${c.background?`<div style="margin-top:14px"><dt style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600">Experiências</dt>
+        <p class="small" style="white-space:pre-wrap;line-height:1.6;margin-top:4px">${esc(c.background)}</p></div>`:''}
+      ${c.motivacao?`<div style="margin-top:14px"><dt style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600">Motivação</dt>
+        <p class="small" style="white-space:pre-wrap;line-height:1.6;margin-top:4px">${esc(c.motivacao)}</p></div>`:''}
+      ${ags.length?`<div style="margin-top:16px"><dt style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600">Agendamentos</dt>
+        ${ags.map(a=>`<div class="small" style="margin-top:5px">📅 <b>${a.fase==='dinamica'?'Dinâmica':'Entrevista'}</b>:
+          ${a.slot?`${fmtD(a.slot.data)} ${psHm(a.slot.hora_inicio)}–${psHm(a.slot.hora_fim)}${a.slot.local?', '+esc(a.slot.local):''}`:'—'}
+          ${a.compareceu===true?'<span class="chip" style="background:#E7F4EE;color:var(--ok)">compareceu</span>':a.compareceu===false?'<span class="chip" style="background:#FBEBE9;color:var(--bad)">faltou</span>':''}</div>`).join('')}</div>`:''}
+    </div>
+    <div id="pstab-avals" hidden>
+      ${Object.keys(PS_FASES_AVAL).map(f=>{
+        const l = grupos[f]||[]; if(!l.length) return '';
+        const md = psMedia(l);
+        return `<div class="card" style="margin-bottom:10px;padding:14px 16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+            <b>${PS_FASES_AVAL[f].lbl}</b>${md!=null?`<span class="nota-badge">★ ${md.toFixed(1)} · ${l.length} avaliação${l.length>1?'ões':''}</span>`:''}</div>
+          ${l.map(a=>`<div class="small" style="border-top:1px solid var(--line);padding:8px 0">
+            <b>${esc(a.avaliador||'—')}</b>: nota ${a.nota??'—'}
+            ${a.recomendacao?` <span class="chip">${PS_REC[a.recomendacao]||a.recomendacao}</span>`:''}
+            ${a.parecer?`<div class="muted" style="margin-top:3px;white-space:pre-wrap">${esc(a.parecer)}</div>`:''}
+          </div>`).join('')}
+        </div>`; }).join('') || '<div class="empty">Nenhuma avaliação registrada ainda.<br>Use a aba "Avaliação".</div>'}
+    </div>
+    <div id="pstab-acoes" hidden>
+      <div class="field"><label>Mover para</label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <select id="ps-mov-um" style="flex:1;min-width:220px">
+            ${PS_MOVS.map(([vl,l])=>`<option value="${vl}">${l}</option>`).join('')}</select>
+          <button class="btn btn-primary" onclick="psMoverUm('${c.id}')">Aplicar</button>
+        </div>
+        <p class="small muted" style="margin-top:7px">O candidato só vê o novo resultado no site depois que a publicação da fase for publicada.</p>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
+      <h3 style="font-size:14px;margin-bottom:8px">Integrar como membro</h3>
+      ${podeIntegrar ? `
+        <p class="small muted" style="margin-bottom:12px">Cria o registro em <b>Membros</b> com todos os dados da ficha, grava a ocorrência de ingresso e marca o candidato como integrado.</p>
+        <div class="form-grid">
+          <div class="field"><label>Nº de registro</label><input id="ps-int-reg" type="number" value="${proxReg}"></div>
+          <div class="field"><label>Departamento</label>
+            <select id="ps-int-dep"><option value="">—</option>${deptos.map(d=>`<option>${esc(d)}</option>`).join('')}</select></div>
+          <div class="field"><label>Cargo</label><input id="ps-int-cargo" value="Membro"></div>
+        </div>
+        <button class="btn btn-primary" onclick="psIntegrarCand('${c.id}')">${ic('check')} Integrar ao quadro</button>`
+      : c.status==='integrado'
+        ? `<p class="small">✅ Integrado como membro, registro <b>${c.registro_membro??'—'}</b>.</p>`
+        : `<p class="small muted">Disponível quando o candidato estiver como <b>Trainee</b> ou <b>Aprovado · final</b>.</p>`}
+    </div>
+  `);
+}
+function psFichaTab(btn, tab){
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b===btn));
+  ['dados','avals','acoes'].forEach(t=> document.getElementById('pstab-'+t).hidden = t!==tab);
+}
+async function psMoverUm(id){
+  const alvo = $('#ps-mov-um').value;
+  try{
+    const {error} = await db.from('ps_candidatos').update({status:alvo}).eq('id', id);
+    if(error) throw error;
+    toast('Status atualizado.'); fechaModal();
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao mover'); }
+}
+async function psIntegrarCand(id){
+  const reg = parseInt($('#ps-int-reg').value,10);
+  if(!reg){ toast('Informe o nº de registro.', true); return; }
+  const c = psCand(id);
+  if(!await confirma(`Integrar <b>${esc(c.nome)}</b> como membro com o registro <b>${reg}</b>?`)) return;
+  try{
+    const {data, error} = await db.rpc('ps_integrar', {p_candidato:id, p_registro:reg,
+      p_departamento: $('#ps-int-dep').value||null, p_cargo: $('#ps-int-cargo').value||null});
+    if(error) throw error;
+    if(data.status==='ok'){
+      toast(`Membro criado com o registro ${reg}. 🎉`); fechaModal();
+      const {data:m} = await db.from('membros').select('*').order('registro');
+      state.membros = m||[];
+      PS.pronto=false; renderSelecao();
+    }
+    else if(data.status==='registro_em_uso') toast('Este registro já está em uso.', true);
+    else if(data.status==='status_invalido') toast('O candidato precisa estar como trainee ou aprovado no final.', true);
+    else toast('Não foi possível integrar: '+(data.status||''), true);
+  }catch(e){ falha(e,'Falha na integração'); }
+}
+
+/* ---------- Seleção · avaliação guiada ---------- */
+function psAvaliacao(){
+  const fase = PS.faseAval, cf = PS_FASES_AVAL[fase];
+  const uid = state.perfil.id;
+  const eleg = PS.candidatos.filter(c=>cf.el.includes(c.status));
+  const rank = eleg.map(c=>({c, avs:psAvalsDe(c.id,fase)}))
+    .map(x=>({...x, media:psMedia(x.avs)}))
+    .sort((a,b)=> (b.media??-1)-(a.media??-1));
+  $('#sel-corpo').innerHTML = `
+  <div class="banner neutral">Selecione a fase, avalie cada candidato pelos critérios padronizados e acompanhe o consolidado. Cada membro do comitê registra a própria avaliação; a nota final é a média.</div>
+  <div class="fase-chips">${Object.keys(PS_FASES_AVAL).map(f=>
+    `<button class="${f===fase?'on':''}" onclick="PS.faseAval='${f}';psAvaliacao()">${PS_FASES_AVAL[f].lbl}</button>`).join('')}</div>
+  <div class="card">
+    <h3>${cf.lbl}: ${eleg.length} candidato${eleg.length===1?'':'s'} nesta fase</h3>
+    ${eleg.length ? rank.map(({c,avs,media})=>{
+      const minha = avs.find(a=>a.avaliador_id===uid);
+      const ag = (fase==='dinamica'||fase==='entrevista') ? psAgendDe(c.id,fase) : null;
+      const recs = avs.reduce((m,a)=>{ if(a.recomendacao) m[a.recomendacao]=(m[a.recomendacao]||0)+1; return m; },{});
+      return `<div class="aval-cand">
+        <div style="min-width:0;flex:1">
+          <div class="nm">${esc(c.nome)} <span class="reg">${esc(c.protocolo||'')}</span></div>
+          <div class="mt">${psPill(c.status)}
+            ${ag&&ag.slot?` · 📅 ${fmtD(ag.slot.data)} ${psHm(ag.slot.hora_inicio)}`:''}
+            ${avs.length?` · ${avs.length} avaliação${avs.length>1?'ões':''}`:' · sem avaliações'}
+            ${Object.keys(recs).length?' · '+Object.entries(recs).map(([r,q])=>`${q}× ${PS_REC[r]}`).join(', '):''}
+          </div>
+        </div>
+        ${media!=null?`<span class="nota-badge">★ ${media.toFixed(1)}</span>`:''}
+        <button class="btn ${minha?'':'btn-primary'} sm" onclick="psAbrirAval('${c.id}','${fase}')">
+          ${ic('pencil')} ${minha?'Editar minha avaliação':'Avaliar'}</button>
+      </div>`; }).join('')
+    : `<div class="empty">Nenhum candidato nesta fase no momento.<br>
+       <span class="small">Os candidatos entram aqui conforme as movimentações na aba Candidatos.</span></div>`}
+  </div>`;
+}
+function psAbrirAval(candId, fase){
+  const c = psCand(candId), cf = PS_FASES_AVAL[fase];
+  const minha = psAvalsDe(candId,fase).find(a=>a.avaliador_id===state.perfil.id);
+  const crit = minha?.criterios || {};
+  window.__psAval = {candId, fase, criterios:{...crit}, recomendacao:minha?.recomendacao||null};
+  abreModal(`
+    <h3>${cf.lbl}: ${esc(c.nome)}</h3>
+    <p class="small muted" style="margin:-8px 0 14px">Dê uma nota de 1 a 5 em cada critério. A nota geral é a média dos critérios preenchidos.</p>
+    ${cf.crit.map(cr=>`<div class="crit-row"><span class="lb">${cr}</span>
+      <span class="seg15">${[1,2,3,4,5].map(nn=>
+        `<button class="${crit[cr]===nn?'on':''}" onclick="psNotaCr(this,'${esc(cr)}',${nn})">${nn}</button>`).join('')}</span></div>`).join('')}
+    <div class="field" style="margin-top:14px"><label>Parecer</label>
+      <textarea id="ps-av-parecer" placeholder="Observações, destaques, pontos de atenção…">${esc(minha?.parecer||'')}</textarea></div>
+    <div class="field"><label>Recomendação</label>
+      <div class="rec-seg">
+        <button id="ps-rec-aprovar" class="${window.__psAval.recomendacao==='aprovar'?'on-ap':''}" onclick="psRecSel('aprovar')">✓ Aprovar</button>
+        <button id="ps-rec-em_duvida" class="${window.__psAval.recomendacao==='em_duvida'?'on-du':''}" onclick="psRecSel('em_duvida')">? Em dúvida</button>
+        <button id="ps-rec-reprovar" class="${window.__psAval.recomendacao==='reprovar'?'on-re':''}" onclick="psRecSel('reprovar')">✕ Reprovar</button>
+      </div></div>
+    <div class="actions">
+      <button class="btn" onclick="fechaModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="psSalvarAval()">${ic('check')} Salvar avaliação</button>
+    </div>`);
+}
+function psNotaCr(btn, cr, nn){
+  window.__psAval.criterios[cr] = nn;
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b===btn));
+}
+function psRecSel(r){
+  window.__psAval.recomendacao = r;
+  const map = {aprovar:'on-ap', em_duvida:'on-du', reprovar:'on-re'};
+  Object.keys(map).forEach(k=>{ document.getElementById('ps-rec-'+k).className = k===r ? map[k] : ''; });
+}
+async function psSalvarAval(){
+  const {candId, fase, criterios, recomendacao} = window.__psAval;
+  const notas = Object.values(criterios).filter(nn=>nn>0);
+  if(!notas.length){ toast('Preencha ao menos um critério.', true); return; }
+  const nota = Math.round(notas.reduce((s,nn)=>s+nn,0)/notas.length*100)/100;
+  try{
+    const {error} = await db.from('ps_avaliacoes').upsert({
+      candidato_id:candId, fase, criterios, nota,
+      parecer: $('#ps-av-parecer').value.trim()||null,
+      recomendacao, avaliador_id: state.perfil.id, avaliador: quemSouEu()
+    }, {onConflict:'candidato_id,fase,avaliador_id'});
+    if(error) throw error;
+    toast('Avaliação salva.'); fechaModal();
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao salvar avaliação'); }
+}
+
+/* ---------- Seleção · agenda ---------- */
+function psAgenda(){
+  const fase = PS.faseAgenda;
+  const slots = PS.slots.filter(s=>s.fase===fase);
+  const porDia = {};
+  slots.forEach(s=>{ (porDia[s.data]=porDia[s.data]||[]).push(s); });
+  const ocup = s=> PS.agends.filter(a=>a.slot_id===s.id).length;
+  $('#sel-corpo').innerHTML = `
+  <div class="fase-chips">
+    <button class="${fase==='dinamica'?'on':''}" onclick="PS.faseAgenda='dinamica';psAgenda()">Dinâmicas em grupo</button>
+    <button class="${fase==='entrevista'?'on':''}" onclick="PS.faseAgenda='entrevista';psAgenda()">Entrevistas individuais</button>
+  </div>
+  <div class="card">
+    <h3>Abrir janela de horários</h3>
+    <p class="small muted" style="margin:-8px 0 12px">Gera vários horários de uma vez. O candidato escolhe um deles no site.</p>
+    <div class="form-grid">
+      <div class="field"><label>Data</label><input id="ps-sl-data" type="date"></div>
+      <div class="field"><label>Início</label><input id="ps-sl-ini" type="time" value="${fase==='dinamica'?'18:00':'14:00'}"></div>
+      <div class="field"><label>Fim</label><input id="ps-sl-fim" type="time" value="${fase==='dinamica'?'21:00':'18:00'}"></div>
+      <div class="field"><label>Duração (min)</label><input id="ps-sl-dur" type="number" value="${fase==='dinamica'?'90':'30'}"></div>
+      <div class="field"><label>Vagas por horário</label><input id="ps-sl-cap" type="number" value="${fase==='dinamica'?'8':'1'}"></div>
+      <div class="field"><label>Local</label><input id="ps-sl-local" placeholder="Ex.: LABBIO, Sala de reunião"></div>
+    </div>
+    <button class="btn btn-primary" onclick="psCriarSlots('${fase}')">${ic('plus')} Criar horários</button>
+  </div>
+  <div class="card">
+    <h3>Horários abertos${slots.length?`: ${slots.length}`:''}</h3>
+    ${Object.keys(porDia).sort().map(d=>`
+      <div class="slot-dia"><h4>${new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit'})}</h4>
+      <div class="slot-chips">${porDia[d].map(s=>{
+        const o = ocup(s);
+        return `<button class="slot-chip ${o>=s.capacidade?'cheio':''} ${s.ativo?'':'inativo'}" onclick="psAbrirSlot('${s.id}')">
+          <div class="h">${psHm(s.hora_inicio)}–${psHm(s.hora_fim)}</div>
+          <div class="o">${o}/${s.capacidade} vaga${s.capacidade>1?'s':''}${s.local?', '+esc(s.local):''}${s.ativo?'':', inativo'}</div>
+        </button>`; }).join('')}</div></div>`).join('')
+      || `<div class="empty">Nenhum horário de ${fase==='dinamica'?'dinâmica':'entrevista'} aberto ainda.</div>`}
+  </div>`;
+}
+async function psCriarSlots(fase){
+  const data=$('#ps-sl-data').value, ini=$('#ps-sl-ini').value, fim=$('#ps-sl-fim').value;
+  const dur=parseInt($('#ps-sl-dur').value,10), cap=parseInt($('#ps-sl-cap').value,10), local=$('#ps-sl-local').value.trim();
+  if(!data||!ini||!fim||!dur||!cap){ toast('Preencha data, horários, duração e vagas.', true); return; }
+  const linhas=[]; let t = new Date(`${data}T${ini}:00`); const tf = new Date(`${data}T${fim}:00`);
+  while(t < tf){
+    const prox = new Date(t.getTime()+dur*60000);
+    if(prox > tf) break;
+    const h = x=> x.toTimeString().slice(0,5);
+    linhas.push({edicao_id:PS.ed.id, fase, data, hora_inicio:h(t), hora_fim:h(prox), capacidade:cap, local:local||null});
+    t = prox;
+  }
+  if(!linhas.length){ toast('Nenhum horário cabe nessa janela.', true); return; }
+  try{
+    const {error} = await db.from('ps_slots').insert(linhas);
+    if(error) throw error;
+    toast(`${linhas.length} horário(s) criado(s).`);
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao criar horários'); }
+}
+function psAbrirSlot(id){
+  const s = PS.slots.find(x=>x.id===id); if(!s) return;
+  const ags = PS.agends.filter(a=>a.slot_id===id);
+  abreModal(`
+    <h3>${s.fase==='dinamica'?'Dinâmica':'Entrevista'}: ${fmtD(s.data)}, ${psHm(s.hora_inicio)}–${psHm(s.hora_fim)}</h3>
+    <p class="small muted" style="margin:-8px 0 12px">${s.local?esc(s.local)+' · ':''}${ags.length}/${s.capacidade} vaga${s.capacidade>1?'s':''} ocupada${ags.length===1?'':'s'}</p>
+    ${ags.length ? `<table class="tb"><thead><tr><th>Candidato</th><th>Contato</th><th>Presença</th></tr></thead><tbody>
+      ${ags.map(a=>{ const c=psCand(a.candidato_id);
+        return `<tr><td><b>${esc(c?.nome||'—')}</b><br><span class="reg">${esc(c?.protocolo||'')}</span></td>
+          <td class="small">${esc(c?.telefone||'')}<br>${esc(c?.email||'')}</td>
+          <td><span class="seg15">
+            <button class="${a.compareceu===true?'on':''}" style="width:56px" onclick="psPresenca('${a.id}',true)">Sim</button>
+            <button class="${a.compareceu===false?'on':''}" style="width:56px" onclick="psPresenca('${a.id}',false)">Não</button>
+          </span></td></tr>`; }).join('')}</tbody></table>`
+    : '<div class="empty">Nenhum candidato agendado neste horário.</div>'}
+    <div class="actions">
+      <button class="btn ${s.ativo?'':'btn-primary'}" onclick="psToggleSlot('${s.id}',${!s.ativo})">${s.ativo?'Desativar horário':'Reativar horário'}</button>
+      <button class="btn btn-danger" onclick="psExcluirSlot('${s.id}',${ags.length})">${ic('trash')} Excluir</button>
+      <button class="btn btn-primary" onclick="fechaModal()">Fechar</button>
+    </div>`);
+}
+async function psPresenca(agId, vl){
+  try{
+    const {error} = await db.from('ps_agendamentos').update({compareceu:vl}).eq('id', agId);
+    if(error) throw error;
+    const a = PS.agends.find(x=>x.id===agId); if(a){ a.compareceu=vl; psAbrirSlot(a.slot_id); }
+    toast('Presença registrada.');
+  }catch(e){ falha(e,'Falha ao registrar presença'); }
+}
+async function psToggleSlot(id, ativo){
+  try{
+    const {error} = await db.from('ps_slots').update({ativo}).eq('id', id);
+    if(error) throw error;
+    toast(ativo?'Horário reativado.':'Horário desativado. Ele some do site.');
+    fechaModal(); PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao atualizar horário'); }
+}
+async function psExcluirSlot(id, qtd){
+  if(!await confirma(qtd?`Este horário tem <b>${qtd}</b> agendamento(s), que serão <b>removidos</b> junto. Excluir mesmo assim?`
+    :'Excluir este horário?','Excluir')) return;
+  try{
+    const {error} = await db.from('ps_slots').delete().eq('id', id);
+    if(error) throw error;
+    toast('Horário excluído.'); fechaModal();
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao excluir'); }
+}
+
+/* ---------- Seleção · publicações ---------- */
+function psPublicacoes(){
+  $('#sel-corpo').innerHTML = `
+  <div class="banner neutral">O site público só mostra o que estiver <b>publicado</b>, e é a publicação de cada resultado que libera a situação correspondente para os candidatos. As listas de aprovados são geradas na hora, a partir do status atual.</div>
+  <div style="margin-bottom:14px"><button class="btn btn-primary" onclick="psEditarPub()">${ic('plus')} Nova publicação</button></div>
+  ${PS.pubs.map(p=>{
+    const setPub = PS_SETS[p.tipo];
+    const qtd = setPub ? PS.candidatos.filter(c=>setPub.includes(c.status)).length : null;
+    return `<div class="pub-row">
+      <div style="min-width:0;flex:1">
+        <div class="tt">${esc(p.titulo)} <span class="chip">${PS_TIPO_PUB[p.tipo]||p.tipo}</span></div>
+        <div class="mt">${p.publicado?`Publicado em ${psFmtDT(p.publicado_em)}`:`Rascunho, criado em ${psFmtDT(p.criado_em)}`}
+          ${qtd!=null?` · lista atual: <b>${qtd}</b> nome${qtd===1?'':'s'}`:''}</div>
+      </div>
+      <span class="badge-pub ${p.publicado?'sim':'nao'}">${p.publicado?'No ar':'Rascunho'}</span>
+      ${ibtn('pencil','Editar',`psEditarPub('${p.id}')`,'sm')}
+      <button class="btn sm ${p.publicado?'':'btn-primary'}" onclick="psPublicar('${p.id}',${!p.publicado})">
+        ${p.publicado?'Despublicar':'Publicar'}</button>
+      ${ibtn('trash','Excluir',`psExcluirPub('${p.id}')`,'sm')}
+    </div>`; }).join('') || '<div class="empty">Nenhuma publicação criada.<br>Comece pelo <b>edital</b>.</div>'}`;
+}
+function psEditarPub(id){
+  const p = id ? PS.pubs.find(x=>x.id===id) : null;
+  abreModal(`
+    <h3>${p?'Editar publicação':'Nova publicação'}</h3>
+    <div class="field"><label>Tipo</label>
+      <select id="ps-pb-tipo">${Object.entries(PS_TIPO_PUB).map(([vl,l])=>
+        `<option value="${vl}" ${p?.tipo===vl?'selected':''}>${l}</option>`).join('')}</select></div>
+    <div class="field"><label>Título</label><input id="ps-pb-titulo" value="${esc(p?.titulo||'')}" placeholder="Ex.: Edital nº 01/2026, Processo Seletivo"></div>
+    <div class="field"><label>Texto</label><textarea id="ps-pb-corpo" style="min-height:130px" placeholder="Texto exibido no site (opcional para resultados: a lista é automática).">${esc(p?.corpo||'')}</textarea></div>
+    <div class="field"><label>Link do documento (PDF do edital etc.)</label><input id="ps-pb-anexo" value="${esc(p?.url_anexo||'')}" placeholder="https://…"></div>
+    <p class="small muted">Para tipos de resultado, a lista de nomes é montada a partir do status dos candidatos. Faça as movimentações antes de publicar.</p>
+    <div class="actions">
+      <button class="btn" onclick="fechaModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="psSalvarPub(${p?`'${p.id}'`:'null'})">${ic('check')} Salvar</button>
+    </div>`);
+}
+async function psSalvarPub(id){
+  const linha = { tipo:$('#ps-pb-tipo').value, titulo:$('#ps-pb-titulo').value.trim(),
+    corpo:$('#ps-pb-corpo').value.trim()||null, url_anexo:$('#ps-pb-anexo').value.trim()||null };
+  if(!linha.titulo){ toast('Dê um título à publicação.', true); return; }
+  try{
+    const q = id ? db.from('ps_publicacoes').update(linha).eq('id', id)
+                 : db.from('ps_publicacoes').insert({...linha, edicao_id:PS.ed.id, criado_por:quemSouEu()});
+    const {error} = await q;
+    if(error) throw error;
+    toast('Publicação salva.'); fechaModal();
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao salvar publicação'); }
+}
+async function psPublicar(id, publicar){
+  const p = PS.pubs.find(x=>x.id===id);
+  const setPub = PS_SETS[p.tipo];
+  const qtd = setPub ? PS.candidatos.filter(c=>setPub.includes(c.status)).length : null;
+  if(publicar && !await confirma(`Publicar "<b>${esc(p.titulo)}</b>"?<br><span class="small muted">
+    Ela aparece imediatamente no site${qtd!=null?` com <b>${qtd}</b> nome(s) na lista, e libera essa fase do resultado para os candidatos`:''}.</span>`,'Publicar')) return;
+  try{
+    const {error} = await db.from('ps_publicacoes')
+      .update({publicado:publicar, publicado_em: publicar?new Date().toISOString():null}).eq('id', id);
+    if(error) throw error;
+    toast(publicar?'Publicado no site. 📣':'Removido do site.');
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao publicar'); }
+}
+async function psExcluirPub(id){
+  if(!await confirma('Excluir esta publicação?','Excluir')) return;
+  try{
+    const {error} = await db.from('ps_publicacoes').delete().eq('id', id);
+    if(error) throw error;
+    toast('Publicação excluída.');
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao excluir'); }
+}
+
+/* ---------- Seleção · configurações ---------- */
+function psConfig(){
+  const e = PS.ed;
+  const souAdmin = state.perfil.papel==='admin';
+  const comite = PS.perfis.filter(p=>p.papel==='selecao');
+  const promoviveis = PS.perfis.filter(p=>p.papel==='leitura');
+  $('#sel-corpo').innerHTML = `
+  <div class="card">
+    <h3>Edição</h3>
+    <div class="form-grid">
+      <div class="field full"><label>Nome</label><input id="ps-ed-nome" value="${esc(e.nome)}"></div>
+      <div class="field full"><label>Descrição (aparece no site)</label><textarea id="ps-ed-desc">${esc(e.descricao||'')}</textarea></div>
+      <div class="field"><label>Início das inscrições</label><input id="ps-ed-ini" type="date" value="${e.inscricoes_inicio}"></div>
+      <div class="field"><label>Fim das inscrições</label><input id="ps-ed-fim" type="date" value="${e.inscricoes_fim}"></div>
+      <div class="field"><label>Status</label><select id="ps-ed-status">
+        ${['rascunho','publicada','encerrada'].map(s=>`<option ${e.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
+      <div class="field"><label>URL do edital (PDF)</label><input id="ps-ed-edital" value="${esc(e.edital_url||'')}" placeholder="https://…"></div>
+      <div class="field full"><label>Áreas do formulário (separadas por vírgula)</label>
+        <input id="ps-ed-areas" value="${esc((e.areas||[]).join(', '))}"></div>
+    </div>
+    <p class="small muted" style="margin-bottom:10px">O site mostra a edição <b>publicada</b> mais recente. "Rascunho" fica invisível ao público; "encerrada" tira a edição do ar.</p>
+    <button class="btn btn-primary" onclick="psSalvarEdicao()">${ic('check')} Salvar edição</button>
+    <button class="btn" onclick="psNovaEdicao()" style="margin-left:8px">${ic('plus')} Nova edição</button>
+  </div>
+  <div class="card">
+    <h3>Cronograma público</h3>
+    <table class="tb"><thead><tr><th>Ordem</th><th>Marco</th><th>Período</th><th>Fase</th><th></th></tr></thead><tbody>
+      ${PS.etapas.map(t=>`<tr>
+        <td class="reg">${t.ordem}</td><td><b>${esc(t.titulo)}</b></td>
+        <td class="small">${fmtD(t.data_inicio)}${t.data_fim&&t.data_fim!==t.data_inicio?' a '+fmtD(t.data_fim):''}</td>
+        <td><span class="chip">${esc(t.fase)}</span></td>
+        <td style="text-align:right;white-space:nowrap">
+          ${ibtn('pencil','Editar',`psEditarEtapa('${t.id}')`,'sm ghost')}
+          ${ibtn('trash','Excluir',`psExcluirEtapa('${t.id}')`,'sm ghost')}</td>
+      </tr>`).join('') || '<tr><td colspan="5"><div class="empty">Nenhum marco cadastrado.</div></td></tr>'}
+    </tbody></table>
+    <div style="margin-top:12px"><button class="btn" onclick="psEditarEtapa()">${ic('plus')} Adicionar marco</button></div>
+  </div>
+  <div class="card">
+    <h3>Acesso ao módulo (Comitê de Seleção)</h3>
+    <p class="small muted" style="margin:-8px 0 12px">Quem tiver o papel <b>selecao</b> acessa esta página por completo, mantendo apenas consulta no restante do SOMA. Administração e Depto de Pessoal sempre têm acesso.${souAdmin?'':' <b>Somente administradores alteram papéis.</b>'}</p>
+    ${can() ? (comite.map(p=>`<div class="bar-row">
+        <span class="avatar" style="width:28px;height:28px">${esc(iniciais(p.nome||p.email))}</span>
+        <span style="flex:1"><b>${esc(p.nome||p.email)}</b> <span class="muted small">${esc(p.email)}</span></span>
+        ${souAdmin?ibtn('x','Remover do comitê',`psTirarAcesso('${p.id}')`,'sm ghost'):''}</div>`).join('')
+      || '<div class="empty" style="padding:16px">Ninguém com o papel selecao ainda. Apenas admin/pessoal acessam por enquanto.</div>')
+    : '<div class="empty" style="padding:16px">A lista de perfis é visível apenas para admin/pessoal.</div>'}
+    ${souAdmin?`<div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+      <select id="ps-com-add" style="flex:1;min-width:240px">
+        <option value="">Escolher perfil…</option>
+        ${promoviveis.map(p=>`<option value="${p.id}">${esc(p.nome||p.email)} (${esc(p.email)})</option>`).join('')}
+      </select>
+      <button class="btn btn-primary" onclick="psDarAcesso()">${ic('plus')} Incluir no comitê</button></div>
+      <p class="small muted" style="margin-top:8px">A pessoa precisa ter uma conta no SOMA (perfil criado no primeiro login). Contas admin/pessoal não aparecem aqui porque já têm acesso.</p>`:''}
+  </div>`;
+}
+async function psSalvarEdicao(){
+  const linha = { nome:$('#ps-ed-nome').value.trim(), descricao:$('#ps-ed-desc').value.trim()||null,
+    inscricoes_inicio:$('#ps-ed-ini').value, inscricoes_fim:$('#ps-ed-fim').value,
+    status:$('#ps-ed-status').value, edital_url:$('#ps-ed-edital').value.trim()||null,
+    areas: $('#ps-ed-areas').value.split(',').map(s=>s.trim()).filter(Boolean) };
+  if(!linha.nome||!linha.inscricoes_inicio||!linha.inscricoes_fim){ toast('Preencha nome e período de inscrições.', true); return; }
+  try{
+    const {error} = await db.from('ps_edicoes').update(linha).eq('id', PS.ed.id);
+    if(error) throw error;
+    toast('Edição salva.');
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao salvar edição'); }
+}
+function psNovaEdicao(){
+  abreModal(`<h3>Nova edição</h3>
+    <div class="field"><label>Nome</label><input id="ps-ne-nome" placeholder="Processo Seletivo 2027"></div>
+    <div class="field"><label>Identificador (slug)</label><input id="ps-ne-slug" placeholder="ps-2027"></div>
+    <div class="form-grid">
+      <div class="field"><label>Início das inscrições</label><input id="ps-ne-ini" type="date"></div>
+      <div class="field"><label>Fim das inscrições</label><input id="ps-ne-fim" type="date"></div>
+    </div>
+    <p class="small muted">A edição nasce como <b>rascunho</b>. Publique-a nas configurações quando estiver pronta.</p>
+    <div class="actions"><button class="btn" onclick="fechaModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="psCriarEdicao()">${ic('check')} Criar</button></div>`, true);
+}
+async function psCriarEdicao(){
+  const nome=$('#ps-ne-nome').value.trim(), slug=$('#ps-ne-slug').value.trim().toLowerCase();
+  const ini=$('#ps-ne-ini').value, fim=$('#ps-ne-fim').value;
+  if(!nome||!slug||!ini||!fim){ toast('Preencha todos os campos.', true); return; }
+  try{
+    const {data, error} = await db.from('ps_edicoes')
+      .insert({nome, slug, inscricoes_inicio:ini, inscricoes_fim:fim, areas:PS.ed?.areas||[]})
+      .select().single();
+    if(error) throw error;
+    toast('Edição criada.'); fechaModal();
+    PS.ed = data; PS.pronto=false; PS.tab='config';
+    renderSelecao();
+  }catch(e){ falha(e,'Falha ao criar edição'); }
+}
+function psEditarEtapa(id){
+  const t = id ? PS.etapas.find(x=>x.id===id) : null;
+  abreModal(`<h3>${t?'Editar marco':'Novo marco do cronograma'}</h3>
+    <div class="field"><label>Título</label><input id="ps-et-titulo" value="${esc(t?.titulo||'')}"></div>
+    <div class="form-grid">
+      <div class="field"><label>Data de início</label><input id="ps-et-ini" type="date" value="${t?.data_inicio||''}"></div>
+      <div class="field"><label>Data de fim (opcional)</label><input id="ps-et-fim" type="date" value="${t?.data_fim||''}"></div>
+      <div class="field"><label>Fase</label><select id="ps-et-fase">
+        ${PS_FASES_ETAPA.map(f=>`<option ${t?.fase===f?'selected':''}>${f}</option>`).join('')}</select></div>
+      <div class="field"><label>Ordem</label><input id="ps-et-ordem" type="number" value="${t?.ordem??(Math.max(0,...PS.etapas.map(x=>x.ordem))+10)}"></div>
+    </div>
+    <div class="field"><label>Descrição (opcional, aparece no site)</label><textarea id="ps-et-desc">${esc(t?.descricao||'')}</textarea></div>
+    <div class="actions"><button class="btn" onclick="fechaModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="psSalvarEtapa(${t?`'${t.id}'`:'null'})">${ic('check')} Salvar</button></div>`);
+}
+async function psSalvarEtapa(id){
+  const linha = { titulo:$('#ps-et-titulo').value.trim(), data_inicio:$('#ps-et-ini').value,
+    data_fim:$('#ps-et-fim').value||null, fase:$('#ps-et-fase').value,
+    ordem:parseInt($('#ps-et-ordem').value,10)||100, descricao:$('#ps-et-desc').value.trim()||null };
+  if(!linha.titulo||!linha.data_inicio){ toast('Preencha título e data.', true); return; }
+  try{
+    const q = id ? db.from('ps_etapas').update(linha).eq('id', id)
+                 : db.from('ps_etapas').insert({...linha, edicao_id:PS.ed.id});
+    const {error} = await q;
+    if(error) throw error;
+    toast('Cronograma atualizado.'); fechaModal();
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao salvar marco'); }
+}
+async function psExcluirEtapa(id){
+  if(!await confirma('Excluir este marco do cronograma?','Excluir')) return;
+  try{
+    const {error} = await db.from('ps_etapas').delete().eq('id', id);
+    if(error) throw error;
+    toast('Marco excluído.');
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao excluir'); }
+}
+async function psDarAcesso(){
+  const uid = $('#ps-com-add').value;
+  if(!uid){ toast('Escolha um perfil.', true); return; }
+  try{
+    const {error} = await db.from('perfis').update({papel:'selecao'}).eq('id', uid);
+    if(error) throw error;
+    toast('Acesso concedido ao comitê.');
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao conceder acesso'); }
+}
+async function psTirarAcesso(uid){
+  if(!await confirma('Remover esta pessoa do comitê? O perfil volta ao papel de consulta.','Remover')) return;
+  try{
+    const {error} = await db.from('perfis').update({papel:'leitura'}).eq('id', uid);
+    if(error) throw error;
+    toast('Removido do comitê.');
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao remover'); }
 }
 
 init();
