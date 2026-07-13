@@ -626,6 +626,44 @@ async function copiar(texto){
   catch(e){ const ta=document.createElement('textarea'); ta.value=texto; document.body.appendChild(ta);
     ta.select(); document.execCommand('copy'); ta.remove(); toast('Copiado para a área de transferência.'); }
 }
+/* copia HTML como conteúdo formatado (rich text) — ao colar no editor de
+   e-mail o resultado sai renderizado, não como código. */
+async function copiarHTML(html){
+  // usa só o conteúdo do <body> na área de transferência, evitando que
+  // <title>/<head> vazem para o editor ao colar.
+  let corpo = html;
+  try{ const d=new DOMParser().parseFromString(html,'text/html'); if(d.body) corpo=d.body.innerHTML; }catch(e){}
+  try{
+    if(navigator.clipboard && window.ClipboardItem){
+      await navigator.clipboard.write([new ClipboardItem({
+        'text/html': new Blob([corpo], {type:'text/html'}),
+        'text/plain': new Blob([html], {type:'text/plain'}),
+      })]);
+      toast('E-mail copiado — cole no seu editor (Gmail, Outlook, Zimbra…).');
+      return;
+    }
+    throw new Error('ClipboardItem indisponível');
+  }catch(e){
+    try{ // reserva: seleciona um nó renderizado e copia via execCommand (colagem rica)
+      const div=document.createElement('div');
+      div.setAttribute('contenteditable','true');
+      div.style.cssText='position:fixed;left:-9999px;top:0;opacity:0';
+      div.innerHTML=corpo; document.body.appendChild(div);
+      const range=document.createRange(); range.selectNodeContents(div);
+      const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      const ok=document.execCommand('copy'); sel.removeAllRanges(); div.remove();
+      if(ok){ toast('E-mail copiado — cole no seu editor.'); return; }
+      throw new Error('execCommand falhou');
+    }catch(e2){ copiar(html); }
+  }
+}
+/* invoca o cliente de e-mail sem desmontar o DOM (o que cancelaria a
+   navegação mailto). Use via onclick="return abrirEmail(this.href)". */
+function abrirEmail(url){
+  try{ window.location.href = url; }
+  catch(e){ try{ window.open(url,'_self'); }catch(_){ } }
+  return false;
+}
 function grupoCheckboxes(idPrefix, selecionados){
   const gs = [...new Set(state.membros.flatMap(m=>m.grupos||[]))].sort();
   if(!gs.length) return '<div class="muted small">Nenhum grupo cadastrado no quadro.</div>';
@@ -1514,7 +1552,7 @@ Departamento de Pessoal — NeuroDynamics`);
       (por segurança, o navegador não anexa arquivos sozinho).</p>
       <div class="actions"><button class="btn" onclick="fechaModal()">Fechar</button>
       <a class="btn btn-primary" href="mailto:slog@eng.ufmg.br?cc=marcondes@neurodynamics.dev&subject=${assunto}&body=${corpo}"
-        onclick="fechaModal()">${ic('mail')} Prosseguir: e-mail à SLOG</a></div>`, true);
+        onclick="abrirEmail(this.href);setTimeout(fechaModal,400);return false">${ic('mail')} Prosseguir: e-mail à SLOG</a></div>`, true);
   }catch(e){ falha(e,'Erro ao gerar a lista'); }
 }
 /* --- 2. lista para assinatura em evento --- */
@@ -1564,14 +1602,17 @@ function gerarEmails(){
   const lista = filtraPorSelecao(marcados('s-eml'), marcados('g-eml'));
   const emails = [...new Set(lista.map(m=> (m.email_nro||m.email_pessoal||'').trim().toLowerCase()).filter(Boolean))];
   const semEmail = lista.filter(m=> !(m.email_nro||m.email_pessoal));
+  const eu = (state.perfil && state.perfil.email) ? state.perfil.email : '';
+  const mailtoHref = `mailto:${eu}?bcc=${encodeURIComponent(emails.join(','))}`;
   $('#eml-result').innerHTML = emails.length ? `
     <div class="field" style="margin-top:4px"><label>${emails.length} e-mail(s) · separados por vírgula</label>
       <textarea id="eml-texto" readonly style="min-height:110px;font-size:12.5px">${esc(emails.join(', '))}</textarea></div>
     ${semEmail.length?`<p class="small muted">⚠ ${semEmail.length} membro(s) sem e-mail cadastrado: ${esc(semEmail.map(m=>m.nome).join('; '))}</p>`:''}
     <div style="display:flex;gap:8px;margin-top:6px">
       <button class="btn" onclick="copiar(document.getElementById('eml-texto').value)">${ic('copy')} Copiar</button>
-      <a class="btn" id="eml-mailto" href="mailto:?bcc=${encodeURIComponent(emails.join(','))}">${ic('mail')} Abrir e-mail (Cco)</a>
-    </div>`
+      <a class="btn" id="eml-mailto" href="${esc(mailtoHref)}" onclick="return abrirEmail(this.href)">${ic('mail')} Abrir e-mail (Cco)</a>
+    </div>
+    ${eu?`<p class="small muted" style="margin-top:6px">O e-mail abre endereçado a você (${esc(eu)}) com todos em Cco, preservando a privacidade dos endereços.</p>`:''}`
     : '<div class="empty">Nenhum e-mail encontrado com esses filtros.</div>';
 }
 /* --- 3b. full mailer (gerador de e-mails estilizados) --- */
@@ -1737,7 +1778,8 @@ function mlArea(){
   else { const a = AREAS_MAILER[+v]; if(a){ $('#ml-titulo').value=a.t; $('#ml-tema').value=a.tema; } }
   mlUpd(true);
 }
-function mlCopiar(){ if(_mailerHTML) copiar(_mailerHTML); }
+function mlCopiar(){ if(_mailerHTML) copiarHTML(_mailerHTML); }
+function mlCopiarCodigo(){ if(_mailerHTML) copiar(_mailerHTML); }
 function mlBaixar(){
   if(!_mailerHTML) return;
   const blob = new Blob([_mailerHTML], {type:'text/html;charset=utf-8'});
@@ -1800,7 +1842,8 @@ Qualquer dúvida, é só responder a este e-mail — estamos à disposição.</t
       <button class="btn" onclick="fechaModal()">Fechar</button>
       <button class="btn" onclick="mlAbrir()">${ic('eye')} Abrir em nova aba</button>
       <button class="btn" onclick="mlBaixar()">${ic('down')} Baixar .html</button>
-      <button class="btn btn-primary" onclick="mlCopiar()">${ic('copy')} Copiar HTML</button>
+      <button class="btn" onclick="mlCopiarCodigo()">${ic('copy')} Copiar código</button>
+      <button class="btn btn-primary" onclick="mlCopiar()">${ic('mail')} Copiar e-mail</button>
     </div>`);
   const m = document.querySelector('.modal'); if(m) m.classList.add('larga','mailer');
   $('#ml-tema').value = AREAS_MAILER[0].tema;
