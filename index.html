@@ -258,6 +258,17 @@ table.tb{width:100%;border-collapse:collapse}
 .dropzone b{color:var(--ink)}
 .log{background:var(--soft);border-radius:10px;padding:12px 14px;font-family:ui-monospace,'SF Mono','Courier New',monospace;
   font-size:12px;line-height:1.7;max-height:260px;overflow-y:auto;white-space:pre-wrap}
+/* ============ FULL MAILER (gerador de e-mails) ============ */
+.modal.mailer{max-width:1040px}
+.mailer-wrap{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:22px;align-items:start}
+.mailer-form{max-height:64vh;overflow-y:auto;padding-right:8px}
+.mailer-form .field{margin-bottom:12px}
+.mailer-prev{position:sticky;top:0}
+.mailer-prev iframe{width:100%;height:64vh;border:1px solid var(--line2);border-radius:12px;background:#fff;display:block}
+.mailer-sub{display:block;font-size:11px;color:var(--muted);line-height:1.5;margin:-6px 0 10px}
+.mailer-sub.tight{margin:4px 0 0}
+.ml-soc{margin-bottom:6px}
+@media(max-width:780px){.mailer-wrap{grid-template-columns:1fr}.mailer-prev{position:static}.mailer-prev iframe{height:440px}}
 /* ============ MÓDULO SELEÇÃO (Processo Seletivo) ============ */
 .modal.larga{max-width:840px}
 .btn.sm{padding:5px 11px;font-size:12px;border-radius:8px}
@@ -485,7 +496,8 @@ const ICONS = {
   shield:'<path d="M12 3.5 5 6v6c0 4.5 3 7.5 7 8.5 4-1 7-4 7-8.5V6z"/><path d="m9 12 2.2 2.2L15.5 10"/>',
   door:'<path d="M4 21h16M6 21V4.5h9V21M15 8h3.5V21"/><circle cx="12.3" cy="12.8" r=".7"/>',
   chat:'<path d="M4 5.5h16v11H10L5.5 20v-3.5H4z"/>',
-  target:'<circle cx="12" cy="12" r="8.3"/><circle cx="12" cy="12" r="4.3"/><path d="M12 12h.01"/>'
+  target:'<circle cx="12" cy="12" r="8.3"/><circle cx="12" cy="12" r="4.3"/><path d="M12 12h.01"/>',
+  mailer:'<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="m4.5 7 7.5 5.4L19.5 7"/><path d="M7 15.5h5"/>'
 };
 const ic = (n, cls)=>`<svg class="ic${cls?' '+cls:''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]||''}</svg>`;
 const ibtn = (icone, titulo, onclick, extra)=>`<button class="icon-btn ${extra||''}" title="${titulo}" aria-label="${titulo}" onclick="${onclick}">${ic(icone)}</button>`;
@@ -1431,6 +1443,7 @@ function renderRelatorios(){
   if(can()) tiles.push(['door','Lista para acesso na portaria','Autorização de entrada na Escola de Engenharia, com espaços para assinatura e envio direto à SLOG.','modalPortaria()']);
   if(can()) tiles.push(['clip','Lista para assinatura em evento','Lista de presença de membros ativos para imprimir, com nome do evento e data.','modalAssinatura()']);
   tiles.push(['mail','Lista de e-mails','Copie os e-mails dos membros por grupo e status para enviar comunicados.','modalEmails()']);
+  tiles.push(['mailer','Full mailer','Monte um e-mail estilizado no padrão NeuroDynamics — tema por área, logo recolorida e HTML pronto.','modalMailer()']);
   tiles.push(['key','Lista de autorizados','Quem tem acesso ativo a um sistema, local ou documento — em PDF.','modalAutorizados()']);
   tiles.push(['down','Quadro completo','Exportação geral do quadro em Excel ou PDF, com filtros.','modalQuadro()']);
   $('#view-relatorios').innerHTML = `<div class="gal">${tiles.map(([i,t,d,fn])=>
@@ -1560,6 +1573,238 @@ function gerarEmails(){
       <a class="btn" id="eml-mailto" href="mailto:?bcc=${encodeURIComponent(emails.join(','))}">${ic('mail')} Abrir e-mail (Cco)</a>
     </div>`
     : '<div class="empty">Nenhum e-mail encontrado com esses filtros.</div>';
+}
+/* --- 3b. full mailer (gerador de e-mails estilizados) --- */
+/* Áreas da equipe: cada uma sugere um título e uma combinação de cores. */
+const AREAS_MAILER = [
+  {t:'Pesquisa & Desenvolvimento',                tema:'teal'},
+  {t:'Clínica',                                   tema:'clinica'},
+  {t:'Departamento de Pessoal',                   tema:'pessoal'},
+  {t:'Relações Institucionais e Parcerias',       tema:'institucional'},
+  {t:'Marketing e Comunicação',                   tema:'marketing'},
+];
+/* Combinações de cores — base na paleta NeuroDynamics (teal #00594F, deep
+   #00352F, sinapse/lima #CEDC00) com auxiliares harmônicas. Campos:
+   band=fundo do cabeçalho · onBand=título sobre o fundo · logo=cor da logo
+   recolorida · bandRule=régua sobre o fundo · bodyAccent=cor legível para
+   chamada/links/réguas no corpo (fundo branco) · btnBg/btnInk=botão. */
+const THEMES_MAILER = {
+  teal:          {nome:'Menta & Teal · P&D',            band:'#E4EFEC', onBand:'#00352F', logo:'#00594F', bandRule:'#00594F', bodyAccent:'#00594F', btnBg:'#00594F', btnInk:'#FFFFFF'},
+  clinica:       {nome:'Clínica · Cyan sereno',         band:'#E2F0F2', onBand:'#0B5A64', logo:'#0F7C8A', bandRule:'#0F7C8A', bodyAccent:'#0F7C8A', btnBg:'#0F7C8A', btnInk:'#FFFFFF'},
+  pessoal:       {nome:'Pessoal · Bronze acolhedor',    band:'#F4EEDC', onBand:'#5E4A12', logo:'#8A6D1F', bandRule:'#8A6D1F', bodyAccent:'#7A5E15', btnBg:'#8A6D1F', btnInk:'#FFFFFF'},
+  institucional: {nome:'Institucional · Deep + Lima',   band:'#00352F', onBand:'#F5F5F7', logo:'#CEDC00', bandRule:'#CEDC00', bodyAccent:'#00594F', btnBg:'#00352F', btnInk:'#FFFFFF', dark:true},
+  marketing:     {nome:'Marketing · Lima viva',         band:'#F1F5D6', onBand:'#3E5200', logo:'#5C7A00', bandRule:'#5C7A00', bodyAccent:'#5C7A00', btnBg:'#5C7A00', btnInk:'#FFFFFF'},
+  sinapse:       {nome:'Sinapse · Lima & Verde',        band:'#EDF2C8', onBand:'#00352F', logo:'#00594F', bandRule:'#00594F', bodyAccent:'#00594F', btnBg:'#00594F', btnInk:'#FFFFFF'},
+  deep:          {nome:'Deep Total · Verde escuro',     band:'#00594F', onBand:'#FFFFFF', logo:'#FFFFFF', bandRule:'#CEDC00', bodyAccent:'#00594F', btnBg:'#00594F', btnInk:'#FFFFFF', dark:true},
+  grafite:       {nome:'Grafite · Neutro',              band:'#F0F0F2', onBand:'#1D1D1F', logo:'#1D1D1F', bandRule:'#1D1D1F', bodyAccent:'#1D1D1F', btnBg:'#1D1D1F', btnInk:'#FFFFFF'},
+};
+const SOCIAIS_MAILER = [
+  {k:'site',      l:'Site (https://…)'},
+  {k:'instagram', l:'Instagram (URL)'},
+  {k:'linkedin',  l:'LinkedIn (URL)'},
+  {k:'youtube',   l:'YouTube (URL)'},
+  {k:'x',         l:'X / Twitter (URL)'},
+  {k:'facebook',  l:'Facebook (URL)'},
+];
+/* Recolorização da logo: recolore os pixels opacos (o preto original) para a
+   cor do tema mantendo o recorte da onda transparente. Resultado embutido
+   como data-URI — self-contained no HTML gerado. */
+function _hexRGB(h){ h=String(h).replace('#',''); if(h.length===3) h=h.split('').map(c=>c+c).join('');
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]; }
+let _logoImg=null; const _logoCache={};
+async function _garantirLogoImg(){
+  if(_logoImg) return _logoImg;
+  let src = LOGO_PDF?.dados;
+  if(!src){
+    const r = await fetch(LOGO_URL); const b = await r.blob();
+    src = await new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(b); });
+  }
+  const img = new Image(); img.crossOrigin='anonymous';
+  await new Promise((res,rej)=>{ img.onload=res; img.onerror=rej; img.src=src; });
+  _logoImg = img; return img;
+}
+async function logoRecolorida(hex){
+  if(_logoCache[hex]) return _logoCache[hex];
+  try{
+    const img = await _garantirLogoImg();
+    const c = document.createElement('canvas'); c.width = img.naturalWidth||1563; c.height = img.naturalHeight||265;
+    const ctx = c.getContext('2d'); ctx.drawImage(img,0,0);
+    const im = ctx.getImageData(0,0,c.width,c.height), px = im.data, [r,g,b] = _hexRGB(hex);
+    for(let i=0;i<px.length;i+=4){ if(px[i+3]>10){ px[i]=r; px[i+1]=g; px[i+2]=b; } }
+    ctx.putImageData(im,0,0);
+    const url = c.toDataURL('image/png'); _logoCache[hex]=url; return url;
+  }catch(e){ return LOGO_URL; }
+}
+function _socialSVG(k, cor){
+  const S = (inner)=>`<svg width="21" height="21" viewBox="0 0 24 24" fill="${cor}" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+  switch(k){
+    case 'site': return S('<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.9 6h-2.7a15.7 15.7 0 00-1.2-3.3A8 8 0 0118.9 8zM12 4c.8 1 1.5 2.4 1.9 4h-3.8c.4-1.6 1.1-3 1.9-4zM4.3 14a8 8 0 010-4h3a18 18 0 000 4zm.8 2h2.7c.3 1.2.7 2.3 1.2 3.3A8 8 0 015.1 16zM7.8 8H5.1a8 8 0 013.9-3.3C8.5 5.7 8.1 6.8 7.8 8zM12 20c-.8-1-1.5-2.4-1.9-4h3.8c-.4 1.6-1.1 3-1.9 4zm2.3-6H9.7a16 16 0 010-4h4.6a16 16 0 010 4zm.6 5.3c.5-1 .9-2.1 1.2-3.3h2.7a8 8 0 01-3.9 3.3zM16.7 14a18 18 0 000-4h3a8 8 0 010 4z"/>');
+    case 'instagram': return S('<path d="M12 8.8A3.2 3.2 0 1012 15.2 3.2 3.2 0 0012 8.8zm0 5.3a2.1 2.1 0 110-4.2 2.1 2.1 0 010 4.2z"/><path d="M16 2H8a6 6 0 00-6 6v8a6 6 0 006 6h8a6 6 0 006-6V8a6 6 0 00-6-6zm4.8 14A4.8 4.8 0 0116 20.8H8A4.8 4.8 0 013.2 16V8A4.8 4.8 0 018 3.2h8A4.8 4.8 0 0120.8 8z"/><circle cx="15.4" cy="8.6" r=".9"/>');
+    case 'linkedin': return S('<path d="M6.9 8.4H3.6V20h3.3V8.4zM5.2 3.4a1.9 1.9 0 100 3.8 1.9 1.9 0 000-3.8zM20.4 20h-3.3v-5.6c0-1.4 0-3.1-1.9-3.1s-2.2 1.5-2.2 3v5.7H9.7V8.4H13v1.6h.1c.5-.9 1.6-1.9 3.3-1.9 3.5 0 4.1 2.3 4.1 5.3V20z"/>');
+    case 'youtube': return S('<path d="M23 7.5a3 3 0 00-2.1-2.1C19 4.9 12 4.9 12 4.9s-7 0-8.9.5A3 3 0 001 7.5C.5 9.4.5 12 .5 12s0 2.6.5 4.5a3 3 0 002.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 002.1-2.1c.5-1.9.5-4.5.5-4.5s0-2.6-.5-4.5zM9.8 15.3V8.7l5.7 3.3-5.7 3.3z"/>');
+    case 'x': return S('<path d="M17.5 3h3.1l-6.8 7.8L21.7 21h-6.2l-4.9-6.4L5 21H1.9l7.3-8.3L2.3 3h6.4l4.4 5.8L17.5 3zm-1.1 16.1h1.7L7.2 4.8H5.4l11 14.3z"/>');
+    case 'facebook': return S('<path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0022 12z"/>');
+  }
+  return '';
+}
+const _escBr = (s)=> esc(s).replace(/\n/g,'<br>');
+function _mailerParas(txt){
+  return String(txt||'').split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean)
+    .map(p=>`<p style="margin:0 0 16px;font-size:15px;line-height:1.65;color:#2A2A2E">${_escBr(p)}</p>`).join('');
+}
+function _mailerSocial(social, cor){
+  const items = SOCIAIS_MAILER.filter(s=>social[s.k]).map(s=>
+    `<a href="${esc(social[s.k])}" target="_blank" style="text-decoration:none;display:inline-block;margin:0 8px;vertical-align:middle">${_socialSVG(s.k,cor)}</a>`).join('');
+  if(!items) return '';
+  return `<tr><td style="padding:24px 12px 4px">
+    <div style="border-top:2px solid ${cor};font-size:0;line-height:0">&nbsp;</div>
+    <div style="padding:15px 0">${items}</div>
+    <div style="border-top:2px solid ${cor};font-size:0;line-height:0">&nbsp;</div>
+  </td></tr>`;
+}
+function construirMailerHTML(cfg){
+  const th = cfg.tema, logo = cfg.logoData || LOGO_URL;
+  const paras = _mailerParas(cfg.corpo);
+  const cta = (cfg.ctaLabel && cfg.ctaUrl)
+    ? `<div style="height:10px;line-height:10px">&nbsp;</div>
+       <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+         <td style="border-radius:10px;background:${th.btnBg}">
+           <a href="${esc(cfg.ctaUrl)}" target="_blank" style="display:inline-block;padding:12px 26px;font-size:14px;font-weight:600;color:${th.btnInk};text-decoration:none;border-radius:10px">${esc(cfg.ctaLabel)}</a>
+         </td></tr></table><div style="height:6px;line-height:6px">&nbsp;</div>`
+    : '';
+  const social = _mailerSocial(cfg.social||{}, th.bodyAccent);
+  const links = String(cfg.footLinks||'').split('|').map(s=>s.trim()).filter(Boolean)
+    .map(t=>`<a href="#" style="color:${th.bodyAccent};text-decoration:none">${esc(t)}</a>`)
+    .join('<span style="color:#B5B5BA"> | </span>');
+  const fine = String(cfg.fine||'').split(/\n/).map(s=>s.trim()).filter(Boolean)
+    .map(p=>`<p style="margin:0 0 8px;font-size:11px;line-height:1.6;color:#9A9AA0">${esc(p)}</p>`).join('');
+  return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="x-apple-disable-message-reformatting">
+<title>${esc(cfg.titulo||'NeuroDynamics')}</title></head>
+<body style="margin:0;padding:0;background:#EFEFF1;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent">${esc(cfg.preheader||'')}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#EFEFF1">
+<tr><td align="center" style="padding:26px 14px">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
+  <tr><td style="background:${th.band};border-radius:16px;padding:30px 34px 26px">
+    <img src="${logo}" width="188" alt="NeuroDynamics" style="display:block;width:188px;max-width:62%;height:auto;border:0;outline:none;text-decoration:none">
+    <div style="height:22px;line-height:22px">&nbsp;</div>
+    <div style="border-top:1.5px solid ${th.bandRule};font-size:0;line-height:0">&nbsp;</div>
+    <div style="height:16px;line-height:16px">&nbsp;</div>
+    <div style="font-size:20px;font-weight:300;letter-spacing:.2px;line-height:1.35;color:${th.onBand}">${esc(cfg.titulo||'')}</div>
+  </td></tr>
+  <tr><td style="padding:32px 12px 6px">
+    ${cfg.chamada?`<h1 style="margin:0 0 18px;font-size:23px;font-weight:400;line-height:1.28;color:${th.bodyAccent}">${esc(cfg.chamada)}</h1>`:''}
+    ${paras}
+    ${cta}
+  </td></tr>
+  ${social}
+  ${cfg.footText?`<tr><td style="padding:10px 12px 4px"><p style="margin:0;font-size:12.5px;line-height:1.6;color:#7A7A80">${_escBr(cfg.footText)}</p></td></tr>`:''}
+  <tr><td style="padding:16px 12px 0"><div style="border-top:1px solid #D9D9DE;font-size:0;line-height:0">&nbsp;</div></td></tr>
+  ${links?`<tr><td style="padding:12px 12px 4px;font-size:12.5px;color:${th.bodyAccent}">${links}</td></tr>`:''}
+  ${fine?`<tr><td style="padding:8px 12px 26px">${fine}</td></tr>`:''}
+</table>
+</td></tr></table></body></html>`;
+}
+/* estado + UI */
+let _mailerHTML='', _mailerTimer=null;
+function mlLerCfg(){
+  const social={};
+  document.querySelectorAll('.ml-soc').forEach(i=>{ const u=i.value.trim(); if(u) social[i.dataset.k]=u; });
+  const temaKey = $('#ml-tema').value;
+  return {
+    titulo:$('#ml-titulo').value, temaKey, tema:THEMES_MAILER[temaKey]||THEMES_MAILER.teal,
+    preheader:$('#ml-pre').value, chamada:$('#ml-chamada').value, corpo:$('#ml-corpo').value,
+    ctaLabel:$('#ml-cta').value.trim(), ctaUrl:$('#ml-ctaurl').value.trim(),
+    footText:$('#ml-foot').value, footLinks:$('#ml-links').value, fine:$('#ml-fine').value, social,
+  };
+}
+function mlUpd(now){
+  clearTimeout(_mailerTimer);
+  const run = async ()=>{
+    if(!$('#ml-prev')) return;
+    const cfg = mlLerCfg();
+    cfg.logoData = await logoRecolorida(cfg.tema.logo);
+    _mailerHTML = construirMailerHTML(cfg);
+    const f = $('#ml-prev'); if(f) f.srcdoc = _mailerHTML;
+  };
+  if(now) run(); else _mailerTimer = setTimeout(run, 150);
+}
+function mlArea(){
+  const v = $('#ml-area').value;
+  if(v==='custom'){ $('#ml-titulo').value=''; $('#ml-titulo').focus(); }
+  else { const a = AREAS_MAILER[+v]; if(a){ $('#ml-titulo').value=a.t; $('#ml-tema').value=a.tema; } }
+  mlUpd(true);
+}
+function mlCopiar(){ if(_mailerHTML) copiar(_mailerHTML); }
+function mlBaixar(){
+  if(!_mailerHTML) return;
+  const blob = new Blob([_mailerHTML], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `NRO_full_mailer_${hoje()}.html`; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000); toast('HTML baixado.');
+}
+function mlAbrir(){
+  if(!_mailerHTML) return;
+  const blob = new Blob([_mailerHTML], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob); window.open(url,'_blank');
+  setTimeout(()=>URL.revokeObjectURL(url), 8000);
+}
+function modalMailer(){
+  const temaOpts = Object.entries(THEMES_MAILER).map(([k,v])=>`<option value="${k}">${esc(v.nome)}</option>`).join('');
+  abreModal(`<h3>Full mailer — e-mail estilizado</h3>
+    <p class="mailer-sub">Monte um comunicado no padrão visual da NeuroDynamics. Escolha a área (sugere título e combinação de cores) ou crie um título próprio; a logo é recolorida conforme o tema. Ajuste os textos e copie/baixe o HTML pronto.</p>
+    <div class="mailer-wrap">
+      <div class="mailer-form">
+        <div class="field"><label>Área / seção</label>
+          <select id="ml-area" onchange="mlArea()">
+            ${AREAS_MAILER.map((a,i)=>`<option value="${i}">${esc(a.t)}</option>`).join('')}
+            <option value="custom">Outra (título personalizado)…</option>
+          </select></div>
+        <div class="field"><label>Título do cabeçalho</label>
+          <input id="ml-titulo" value="${esc(AREAS_MAILER[0].t)}" oninput="mlUpd()"></div>
+        <div class="field"><label>Tema / combinação de cores</label>
+          <select id="ml-tema" onchange="mlUpd()">${temaOpts}</select></div>
+        <div class="field"><label>Pré-cabeçalho <span class="muted">(resumo na caixa de entrada)</span></label>
+          <input id="ml-pre" value="Confira as novidades desta edição." oninput="mlUpd()"></div>
+        <div class="field"><label>Chamada (título do corpo)</label>
+          <input id="ml-chamada" value="Um novo marco para a NeuroDynamics" oninput="mlUpd()"></div>
+        <div class="field"><label>Corpo do e-mail</label>
+          <textarea id="ml-corpo" oninput="mlUpd()" style="min-height:130px">Olá, tudo bem?
+
+Compartilhamos aqui as principais novidades e próximos passos da nossa equipe. Nas últimas semanas avançamos em frentes importantes e queremos manter todos alinhados sobre o que vem por aí.
+
+Qualquer dúvida, é só responder a este e-mail — estamos à disposição.</textarea>
+          <span class="mailer-sub tight">Separe parágrafos com uma linha em branco.</span></div>
+        <div class="field"><label>Botão — rótulo <span class="muted">(opcional)</span></label>
+          <input id="ml-cta" oninput="mlUpd()" placeholder="ex.: Saiba mais"></div>
+        <div class="field"><label>Botão — link</label>
+          <input id="ml-ctaurl" oninput="mlUpd()" placeholder="https://…"></div>
+        <div class="field"><label>Texto do rodapé <span class="muted">(opcional)</span></label>
+          <textarea id="ml-foot" oninput="mlUpd()" style="min-height:60px">NeuroDynamics · Escola de Engenharia da UFMG · Belo Horizonte/MG</textarea></div>
+        <div class="field"><label>Links do rodapé <span class="muted">(separados por | )</span></label>
+          <input id="ml-links" value="Inscrever-se | Cancelar inscrição | Contato | Política de Privacidade | Enviar feedback" oninput="mlUpd()"></div>
+        <div class="field"><label>Letra miúda <span class="muted">(uma linha por parágrafo)</span></label>
+          <textarea id="ml-fine" oninput="mlUpd()" style="min-height:56px">Você recebeu este e-mail porque faz parte da rede da NeuroDynamics.
+© ${new Date().getFullYear()} NeuroDynamics. Todos os direitos reservados.</textarea></div>
+        <div class="field"><label>Redes sociais / site <span class="muted">(em branco = oculta o ícone)</span></label>
+          ${SOCIAIS_MAILER.map(s=>`<input class="ml-soc" data-k="${s.k}" oninput="mlUpd()" placeholder="${s.l}" value="${s.k==='site'?'https://neurodynamics.dev':''}">`).join('')}
+        </div>
+      </div>
+      <div class="mailer-prev">
+        <iframe id="ml-prev" title="Prévia do e-mail"></iframe>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="fechaModal()">Fechar</button>
+      <button class="btn" onclick="mlAbrir()">${ic('eye')} Abrir em nova aba</button>
+      <button class="btn" onclick="mlBaixar()">${ic('down')} Baixar .html</button>
+      <button class="btn btn-primary" onclick="mlCopiar()">${ic('copy')} Copiar HTML</button>
+    </div>`);
+  const m = document.querySelector('.modal'); if(m) m.classList.add('larga','mailer');
+  $('#ml-tema').value = AREAS_MAILER[0].tema;
+  _mailerHTML=''; mlUpd(true);
 }
 /* --- 4. lista de autorizados --- */
 function modalAutorizados(){
