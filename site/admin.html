@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#050807">
+<title>Site · Projetos — NeuroDynamics</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300352F'/%3E%3Ccircle cx='11' cy='16' r='5' fill='%23F5F5F7'/%3E%3Ccircle cx='23' cy='9.5' r='2.8' fill='%23F5F5F7'/%3E%3Ccircle cx='23' cy='22.5' r='2.8' fill='%23F5F5F7'/%3E%3Cpath d='M15 13.8 20.6 10.6M15 18.2 20.6 21.4' stroke='%23CEDC00' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050807; --panel:#0B1210; --ink:#F5F5F7; --muted:#9AA5A1; --dim:#616C68;
+  --line:rgba(245,245,247,.08); --line2:rgba(245,245,247,.16);
+  --deep:#00352F; --syn:#CEDC00; --teal:#2DD4BF; --bad:#F1806F; --ok:#4ADE97;
+  --card:rgba(255,255,255,.03); --r:16px;
+  --fd:'Archivo',-apple-system,sans-serif; --fm:'IBM Plex Mono',monospace;
+  --f:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--f);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3{font-family:var(--fd);letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;color:inherit;border:none;background:none}
+input,textarea,select{font-family:inherit;font-size:14px;color:var(--ink)}
+[hidden]{display:none!important}
+::selection{background:var(--syn);color:var(--deep)}
+body::before{content:'';position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(110% 80% at 75% -10%, #081511 0%, var(--bg) 58%)}
+
+.wrap{max-width:1100px;margin:0 auto;padding:26px 22px 80px}
+.top{display:flex;align-items:center;gap:14px;padding:6px 0 22px;border-bottom:1px solid var(--line);margin-bottom:26px}
+.top img{height:17px;filter:brightness(0) invert(1)}
+.top .logotype{font-family:var(--fd);font-weight:700;font-size:15.5px;letter-spacing:-.02em;white-space:nowrap}
+.top .tag{font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--syn);border:1px solid rgba(206,220,0,.35);border-radius:999px;padding:3px 10px}
+.top .who{margin-left:auto;font-family:var(--fm);font-size:11px;color:var(--dim)}
+.top .sair{font-size:12.5px;color:var(--muted);border:1px solid var(--line2);border-radius:9px;padding:6px 12px}
+.top .sair:hover{color:var(--ink);border-color:var(--dim)}
+
+.btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;border-radius:11px;
+  font-family:var(--fd);font-weight:600;font-size:13px;transition:transform .15s,box-shadow .15s;white-space:nowrap}
+.btn.solid{background:var(--syn);color:var(--deep)}
+.btn.solid:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(206,220,0,.25)}
+.btn.ghost{border:1px solid var(--line2);color:var(--ink);background:rgba(255,255,255,.03)}
+.btn.ghost:hover{background:rgba(255,255,255,.07)}
+.btn.perigo{border:1px solid rgba(241,128,111,.4);color:var(--bad)}
+.btn.perigo:hover{background:rgba(241,128,111,.08)}
+.btn[disabled]{opacity:.5;pointer-events:none}
+
+/* login */
+.login{max-width:380px;margin:14vh auto 0;background:var(--panel);border:1px solid var(--line2);
+  border-radius:20px;padding:30px;box-shadow:0 24px 70px rgba(0,0,0,.4)}
+.login h1{font-size:19px;margin-bottom:4px}
+.login .hint{font-size:12.5px;color:var(--muted);margin-bottom:20px}
+.fld{margin-bottom:14px}
+.fld label{display:block;font-size:10.5px;font-weight:700;letter-spacing:.08em;color:var(--muted);
+  margin-bottom:6px;text-transform:uppercase}
+.fld input,.fld textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line2);
+  border-radius:11px;padding:10px 12px;transition:border-color .15s}
+.fld textarea{resize:vertical}
+.fld input:focus,.fld textarea:focus{outline:none;border-color:var(--syn);background:rgba(206,220,0,.04)}
+.fld .mini{font-size:11.5px;color:var(--dim);margin-top:4px}
+
+/* layout do editor */
+.editor{display:grid;grid-template-columns:290px 1fr;gap:20px;align-items:start}
+@media (max-width:840px){.editor{grid-template-columns:1fr}}
+.lista{display:flex;flex-direction:column;gap:8px}
+.lista .item{display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--line);
+  border-radius:13px;padding:12px 14px;background:var(--card);transition:border-color .15s;width:100%}
+.lista .item:hover{border-color:var(--dim)}
+.lista .item.on{border-color:var(--syn);background:rgba(206,220,0,.05)}
+.lista .item .ordem{font-family:var(--fm);font-size:11px;color:var(--dim);min-width:24px}
+.lista .item .nm{font-family:var(--fd);font-weight:600;font-size:14.5px}
+.lista .item .sl{font-family:var(--fm);font-size:10.5px;color:var(--dim)}
+.lista .item .off{margin-left:auto;font-family:var(--fm);font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--bad);border:1px solid rgba(241,128,111,.35);border-radius:3px;padding:2px 6px}
+.form{background:var(--panel);border:1px solid var(--line2);border-radius:20px;padding:26px}
+.form h2{font-size:17px;margin-bottom:2px}
+.form .sub{font-size:12px;color:var(--dim);margin-bottom:20px;font-family:var(--fm)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.fgrid .full{grid-column:1/-1}
+@media (max-width:640px){.fgrid{grid-template-columns:1fr}}
+.check{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--muted);
+  border:1px solid var(--line2);border-radius:11px;padding:10px 13px;cursor:pointer}
+.check input{width:16px;height:16px;accent-color:var(--syn);cursor:pointer}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;align-items:center}
+.acts .quando{margin-left:auto;font-family:var(--fm);font-size:10.5px;color:var(--dim)}
+.vazio{padding:40px 20px;text-align:center;color:var(--muted);border:1.5px dashed var(--line2);border-radius:var(--r)}
+.aviso{border-radius:12px;padding:12px 15px;font-size:13px;border:1px solid;margin-bottom:16px;line-height:1.55}
+.aviso.err{background:rgba(241,128,111,.09);border-color:rgba(241,128,111,.35);color:#F5B0A5}
+.aviso.info{background:rgba(96,165,250,.07);border-color:rgba(96,165,250,.3);color:#A9CDF8}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:99;display:flex;
+  flex-direction:column;gap:8px;align-items:center}
+.toast{background:#151B19;border:1px solid var(--line2);color:var(--ink);border-radius:12px;
+  padding:11px 18px;font-size:13px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.toast.err{border-color:rgba(241,128,111,.4);color:#F5B0A5}
+.spin{width:18px;height:18px;border:2.5px solid var(--line2);border-top-color:var(--syn);border-radius:50%;
+  animation:gira .8s linear infinite;display:inline-block}
+@keyframes gira{to{transform:rotate(360deg)}}
+.carregando{display:flex;align-items:center;justify-content:center;gap:12px;padding:60px 0;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <img id="logo" src="" alt="NeuroDynamics">
+    <span class="tag">Site · Projetos</span>
+    <span class="who" id="who" hidden></span>
+    <button class="sair" id="btn-sair" hidden onclick="sair()">Sair</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="login" id="v-login" hidden>
+    <h1>Editar o site</h1>
+    <p class="hint">Entre com a sua conta do SOMA. A edição é liberada para os papéis
+      <b>admin</b> e <b>pessoal</b>.</p>
+    <div class="fld"><label>E-mail</label><input id="l-email" type="email" autocomplete="email"></div>
+    <div class="fld"><label>Senha</label><input id="l-senha" type="password" autocomplete="current-password"></div>
+    <button class="btn solid" style="width:100%;justify-content:center" onclick="entrar()">Entrar</button>
+    <p class="fld mini" id="l-erro" style="color:var(--bad);margin-top:12px" hidden></p>
+  </div>
+
+  <!-- EDITOR -->
+  <div id="v-editor" hidden>
+    <div class="aviso info">Os textos aparecem <b>em inglês</b> no site público
+      (neurodynamics.dev) — preencha os campos já em inglês. Alterações entram no ar
+      assim que você salva; deixe a URL da imagem em branco para manter o placeholder.</div>
+    <div class="editor">
+      <div>
+        <div class="lista" id="lista"></div>
+        <button class="btn ghost" style="width:100%;justify-content:center;margin-top:12px" onclick="novo()">+ Novo projeto</button>
+      </div>
+      <div class="form" id="form"></div>
+    </div>
+  </div>
+
+  <div class="carregando" id="v-carregando"><span class="spin"></span> Carregando…</div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* CONFIG — mesmos dados do SOMA (Settings -> API no Supabase). */
+const CONFIG = {
+  SUPABASE_URL: 'https://rxzmkyjttzzpwtodqkve.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_MJFR-aaQqTS1BthxYJG2kg_5XGhs9wg'
+};
+const LOGO_URL = 'https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/heads/main/imagotipo%20preto.png';
+
+const sb = window.supabase ? supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY) : null;
+const $ = s => document.querySelector(s);
+const esc = v => v == null ? '' : String(v).replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(msg, err){ const t=document.createElement('div'); t.className='toast'+(err?' err':'');
+  t.textContent=msg; $('#toast').appendChild(t); setTimeout(()=>t.remove(), 4600); }
+
+const state = { projetos: [], sel: null };
+
+function mostra(view){
+  ['v-login','v-editor','v-carregando'].forEach(id => $('#'+id).hidden = (id !== view));
+}
+
+/* ---------------- sessão ---------------- */
+async function boot(){
+  const lg = $('#logo');
+  lg.onerror = () => { const s=document.createElement('span'); s.className='logotype'; s.textContent='NeuroDynamics'; lg.replaceWith(s); };
+  lg.src = LOGO_URL;
+  if (!sb){
+    $('#v-carregando').innerHTML =
+      '<div class="aviso err">Não foi possível carregar a biblioteca do Supabase (sem conexão?). Recarregue a página.</div>';
+    return;
+  }
+  const { data:{ session } } = await sb.auth.getSession();
+  if (session) await abrir(); else mostra('v-login');
+}
+async function entrar(){
+  $('#l-erro').hidden = true;
+  const email = $('#l-email').value.trim(), senha = $('#l-senha').value;
+  if (!email || !senha) return;
+  mostra('v-carregando');
+  const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+  if (error){ mostra('v-login'); $('#l-erro').textContent = 'Não foi possível entrar: ' + error.message; $('#l-erro').hidden = false; return; }
+  await abrir();
+}
+async function sair(){ await sb.auth.signOut(); location.reload(); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !$('#v-login').hidden) entrar();
+});
+
+async function abrir(){
+  const { data:{ user } } = await sb.auth.getUser();
+  $('#who').textContent = user?.email || ''; $('#who').hidden = false; $('#btn-sair').hidden = false;
+  await carregar();
+  mostra('v-editor');
+}
+
+/* ---------------- dados ---------------- */
+async function carregar(){
+  const { data, error } = await sb.from('site_projetos').select('*')
+    .order('ordem', { ascending:true }).order('nome', { ascending:true });
+  if (error){ toast('Erro ao carregar: ' + error.message, true); state.projetos = []; }
+  else state.projetos = data || [];
+  if (!state.sel || !state.projetos.find(p => p.id === state.sel))
+    state.sel = state.projetos[0]?.id || null;
+  desenha();
+}
+
+function desenha(){
+  $('#lista').innerHTML = state.projetos.length ? state.projetos.map(p => `
+    <button class="item ${p.id===state.sel?'on':''}" onclick="selecionar('${p.id}')">
+      <span class="ordem">${esc(p.ordem)}</span>
+      <span><span class="nm">${esc(p.nome)}</span><br><span class="sl">/${esc(p.slug)}</span></span>
+      ${p.publicado ? '' : '<span class="off">oculto</span>'}
+    </button>`).join('')
+    : '<div class="vazio">Nenhum projeto ainda.<br>A migração <b>soma_v9.sql</b> foi aplicada?</div>';
+  desenhaForm();
+}
+
+function selecionar(id){ state.sel = id; desenha(); }
+
+function desenhaForm(){
+  const p = state.projetos.find(x => x.id === state.sel);
+  if (!p){ $('#form').innerHTML = '<div class="vazio">Selecione ou crie um projeto.</div>'; return; }
+  const quando = p.atualizado_em ? new Date(p.atualizado_em).toLocaleString('pt-BR') : '—';
+  $('#form').innerHTML = `
+    <h2>${esc(p.nome)}</h2>
+    <p class="sub">id ${esc(p.id).slice(0,8)} · atualizado ${esc(quando)}</p>
+    <div class="fgrid">
+      <div class="fld"><label>Nome</label><input id="f-nome" value="${esc(p.nome)}"></div>
+      <div class="fld"><label>Slug (url)</label><input id="f-slug" value="${esc(p.slug)}">
+        <p class="mini">minúsculas, sem espaço ou acento</p></div>
+      <div class="fld full"><label>Tagline (linha curta sob o título)</label>
+        <input id="f-tagline" value="${esc(p.tagline||'')}"></div>
+      <div class="fld full"><label>Resumo (cartão da home, 1–2 frases)</label>
+        <textarea id="f-resumo" rows="2">${esc(p.resumo||'')}</textarea></div>
+      <div class="fld full"><label>Descrição (página de projetos)</label>
+        <textarea id="f-descricao" rows="5">${esc(p.descricao||'')}</textarea></div>
+      <div class="fld"><label>Status</label><input id="f-status" list="status-sug" value="${esc(p.status||'')}">
+        <datalist id="status-sug">
+          <option value="Applied research"><option value="Prototype">
+          <option value="In development"><option value="Field pilot">
+        </datalist></div>
+      <div class="fld"><label>Ordem de exibição</label><input id="f-ordem" type="number" value="${esc(p.ordem)}"></div>
+      <div class="fld full"><label>Tags (separadas por vírgula)</label>
+        <input id="f-tags" value="${esc((p.tags||[]).join(', '))}"></div>
+      <div class="fld full"><label>URL da imagem (em branco = placeholder)</label>
+        <input id="f-imagem" value="${esc(p.imagem_url||'')}" placeholder="https://…"></div>
+      <label class="check full"><input id="f-publicado" type="checkbox" ${p.publicado?'checked':''}>
+        Publicado no site</label>
+    </div>
+    <div class="acts">
+      <button class="btn solid" id="btn-salvar" onclick="salvar('${p.id}')">Salvar alterações</button>
+      <button class="btn perigo" onclick="excluir('${p.id}')">Excluir</button>
+      <span class="quando"><a href="index.html#/projects" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line2)">ver o site ↗</a></span>
+    </div>`;
+}
+
+function lerForm(){
+  return {
+    nome: $('#f-nome').value.trim(),
+    slug: $('#f-slug').value.trim().toLowerCase(),
+    tagline: $('#f-tagline').value.trim() || null,
+    resumo: $('#f-resumo').value.trim() || null,
+    descricao: $('#f-descricao').value.trim() || null,
+    status: $('#f-status').value.trim() || 'In development',
+    ordem: parseInt($('#f-ordem').value, 10) || 100,
+    tags: $('#f-tags').value.split(',').map(s => s.trim()).filter(Boolean),
+    imagem_url: $('#f-imagem').value.trim() || null,
+    publicado: $('#f-publicado').checked
+  };
+}
+
+async function salvar(id){
+  const v = lerForm();
+  if (!v.nome || !v.slug){ toast('Nome e slug são obrigatórios.', true); return; }
+  $('#btn-salvar').disabled = true;
+  const { error } = await sb.from('site_projetos').update(v).eq('id', id);
+  $('#btn-salvar').disabled = false;
+  if (error){ toast('Erro ao salvar: ' + error.message, true); return; }
+  toast('Projeto salvo — já está no ar.');
+  await carregar();
+}
+
+async function novo(){
+  const nome = prompt('Nome do novo projeto:');
+  if (!nome) return;
+  const slug = nome.normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  const { data, error } = await sb.from('site_projetos')
+    .insert({ nome, slug, publicado:false, ordem: 100 + state.projetos.length * 10 })
+    .select().single();
+  if (error){ toast('Erro ao criar: ' + error.message, true); return; }
+  toast('Projeto criado (começa oculto — publique quando estiver pronto).');
+  state.sel = data.id;
+  await carregar();
+}
+
+async function excluir(id){
+  const p = state.projetos.find(x => x.id === id);
+  if (!confirm(`Excluir "${p?.nome}"? Essa ação não tem volta — se for temporário, prefira desmarcar "Publicado".`)) return;
+  const { error } = await sb.from('site_projetos').delete().eq('id', id);
+  if (error){ toast('Erro ao excluir: ' + error.message, true); return; }
+  toast('Projeto excluído.');
+  state.sel = null;
+  await carregar();
+}
+
+boot();
+</script>
+</body>
+</html>
