@@ -649,7 +649,7 @@ const PAGE_TITLES = {dashboard:'Visão geral', membros:'Membros', ficha:'Ficha d
 
 const state = {
   perfil:null, membros:[], itens:[], tipos:[], view:'dashboard',
-  filtros:{q:'', status:'', dep:'', grupo:''},
+  filtros:{q:'', status:'Ativo', dep:'', grupo:''},
   ficha:{reg:null, tab:'dados', ocorr:[], acessos:[], avals:[], aponts:[], pess:null, editando:false},
   apont:null, eventos:[], evento:null,
   cal:{ano:new Date().getFullYear(), mes:new Date().getMonth(), eventos:[], marcos:[]}
@@ -664,6 +664,11 @@ const fmtDT = (d)=>{ if(!d) return '—'; const x=new Date(d); return x.toLocale
 const hoje = ()=> new Date().toISOString().slice(0,10);
 const norm = (s)=> String(s||'').trim().replace(/\s+/g,' ').toLowerCase();
 const can = ()=> ['admin','pessoal'].includes(state.perfil?.papel);
+/* acesso ao quadro completo — lista direta de membros e ocorrências. Papéis
+   de consulta (leitura e selecao) chegam aos membros apenas pelo organograma
+   e não enxergam ocorrências; hoje isso coincide com can(), mas o predicado
+   fica nomeado à parte para deixar a intenção explícita. */
+const podeQuadro = ()=> can();
 const pill = (st)=> `<span class="pill"><span class="dt ${STATUS_DOT[st]||'dt-gray'}"></span>${esc(st||'—')}</span>`;
 const iniciais = (n)=> String(n||'?').trim().split(/\s+/).map(p=>p[0]).filter(Boolean).slice(0,2).join('').toUpperCase();
 /* Repositório público das fotos: fotos/<registro>.<ext>, sem custo de storage no Supabase.
@@ -863,7 +868,7 @@ async function sair(){ await db.auth.signOut(); location.reload(); }
 
 const NAV = [
   ['dashboard','Visão geral','activity',false],
-  ['membros','Membros','users',false],
+  ['membros','Membros','users','quadro'],
   ['organizacao','Organização','tree',false],
   ['okrs','OKRs','target',false],
   ['relatorios','Relatórios','doc',false],
@@ -873,6 +878,8 @@ const NAV = [
   ['pessoal','Painel do Pessoal','chat',true],
   ['auditoria','Auditoria','shield',true]
 ];
+/* avalia o marcador de acesso de cada item do NAV */
+const navPermite = (acc)=> !acc || (acc==='sel' ? podeSelecao() : acc==='quadro' ? podeQuadro() : can());
 async function entrar(){
   if(booted) return; booted=true;
   try{
@@ -892,7 +899,7 @@ async function entrar(){
     uav.style.position='relative'; uav.style.overflow='hidden';
     uav.innerHTML = avatarConteudo({registro: perfil.registro, nome: perfil.nome || perfil.email});
     $('#user-papel').textContent = {admin:'Administração', pessoal:'Depto de Pessoal', selecao:'Comitê de Seleção', leitura:'Consulta'}[perfil.papel] || perfil.papel;
-    $('#nav').innerHTML = NAV.filter(([,,,acc])=>!acc || (acc==='sel' ? podeSelecao() : can())).map(([v,l,i])=>
+    $('#nav').innerHTML = NAV.filter(([,,,acc])=>navPermite(acc)).map(([v,l,i])=>
       `<button data-view="${v}" onclick="showView('${v}')">${ic(i)}<span class="lb">${l}</span></button>`).join('');
     await carregarBase();
     $('#login-view').hidden = true; $('#app').hidden = false;
@@ -916,6 +923,9 @@ function setTopo(titulo, voltarPara, actionsHTML){
   $('#page-actions').innerHTML = actionsHTML || '';
 }
 function showView(v){
+  /* barreira de acesso: papéis de consulta não abrem a lista direta de
+     membros — são levados ao organograma, o caminho permitido até as fichas. */
+  if(v==='membros' && !podeQuadro()) v = 'organizacao';
   state.view = v;
   document.querySelectorAll('.content > section').forEach(s=>s.hidden = (s.id !== 'view-'+v));
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
@@ -950,9 +960,9 @@ async function renderDashboard(){
             <div class="tr"><div class="fl" style="width:${Math.round(n/maxDep*100)}%"></div></div>
             <div class="vl">${n}</div></div>`).join('') || '<div class="empty">Nenhum membro ativo cadastrado.</div>'}
       </div>
-      <div class="card"><h3>Ocorrências recentes</h3><div id="dash-ocorr"><div class="empty">Carregando…</div></div></div>
+      ${podeQuadro()?`<div class="card"><h3>Ocorrências recentes</h3><div id="dash-ocorr"><div class="empty">Carregando…</div></div></div>`:''}
     </div>`;
-  try{
+  if(podeQuadro()) try{
     const {data:oc} = await db.from('ocorrencias').select('*, membro:membros(nome)')
       .order('data',{ascending:false}).order('criado_em',{ascending:false}).limit(8);
     $('#dash-ocorr').innerHTML = (oc&&oc.length) ? `<div class="timeline">${oc.map(o=>`
@@ -960,7 +970,7 @@ async function renderDashboard(){
         <div class="tp">${esc(o.tipo)} · <a href="#" onclick="abrirFicha(${o.registro});return false">${esc(o.membro?.nome||'registro '+o.registro)}</a></div>
         ${o.descricao?`<div class="ds">${esc(o.descricao)}</div>`:''}</div>`).join('')}</div>`
       : '<div class="empty">Nenhuma ocorrência registrada ainda.</div>';
-  }catch(e){ $('#dash-ocorr').innerHTML='<div class="empty">Não foi possível carregar as ocorrências.</div>'; }
+  }catch(e){ const el=$('#dash-ocorr'); if(el) el.innerHTML='<div class="empty">Não foi possível carregar as ocorrências.</div>'; }
   try{
     let html='';
     if(can()){
@@ -1009,7 +1019,7 @@ function filtrosHTML(){
       <option value="">Todos</option>${opcoesDe('departamento').map(d=>`<option ${f.dep===d?'selected':''}>${esc(d)}</option>`).join('')}</select></div>
     <div class="field"><label>Grupo</label><select onchange="state.filtros.grupo=this.value;renderTabelaMembros()">
       <option value="">Todos</option>${todosGrupos().map(g=>`<option ${f.grupo===g?'selected':''}>${esc(g)}</option>`).join('')}</select></div>
-    ${ibtn('x','Limpar filtros',"state.filtros={q:'',status:'',dep:'',grupo:''};renderMembros()")}
+    ${ibtn('x','Limpar filtros (volta ao padrão de ativos)',"state.filtros={q:'',status:'Ativo',dep:'',grupo:''};renderMembros()")}
   </div>`;
 }
 function renderMembros(){
@@ -1102,20 +1112,25 @@ async function abrirFicha(reg){
 }
 async function carregarFicha(){
   const reg = state.ficha.reg;
-  const pr = [
-    db.from('ocorrencias').select('*').eq('registro',reg).order('data',{ascending:false}).order('criado_em',{ascending:false}),
-    db.from('acessos_concedidos').select('*').eq('registro',reg),
-    db.from('avaliacoes').select('*').eq('registro',reg).order('data',{ascending:false}),
-    db.from('apontamento_itens').select('*').eq('registro',reg)
-      .order('data',{ascending:false}).limit(12)
-  ];
-  if(can()) pr.push(db.from('dados_pessoais').select('*').eq('registro',reg).maybeSingle());
-  const [o,a,v,ap,p] = await Promise.all(pr);
-  const falhou = [o,a,v,ap,p].find(r=>r && r.error);
+  /* consultas por chave: ocorrências só para quem tem o quadro (admin/pessoal);
+     dados pessoais idem. Assim o papel de consulta nem carrega ocorrências. */
+  const q = {
+    acessos: db.from('acessos_concedidos').select('*').eq('registro',reg),
+    avals:   db.from('avaliacoes').select('*').eq('registro',reg).order('data',{ascending:false}),
+    aponts:  db.from('apontamento_itens').select('*').eq('registro',reg).order('data',{ascending:false}).limit(12),
+  };
+  if(podeQuadro()) q.ocorr = db.from('ocorrencias').select('*').eq('registro',reg).order('data',{ascending:false}).order('criado_em',{ascending:false});
+  if(can()) q.pess = db.from('dados_pessoais').select('*').eq('registro',reg).maybeSingle();
+  const chaves = Object.keys(q);
+  const res = await Promise.all(chaves.map(k=>q[k]));
+  const out = {}; chaves.forEach((k,i)=> out[k]=res[i]);
+  const falhou = Object.values(out).find(r=>r && r.error);
   if(falhou) throw falhou.error;
-  state.ficha.ocorr=o.data||[]; state.ficha.acessos=a.data||[]; state.ficha.avals=v.data||[];
-  state.ficha.aponts = await juntarCabecalhos(ap.data||[]);
-  state.ficha.pess = p ? (p.data||null) : null;
+  state.ficha.ocorr = out.ocorr?.data || [];
+  state.ficha.acessos = out.acessos.data||[];
+  state.ficha.avals = out.avals.data||[];
+  state.ficha.aponts = await juntarCabecalhos(out.aponts.data||[]);
+  state.ficha.pess = out.pess ? (out.pess.data||null) : null;
 }
 /* anexa {apont:{grupo,responsavel}} aos itens de apontamento buscando os
    cabeçalhos por id. A junção é feita aqui no cliente porque a consulta
@@ -1132,12 +1147,14 @@ async function juntarCabecalhos(itens){
 function renderFicha(){
   const m = membroAtual();
   if(!m){ $('#view-ficha').innerHTML='<div class="empty">Registro não encontrado.</div>'; return; }
-  setTopo(m.nome, "showView('membros')",
+  setTopo(m.nome, podeQuadro()?"showView('membros')":"showView('organizacao')",
     ibtn('doc','Gerar relatório do membro','gerarRelatorioMembro()')
     + (can()? ibtn('pencil','Editar dados',"state.ficha.editando=true;state.ficha.tab='dados';renderFicha()") : ''));
   const f = state.ficha;
   const gestor = m.gestor_registro ? nomeDe(m.gestor_registro) : null;
-  const tabs = [['dados','Dados'],['ocorr',`Ocorrências (${f.ocorr.length})`],['acessos','Acessos'],['avals',`Avaliações (${f.avals.length})`]];
+  const tabs = [['dados','Dados']];
+  if(podeQuadro()) tabs.push(['ocorr',`Ocorrências (${f.ocorr.length})`]);
+  tabs.push(['acessos','Acessos'],['avals',`Avaliações (${f.avals.length})`]);
   if(can()) tabs.push(['pess','Dados pessoais']);
   $('#view-ficha').innerHTML = `
     <div class="card" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
