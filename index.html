@@ -7,6 +7,10 @@
 <title>SOMA · Gestão — NeuroDynamics</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- fontes do site institucional, usadas na tela de login -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#F5F5F7; --panel:#FFFFFF; --ink:#1D1D1F; --muted:#6E6E73; --soft:#F0F0F2;
@@ -26,33 +30,51 @@ a:hover{text-decoration:underline}
 .ic{width:19px;height:19px;flex-shrink:0}
 .logo-mark{display:block}
 
-/* ============ LOGIN ============ */
-#login-view{position:fixed;inset:0;display:flex;background:#0C0C0D;color:#F5F5F7;z-index:10;
-  background-image:linear-gradient(rgba(245,245,247,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(245,245,247,.045) 1px,transparent 1px);
-  background-size:120px 120px}
-.lg-left{flex:1;position:relative;min-width:0}
-.lg-logo{position:absolute;top:30px;left:34px;display:flex;align-items:center;gap:11px;color:#F5F5F7}
+/* ============ LOGIN (tema NeuroDynamics — neurodynamics.dev) ============ */
+#login-view{position:fixed;inset:0;display:flex;background:#050807;color:#F5F5F7;z-index:10;
+  background-image:
+    radial-gradient(120% 90% at 72% -12%, #081511 0%, rgba(5,8,7,0) 58%),
+    linear-gradient(rgba(245,245,247,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(245,245,247,.035) 1px,transparent 1px);
+  background-size:auto,120px 120px,120px 120px}
+#login-view ::selection{background:var(--syn);color:var(--deep)}
+.lg-left{flex:1;position:relative;min-width:0;overflow:hidden}
+.lg-orb{position:absolute;border-radius:50%;filter:blur(58px);pointer-events:none}
+.lg-orb.o1{width:430px;height:430px;left:-130px;top:-140px;opacity:.5;
+  background:radial-gradient(circle,#00594F 0%,rgba(0,89,79,0) 70%)}
+.lg-orb.o2{width:540px;height:540px;right:-90px;bottom:-230px;opacity:.42;
+  background:radial-gradient(circle,#0B7D6E 0%,rgba(11,125,110,0) 70%)}
+.lg-orb.o3{width:270px;height:270px;left:40%;bottom:-100px;opacity:.15;
+  background:radial-gradient(circle,#CEDC00 0%,rgba(206,220,0,0) 72%)}
+.lg-logo{position:absolute;top:30px;left:34px;display:flex;align-items:center;gap:11px;color:#F5F5F7;z-index:1}
 .lg-logo .logo-mark{height:26px;width:auto;filter:brightness(0) invert(1)}
-.lg-rodape{position:absolute;bottom:22px;left:34px;right:34px;font-size:11.5px;color:#98989D;letter-spacing:.02em}
-.lg-panel{width:min(430px,100%);background:#1D1D1F;padding:60px 48px;display:flex;flex-direction:column;justify-content:center}
-.lg-panel h1{font-size:38px;font-weight:600;letter-spacing:-.5px;margin-bottom:42px;color:#F5F5F7}
+.lg-rodape{position:absolute;bottom:22px;left:34px;right:34px;font-size:11px;color:#7E8A86;letter-spacing:.02em;z-index:1;
+  font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+.lg-panel{width:min(430px,100%);background:rgba(9,15,13,.78);backdrop-filter:blur(18px) saturate(1.4);
+  border-left:1px solid rgba(245,245,247,.09);padding:60px 48px;display:flex;flex-direction:column;justify-content:center}
+.lg-panel h1{font-family:'Archivo',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-size:36px;font-weight:600;letter-spacing:-.5px;margin-bottom:38px;color:#F5F5F7}
+.lg-hint{font-size:12.5px;color:#9AA5A1;line-height:1.65;margin:-22px 0 26px}
 .lg-field{margin-bottom:26px}
-.lg-field label{display:block;font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#98989D;margin-bottom:7px}
-.lg-field input{width:100%;background:transparent;border:none;border-bottom:1px solid #77777C;color:#F5F5F7;
-  padding:7px 2px;font-size:15px;border-radius:0}
+.lg-field label{display:block;font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#9AA5A1;margin-bottom:7px}
+.lg-field input{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(245,245,247,.28);color:#F5F5F7;
+  padding:7px 2px;font-size:15px;border-radius:0;transition:border-color .15s}
 .lg-field input:focus{outline:none;border-bottom-color:var(--syn)}
-.lg-go{align-self:flex-end;margin-top:34px;width:38px;height:38px;border-radius:11px;border:none;background:#F5F5F7;
-  color:#1D1D1F;display:flex;align-items:center;justify-content:center;transition:transform .15s}
-.lg-go:hover{transform:scale(1.05)}
-.lg-go:disabled{opacity:.5;transform:none;cursor:default}
+.lg-row{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-top:30px}
+.lg-links{display:flex;flex-direction:column;gap:9px;font-size:12.5px}
+.lg-links a{color:#9AA5A1}
+.lg-links a:hover{color:var(--syn);text-decoration:none}
+.lg-go{width:38px;height:38px;border-radius:11px;border:none;background:var(--syn);flex-shrink:0;
+  color:var(--deep);display:flex;align-items:center;justify-content:center;transition:transform .15s, box-shadow .15s}
+.lg-go:hover{transform:scale(1.05);box-shadow:0 4px 18px rgba(206,220,0,.28)}
+.lg-go:disabled{opacity:.5;transform:none;cursor:default;box-shadow:none}
 .lg-go .ic{width:19px;height:19px}
 .lg-err{background:rgba(192,57,43,.16);border:1px solid rgba(192,57,43,.4);color:#F1A9A0;
   border-radius:10px;padding:10px 13px;font-size:12.5px;margin-bottom:20px;line-height:1.5}
 .lg-warn{background:rgba(183,121,31,.14);border:1px solid rgba(183,121,31,.4);color:#E5C07B;
   border-radius:10px;padding:10px 13px;font-size:12.5px;margin-bottom:20px;line-height:1.5}
-@media (max-width:760px){ .lg-left{display:none} .lg-panel{width:100%} 
-  #login-view{background-image:none}
-  .lg-panel::before{content:'';position:fixed;top:30px;left:34px} }
+@media (max-width:760px){ .lg-left{display:none} .lg-panel{width:100%;border-left:none}
+  #login-view{background-size:auto,90px 90px,90px 90px} }
 
 /* ============ ESTRUTURA ============ */
 #app{display:flex;min-height:100vh}
@@ -374,19 +396,80 @@ table.tb{width:100%;border-collapse:collapse}
 <!-- ==================== LOGIN ==================== -->
 <div id="login-view">
   <div class="lg-left">
+    <div class="lg-orb o1"></div><div class="lg-orb o2"></div><div class="lg-orb o3"></div>
     <div class="lg-logo"><span class="logo-slot"></span></div>
     <div class="lg-rodape">SOMA · Sistema de Operações, Membros e Atividades — NeuroDynamics 2026</div>
   </div>
   <div class="lg-panel">
-    <h1>Login</h1>
     <div id="config-warn" class="lg-warn" hidden>O sistema ainda não foi conectado ao banco de dados.
       Preencha o bloco <b>CONFIG</b> do index.html conforme o guia de implantação.</div>
-    <div id="login-err" class="lg-err" hidden></div>
-    <div class="lg-field"><label for="login-email">E-mail</label>
-      <input id="login-email" type="email" autocomplete="username"></div>
-    <div class="lg-field"><label for="login-pass">Senha</label>
-      <input id="login-pass" type="password" autocomplete="current-password"></div>
-    <button id="login-btn" class="lg-go" onclick="fazerLogin()" title="Entrar" aria-label="Entrar"></button>
+
+    <div class="lg-modo" id="lg-login">
+      <h1>Login</h1>
+      <div id="login-err" class="lg-err" hidden></div>
+      <div class="lg-field"><label for="login-email">E-mail</label>
+        <input id="login-email" type="email" autocomplete="username"></div>
+      <div class="lg-field"><label for="login-pass">Senha</label>
+        <input id="login-pass" type="password" autocomplete="current-password"></div>
+      <div class="lg-row">
+        <div class="lg-links">
+          <a href="#" onclick="lgModo('signup');return false">Criar conta</a>
+          <a href="#" onclick="lgModo('reset');return false">Esqueci minha senha</a>
+        </div>
+        <button id="login-btn" class="lg-go" onclick="fazerLogin()" title="Entrar" aria-label="Entrar"></button>
+      </div>
+    </div>
+
+    <div class="lg-modo" id="lg-signup" hidden>
+      <h1>Criar conta</h1>
+      <div id="signup-err" class="lg-err" hidden></div>
+      <p class="lg-hint">Use o e-mail que está no quadro de pessoal (NRO ou pessoal) — o SOMA
+        vincula seu perfil ao seu registro automaticamente. A conta nasce com acesso de consulta;
+        papéis adicionais são atribuídos pelo Depto de Pessoal.</p>
+      <div class="lg-field"><label for="su-email">E-mail</label>
+        <input id="su-email" type="email" autocomplete="username"></div>
+      <div class="lg-field"><label for="su-pass">Senha (mín. 8 caracteres)</label>
+        <input id="su-pass" type="password" autocomplete="new-password"></div>
+      <div class="lg-field"><label for="su-pass2">Confirmar senha</label>
+        <input id="su-pass2" type="password" autocomplete="new-password"></div>
+      <div class="lg-row">
+        <div class="lg-links"><a href="#" onclick="lgModo('login');return false">Voltar ao login</a></div>
+        <button id="su-btn" class="lg-go" onclick="criarConta()" title="Criar conta" aria-label="Criar conta"></button>
+      </div>
+    </div>
+
+    <div class="lg-modo" id="lg-reset" hidden>
+      <h1>Recuperar</h1>
+      <div id="rs-err" class="lg-err" hidden></div>
+      <p class="lg-hint">Informe o e-mail da sua conta. Você recebe um link para definir uma nova
+        senha — abra-o neste mesmo navegador.</p>
+      <div class="lg-field"><label for="rs-email">E-mail</label>
+        <input id="rs-email" type="email" autocomplete="username"></div>
+      <div class="lg-row">
+        <div class="lg-links"><a href="#" onclick="lgModo('login');return false">Voltar ao login</a></div>
+        <button id="rs-btn" class="lg-go" onclick="pedirReset()" title="Enviar link" aria-label="Enviar link"></button>
+      </div>
+    </div>
+
+    <div class="lg-modo" id="lg-novasenha" hidden>
+      <h1>Nova senha</h1>
+      <div id="ns-err" class="lg-err" hidden></div>
+      <p class="lg-hint">Defina a nova senha da sua conta para continuar.</p>
+      <div class="lg-field"><label for="ns-pass">Nova senha (mín. 8 caracteres)</label>
+        <input id="ns-pass" type="password" autocomplete="new-password"></div>
+      <div class="lg-field"><label for="ns-pass2">Confirmar senha</label>
+        <input id="ns-pass2" type="password" autocomplete="new-password"></div>
+      <div class="lg-row">
+        <div class="lg-links"></div>
+        <button id="ns-btn" class="lg-go" onclick="salvarNovaSenha()" title="Salvar" aria-label="Salvar"></button>
+      </div>
+    </div>
+
+    <div class="lg-modo" id="lg-ok" hidden>
+      <h1 id="lgok-t">Confira seu e-mail</h1>
+      <p class="lg-hint" id="lgok-p" style="margin-top:-22px"></p>
+      <div class="lg-row"><div class="lg-links"><a href="#" onclick="lgModo('login');return false">Voltar ao login</a></div></div>
+    </div>
   </div>
 </div>
 
@@ -568,7 +651,7 @@ const state = {
   apont:null, eventos:[], evento:null,
   cal:{ano:new Date().getFullYear(), mes:new Date().getMonth(), eventos:[], marcos:[]}
 };
-let db = null, booted = false;
+let db = null, booted = false, recuperandoSenha = false;
 
 /* ---------------- utilidades ---------------- */
 const $ = (s)=>document.querySelector(s);
@@ -658,12 +741,25 @@ async function copiarHTML(html){
     }catch(e2){ copiar(html); }
   }
 }
-/* invoca o cliente de e-mail sem desmontar o DOM (o que cancelaria a
-   navegação mailto). Use via onclick="return abrirEmail(this.href)". */
+/* invoca o cliente de e-mail por uma âncora real (navegação nativa, a mais
+   compatível entre navegadores). Use via onclick="return abrirEmail(this.href)".
+   Se o computador não tem um app de e-mail configurado, o navegador ignora o
+   mailto em silêncio — por isso todo botão de e-mail tem ao lado a opção
+   "Abrir no Gmail", que funciona sempre (as contas da equipe são Google). */
 function abrirEmail(url){
-  try{ window.location.href = url; }
-  catch(e){ try{ window.open(url,'_self'); }catch(_){ } }
+  try{
+    const a = document.createElement('a');
+    a.href = url; a.style.display = 'none';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>a.remove(), 800);
+  }catch(e){ try{ window.location.href = url; }catch(_){ } }
   return false;
+}
+/* monta a URL do compositor do Gmail no navegador; valores SEM encode prévio */
+function gmailCompose(o){
+  const p = new URLSearchParams({view:'cm', fs:'1'});
+  ['to','cc','bcc','su','body'].forEach(k=>{ if(o[k]) p.set(k, o[k]); });
+  return 'https://mail.google.com/mail/?' + p.toString();
 }
 function grupoCheckboxes(idPrefix, selecionados){
   const gs = [...new Set(state.membros.flatMap(m=>m.grupos||[]))].sort();
@@ -674,19 +770,38 @@ function grupoCheckboxes(idPrefix, selecionados){
 const marcados = (cls)=> [...document.querySelectorAll('input.'+cls+':checked')].map(x=>x.value);
 
 /* ---------------- autenticação ---------------- */
+const URL_APP = ()=> location.origin + location.pathname;
+function lgModo(m){
+  ['login','signup','reset','novasenha','ok'].forEach(x=>{ const el=$('#lg-'+x); if(el) el.hidden = (x!==m); });
+  document.querySelectorAll('.lg-err').forEach(e=> e.hidden=true);
+  const foco = {login:'#login-email', signup:'#su-email', reset:'#rs-email', novasenha:'#ns-pass'}[m];
+  if(foco && $(foco)) $(foco).focus();
+}
+function lgErro(id, msg){ const el=$('#'+id); el.textContent=msg; el.hidden=false; }
+function lgOk(titulo, txt){ $('#lgok-t').textContent=titulo; $('#lgok-p').textContent=txt; lgModo('ok'); }
 function init(){
   carregarLogoPDF();
   document.querySelectorAll('.logo-slot').forEach(el=> el.outerHTML = LOGO);
-  $('#login-btn').innerHTML = ic('arrow');
+  $('#login-btn').innerHTML = ic('arrow'); $('#su-btn').innerHTML = ic('arrow');
+  $('#rs-btn').innerHTML = ic('mail');    $('#ns-btn').innerHTML = ic('check');
   $('#sb-collapse').innerHTML = ic('menu');
   $('#btn-sair').innerHTML = ic('logout');
   if(CONFIG.url.includes('COLE_AQUI') || CONFIG.anonKey.includes('COLE_AQUI')){
     $('#config-warn').hidden = false; $('#login-btn').disabled = true; return;
   }
   db = supabase.createClient(CONFIG.url, CONFIG.anonKey);
-  db.auth.getSession().then(({data:{session}})=>{ if(session) entrar(); });
-  db.auth.onAuthStateChange((ev)=>{ if(ev==='SIGNED_IN') entrar(); });
-  $('#login-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') fazerLogin(); });
+  /* link de redefinição de senha: a pessoa chega autenticada, mas define a
+     nova senha antes de o app abrir. */
+  recuperandoSenha = location.hash.includes('type=recovery');
+  if(recuperandoSenha) lgModo('novasenha');
+  db.auth.getSession().then(({data:{session}})=>{ if(session && !recuperandoSenha) entrar(); });
+  db.auth.onAuthStateChange((ev)=>{
+    if(ev==='PASSWORD_RECOVERY'){ recuperandoSenha = true; lgModo('novasenha'); }
+    else if(ev==='SIGNED_IN' && !recuperandoSenha) entrar();
+  });
+  /* Enter aciona o botão do modo visível */
+  document.querySelectorAll('.lg-modo input').forEach(i=> i.addEventListener('keydown', e=>{
+    if(e.key==='Enter'){ const b=i.closest('.lg-modo').querySelector('.lg-go'); if(b && !b.disabled) b.click(); } }));
 }
 async function fazerLogin(){
   const email=$('#login-email').value.trim(), pass=$('#login-pass').value;
@@ -694,7 +809,52 @@ async function fazerLogin(){
   $('#login-btn').disabled=true; $('#login-err').hidden=true;
   const {error} = await db.auth.signInWithPassword({email, password:pass});
   $('#login-btn').disabled=false;
-  if(error){ $('#login-err').textContent='E-mail ou senha incorretos. Verifique os dados ou fale com o Depto de Pessoal.'; $('#login-err').hidden=false; }
+  if(error) lgErro('login-err','E-mail ou senha incorretos. Se esqueceu a senha, use "Esqueci minha senha" abaixo; se ainda não tem conta, crie a sua.');
+}
+async function criarConta(){
+  const email=$('#su-email').value.trim().toLowerCase(), p1=$('#su-pass').value, p2=$('#su-pass2').value;
+  if(!email || !p1) return lgErro('signup-err','Preencha e-mail e senha.');
+  if(p1.length<8)  return lgErro('signup-err','A senha precisa ter pelo menos 8 caracteres.');
+  if(p1!==p2)      return lgErro('signup-err','As senhas não conferem — digite a mesma senha nos dois campos.');
+  $('#su-btn').disabled=true;
+  const {data, error} = await db.auth.signUp({email, password:p1, options:{emailRedirectTo:URL_APP()}});
+  $('#su-btn').disabled=false;
+  if(error){
+    lgErro('signup-err', /already|registered/i.test(error.message||'')
+      ? 'Este e-mail já tem conta no SOMA. Volte ao login ou use "Esqueci minha senha".'
+      : 'Não foi possível criar a conta: '+(error.message||'tente novamente.'));
+    return;
+  }
+  /* com confirmação de e-mail ligada, o Supabase devolve user sem identities
+     quando o e-mail já era cadastrado (proteção contra enumeração) */
+  if(data?.user && Array.isArray(data.user.identities) && data.user.identities.length===0){
+    lgErro('signup-err','Este e-mail já tem conta no SOMA. Volte ao login ou use "Esqueci minha senha".');
+    return;
+  }
+  if(data?.session) return; /* projeto sem confirmação de e-mail: o SIGNED_IN abre o app */
+  lgOk('Confira seu e-mail', `Enviamos um link de confirmação para ${email}. Depois de confirmar, volte aqui e faça login.`);
+}
+async function pedirReset(){
+  const email=$('#rs-email').value.trim().toLowerCase();
+  if(!email) return lgErro('rs-err','Informe o e-mail da conta.');
+  $('#rs-btn').disabled=true;
+  const {error} = await db.auth.resetPasswordForEmail(email, {redirectTo:URL_APP()});
+  $('#rs-btn').disabled=false;
+  if(error) return lgErro('rs-err','Não deu para enviar agora: '+(error.message||'tente de novo em instantes.'));
+  lgOk('Link enviado', `Se ${email} tiver conta no SOMA, o link de redefinição chega em instantes (confira o spam). Abra-o neste navegador para definir a nova senha.`);
+}
+async function salvarNovaSenha(){
+  const p1=$('#ns-pass').value, p2=$('#ns-pass2').value;
+  if(p1.length<8) return lgErro('ns-err','A senha precisa ter pelo menos 8 caracteres.');
+  if(p1!==p2)     return lgErro('ns-err','As senhas não conferem — digite a mesma senha nos dois campos.');
+  $('#ns-btn').disabled=true;
+  const {error} = await db.auth.updateUser({password:p1});
+  $('#ns-btn').disabled=false;
+  if(error) return lgErro('ns-err','Não foi possível salvar: '+(error.message||'peça um novo link em "Esqueci minha senha".'));
+  recuperandoSenha = false;
+  history.replaceState(null, '', location.pathname + location.search);
+  toast('Senha atualizada.');
+  entrar();
 }
 async function sair(){ await db.auth.signOut(); location.reload(); }
 
@@ -714,8 +874,15 @@ async function entrar(){
   if(booted) return; booted=true;
   try{
     const {data:{user}} = await db.auth.getUser();
-    const {data:perfil, error} = await db.from('perfis').select('*').eq('id', user.id).single();
-    if(error||!perfil) throw (error||new Error('perfil não encontrado'));
+    let {data:perfil} = await db.from('perfis').select('*').eq('id', user.id).maybeSingle();
+    if(!perfil){
+      /* conta do Auth ainda sem linha em perfis (criada antes da migração
+         soma_v10): cria a própria — o banco força papel de consulta e
+         preenche nome/registro pelo e-mail do quadro. */
+      await db.from('perfis').insert({id:user.id, email:user.email});
+      perfil = (await db.from('perfis').select('*').eq('id', user.id).maybeSingle()).data;
+    }
+    if(!perfil) throw new Error('perfil não encontrado — aplique a migração soma_v10.sql ou fale com o Depto de Pessoal');
     state.perfil = perfil;
     $('#user-nome').textContent = perfil.nome || perfil.email;
     const uav = $('#user-avatar');
@@ -936,13 +1103,28 @@ async function carregarFicha(){
     db.from('ocorrencias').select('*').eq('registro',reg).order('data',{ascending:false}).order('criado_em',{ascending:false}),
     db.from('acessos_concedidos').select('*').eq('registro',reg),
     db.from('avaliacoes').select('*').eq('registro',reg).order('data',{ascending:false}),
-    db.from('apontamento_itens').select('*, apont:apontamentos(grupo, responsavel)').eq('registro',reg)
+    db.from('apontamento_itens').select('*').eq('registro',reg)
       .order('data',{ascending:false}).limit(12)
   ];
   if(can()) pr.push(db.from('dados_pessoais').select('*').eq('registro',reg).maybeSingle());
   const [o,a,v,ap,p] = await Promise.all(pr);
+  const falhou = [o,a,v,ap,p].find(r=>r && r.error);
+  if(falhou) throw falhou.error;
   state.ficha.ocorr=o.data||[]; state.ficha.acessos=a.data||[]; state.ficha.avals=v.data||[];
-  state.ficha.aponts=ap.data||[]; state.ficha.pess = p ? (p.data||null) : null;
+  state.ficha.aponts = await juntarCabecalhos(ap.data||[]);
+  state.ficha.pess = p ? (p.data||null) : null;
+}
+/* anexa {apont:{grupo,responsavel}} aos itens de apontamento buscando os
+   cabeçalhos por id. A junção é feita aqui no cliente porque a consulta
+   aninhada do PostgREST depende da foreign key declarada no banco — quando
+   ela falta, a consulta falha e a ficha aparecia sem os resultados. */
+async function juntarCabecalhos(itens){
+  const ids = [...new Set(itens.map(x=>x.apontamento_id).filter(Boolean))];
+  if(!ids.length) return itens.map(x=>({apont:null, ...x}));
+  const {data, error} = await db.from('apontamentos').select('id,grupo,responsavel').in('id', ids);
+  if(error) throw error;
+  const por = new Map((data||[]).map(c=>[c.id, c]));
+  return itens.map(x=>({...x, apont:por.get(x.apontamento_id)||null}));
 }
 function renderFicha(){
   const m = membroAtual();
@@ -1166,7 +1348,11 @@ function renderTabAvals(){
     : '<div class="empty">Nenhuma avaliação registrada.</div>'}
   </div>
   <div class="card"><h3>Apontamentos semanais recentes</h3>
-    ${f.aponts.length ? `<table class="tb"><thead><tr><th>Data</th><th>Grupo</th><th>Assiduidade</th><th>Entregas</th><th>Sinalização</th><th>Liderança</th></tr></thead>
+    ${f.aponts.length ? `<p class="small muted" style="margin:-4px 0 10px">${(n=>n
+        ? `${n} de ${f.aponts.length} apontamento(s) recente(s) com resultado <b>insuficiente</b>.`
+        : `Todos os ${f.aponts.length} apontamento(s) recente(s) com resultado suficiente.`)
+      (f.aponts.filter(a=>a.assiduidade==='INSUFICIENTE'||a.entregas==='INSUFICIENTE').length)}</p>
+    <table class="tb"><thead><tr><th>Data</th><th>Grupo</th><th>Assiduidade</th><th>Entregas</th><th>Sinalização</th><th>Liderança</th></tr></thead>
       <tbody>${f.aponts.map(a=>`<tr>
         <td>${fmtD(a.data)}</td><td>${esc(a.apont?.grupo||'—')}</td>
         <td>${luz(a.assiduidade)}</td><td>${luz(a.entregas)}</td>
@@ -1534,7 +1720,7 @@ async function gerarListaPortaria(){
     doc.text(`Em caso de dúvidas, contatar ${respNome} em ${respTel}.`, 12, fy);
     pdfRodape(doc);
     doc.save(`NRO-PES_lista_portaria_${hoje()}.pdf`);
-    const corpo = encodeURIComponent(
+    const corpo =
 `Prezados,
 
 Solicitamos a autorização de entrada na Escola de Engenharia para as pessoas relacionadas na lista em anexo.
@@ -1545,15 +1731,21 @@ ${dataAc?'Data: '+fmtD(dataAc)+'\n':''}${horaAc?'Horário: '+horaAc+'\n':''}Tota
 Em caso de dúvidas, contatar ${respNome} em ${respTel}.
 
 Atenciosamente,
-Departamento de Pessoal — NeuroDynamics`);
-    const assunto = encodeURIComponent(`Autorização de acesso — NeuroDynamics${dataAc?' — '+fmtD(dataAc):''}`);
+Departamento de Pessoal — NeuroDynamics`;
+    const assunto = `Autorização de acesso — NeuroDynamics${dataAc?' — '+fmtD(dataAc):''}`;
+    const mailtoHref = `mailto:slog@eng.ufmg.br?cc=marcondes@neurodynamics.dev&subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+    const gmailHref = gmailCompose({to:'slog@eng.ufmg.br', cc:'marcondes@neurodynamics.dev', su:assunto, body:corpo});
     abreModal(`<h3>Lista gerada</h3>
       <p style="line-height:1.6">O PDF foi baixado. Para prosseguir, abra o e-mail para a Seção de Logística —
       o texto já vai pronto, com cópia para marcondes@neurodynamics.dev. <b>Anexe o PDF que acabou de ser baixado</b> antes de enviar
       (por segurança, o navegador não anexa arquivos sozinho).</p>
       <div class="actions"><button class="btn" onclick="fechaModal()">Fechar</button>
-      <a class="btn btn-primary" href="mailto:slog@eng.ufmg.br?cc=marcondes@neurodynamics.dev&subject=${assunto}&body=${corpo}"
-        onclick="abrirEmail(this.href);setTimeout(fechaModal,400);return false">${ic('mail')} Prosseguir: e-mail à SLOG</a></div>`, true);
+      <a class="btn" href="${esc(mailtoHref)}"
+        onclick="abrirEmail(this.href);setTimeout(fechaModal,400);return false">${ic('mail')} App de e-mail</a>
+      <a class="btn btn-primary" href="${esc(gmailHref)}" target="_blank" rel="noopener"
+        onclick="setTimeout(fechaModal,400)">${ic('mail')} Abrir no Gmail</a></div>
+      <p class="small muted" style="margin-top:10px">“App de e-mail” usa o programa padrão do computador;
+      se nada acontecer ao clicar, é porque não há um configurado — use o Gmail.</p>`, true);
   }catch(e){ falha(e,'Erro ao gerar a lista'); }
 }
 /* --- 2. lista para assinatura em evento --- */
@@ -1605,15 +1797,18 @@ function gerarEmails(){
   const semEmail = lista.filter(m=> !(m.email_nro||m.email_pessoal));
   const eu = (state.perfil && state.perfil.email) ? state.perfil.email : '';
   const mailtoHref = `mailto:${eu}?bcc=${encodeURIComponent(emails.join(','))}`;
+  const gmailHref = gmailCompose({to:eu, bcc:emails.join(',')});
   $('#eml-result').innerHTML = emails.length ? `
     <div class="field" style="margin-top:4px"><label>${emails.length} e-mail(s) · separados por vírgula</label>
       <textarea id="eml-texto" readonly style="min-height:110px;font-size:12.5px">${esc(emails.join(', '))}</textarea></div>
     ${semEmail.length?`<p class="small muted">⚠ ${semEmail.length} membro(s) sem e-mail cadastrado: ${esc(semEmail.map(m=>m.nome).join('; '))}</p>`:''}
-    <div style="display:flex;gap:8px;margin-top:6px">
+    <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
       <button class="btn" onclick="copiar(document.getElementById('eml-texto').value)">${ic('copy')} Copiar</button>
-      <a class="btn" id="eml-mailto" href="${esc(mailtoHref)}" onclick="return abrirEmail(this.href)">${ic('mail')} Abrir e-mail (Cco)</a>
+      <a class="btn" id="eml-mailto" href="${esc(mailtoHref)}" onclick="return abrirEmail(this.href)">${ic('mail')} App de e-mail (Cco)</a>
+      <a class="btn" href="${esc(gmailHref)}" target="_blank" rel="noopener">${ic('mail')} Abrir no Gmail (Cco)</a>
     </div>
-    ${eu?`<p class="small muted" style="margin-top:6px">O e-mail abre endereçado a você (${esc(eu)}) com todos em Cco, preservando a privacidade dos endereços.</p>`:''}`
+    ${eu?`<p class="small muted" style="margin-top:6px">O e-mail abre endereçado a você (${esc(eu)}) com todos em Cco, preservando a privacidade dos endereços.
+    Se o “App de e-mail” não abrir nada, não há um configurado no computador — use o Gmail.</p>`:''}`
     : '<div class="empty">Nenhum e-mail encontrado com esses filtros.</div>';
 }
 /* --- 3b. full mailer (gerador de e-mails estilizados) --- */
@@ -1894,7 +2089,8 @@ function modalQuadro(){
       <div class="field full"><label>Status (vazio = todos)</label>${statusCheckboxes('s-qd',[])}</div>
     </div>
     <p class="small muted" style="margin:4px 0 0">Inclui registro, nome, status, departamento, cargo, gestor, grupos, e-mails, telefone e datas.
-    Dados sensíveis (CPF, endereço, autodeclarações) nunca entram nos relatórios.</p>
+    Dados sensíveis (CPF, endereço, autodeclarações) nunca entram nos relatórios.
+    O Excel gerado pode ser editado e reimportado em Operações → Importar planilha, para manutenção em massa.</p>
     <div class="actions"><button class="btn" onclick="fechaModal()">Cancelar</button>
     <button class="btn" onclick="exportarExcelQuadro()">Excel</button>
     <button class="btn btn-primary" onclick="exportarPDFQuadro()">PDF</button></div>`);
@@ -1908,10 +2104,11 @@ function exportarExcelQuadro(){
       'Grupos':(m.grupos||[]).join(', '),'E-mail NRO':m.email_nro||'','E-mail pessoal':m.email_pessoal||'',
       'Telefone':m.telefone||'','Data de ingresso':m.data_ingresso?fmtD(m.data_ingresso):'',
       'Forma de ingresso':m.forma_ingresso||'','Data de desligamento':m.data_desligamento?fmtD(m.data_desligamento):'',
-      'Projeto no fomento':m.projeto_fomento||'','Classificação':m.classificacao||'','Bolsa':m.bolsa||''
+      'Projeto no fomento':m.projeto_fomento||'','Classificação':m.classificacao||'','Bolsa':m.bolsa||'',
+      'Data de encerramento':m.data_encerramento?fmtD(m.data_encerramento):''
     }));
     const ws = XLSX.utils.json_to_sheet(rows);
-    ws['!cols'] = [{wch:8},{wch:18},{wch:38},{wch:26},{wch:24},{wch:30},{wch:40},{wch:30},{wch:30},{wch:16},{wch:14},{wch:20},{wch:14},{wch:18},{wch:16},{wch:12}];
+    ws['!cols'] = [{wch:8},{wch:18},{wch:38},{wch:26},{wch:24},{wch:30},{wch:40},{wch:30},{wch:30},{wch:16},{wch:14},{wch:20},{wch:14},{wch:18},{wch:16},{wch:12},{wch:18}];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'QUADRO');
     XLSX.writeFile(wb, `NRO-PES_quadro_${hoje()}.xlsx`);
@@ -1949,8 +2146,9 @@ function renderOperacoes(){
   ];
   if(can()) tiles.push(['chat','Reunião com Depto de Pessoal','Registre um breve alinhamento realizado com um membro.','modalReuniaoDP()']);
   if(can()) tiles.push(['users','Novo membro','Cadastre um novo membro no quadro de pessoal.','modalMembro()']);
+  if(can()) tiles.push(['shield','Contas e perfis','Papéis de acesso ao SOMA, vínculo das contas com o quadro e redefinição de senha.','modalContas()']);
   tiles.push(['key','Catálogo de acessos','Sistemas, locais e documentos controlados pela NRO.',"showView('acessos')"]);
-  if(can()) tiles.push(['upload','Importar planilha','Importe ou atualize o quadro a partir do arquivo NRO-PES-005.',"showView('importar')"]);
+  if(can()) tiles.push(['upload','Importar planilha','Atualize o quadro em massa a partir do NRO-PES-005 ou de um Excel exportado pelo SOMA.',"showView('importar')"]);
   $('#view-operacoes').innerHTML = `<div class="gal">${tiles.map(([i,t,d,fn])=>
     `<div class="tile" onclick="${fn}"><div class="sq">${ic(i)}</div><div class="tt">${t}</div><div class="td">${d}</div></div>`).join('')}</div>`;
 }
@@ -1973,6 +2171,79 @@ async function salvarReuniaoDP(){
     if(error) throw error;
     fechaModal(); toast('Reunião registrada na ficha do membro.');
   }catch(e){ falha(e,'Erro ao registrar'); }
+}
+
+/* ---------------- contas e perfis ---------------- */
+const PAPEIS = {admin:'Administração', pessoal:'Depto de Pessoal', selecao:'Comitê de Seleção', leitura:'Consulta'};
+let _contas = [];
+async function modalContas(){
+  abreModal('<h3>Contas e perfis</h3><div class="empty">Carregando contas…</div>');
+  try{
+    const {data, error} = await db.from('perfis').select('id,email,nome,papel,registro').order('email');
+    if(error) throw error;
+    _contas = data||[];
+    renderContas(_contas);
+  }catch(e){ fechaModal(); falha(e,'Erro ao carregar as contas'); }
+}
+function renderContas(perfis){
+  const souAdmin = state.perfil.papel==='admin';
+  const emailsComConta = new Set(perfis.map(p=>norm(p.email)));
+  const semConta = state.membros.filter(m=> m.status==='Ativo'
+    && ![m.email_nro, m.email_pessoal].some(e=> e && emailsComConta.has(norm(e))));
+  const regOpts = (sel)=> `<option value="">— sem vínculo —</option>` + state.membros.slice()
+    .sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'))
+    .map(m=>`<option value="${m.registro}" ${m.registro===sel?'selected':''}>${esc(m.nome)}</option>`).join('');
+  abreModal(`<h3>Contas e perfis</h3>
+    <p class="small muted" style="line-height:1.6;margin-bottom:12px">Cada conta nasce com papel <b>Consulta</b>,
+    vinculada ao membro pelo e-mail usado no cadastro. Ajuste aqui o papel e o vínculo${souAdmin?'':' (somente administradores alteram papéis)'};
+    a chavinha envia o link de redefinição de senha para o e-mail da conta.</p>
+    <div style="overflow:auto;max-height:56vh">
+    <table class="tb"><thead><tr><th>Conta</th><th>Membro vinculado</th><th>Papel</th><th style="text-align:right">Senha</th></tr></thead>
+    <tbody>${perfis.map(p=>`<tr>
+      <td><b>${esc(p.nome||p.email)}</b><br><span class="small muted">${esc(p.email)}</span></td>
+      <td><select onchange="ctVincular('${p.id}', this.value)" ${souAdmin?'':'disabled'} style="min-width:170px">${regOpts(p.registro)}</select></td>
+      <td><select onchange="ctPapel('${p.id}', this.value)" ${souAdmin && p.id!==state.perfil.id?'':'disabled'}
+          title="${p.id===state.perfil.id?'Seu próprio papel não pode ser alterado por aqui':''}">
+        ${Object.entries(PAPEIS).map(([k,l])=>`<option value="${k}" ${p.papel===k?'selected':''}>${l}</option>`).join('')}</select></td>
+      <td style="text-align:right">${ibtn('key','Enviar link de redefinição de senha',`ctReset('${p.id}')`,'sm ghost')}</td>
+    </tr>`).join('')}</tbody></table></div>
+    ${semConta.length?`<div class="banner neutral" style="margin-top:14px"><b>${semConta.length} membro(s) ativo(s) ainda sem conta.</b>
+      Peçam que criem a conta na própria tela de login do SOMA, com o e-mail do quadro — o vínculo é automático.<br>
+      <button class="btn" style="margin-top:8px" onclick="ctConvite()">${ic('copy')} Copiar instruções de acesso</button></div>`:''}
+    <div class="actions"><button class="btn" onclick="fechaModal()">Fechar</button></div>`);
+  const m = document.querySelector('.modal'); if(m) m.classList.add('larga');
+}
+async function ctPapel(id, papel){
+  try{
+    const {error} = await db.from('perfis').update({papel}).eq('id', id);
+    if(error) throw error;
+    toast('Papel atualizado para '+(PAPEIS[papel]||papel)+'.');
+  }catch(e){ falha(e,'Erro ao mudar o papel'); modalContas(); }
+}
+async function ctVincular(id, reg){
+  try{
+    const r = reg ? parseInt(reg,10) : null;
+    const nome = r ? nomeDe(r) : null;
+    const {error} = await db.from('perfis').update({registro:r, ...(nome?{nome}:{})}).eq('id', id);
+    if(error) throw error;
+    toast(r ? 'Conta vinculada a '+nome+'.' : 'Vínculo removido.');
+  }catch(e){ falha(e,'Erro ao vincular'); modalContas(); }
+}
+async function ctReset(id){
+  const email = _contas.find(p=>p.id===id)?.email;
+  if(!email) return;
+  try{
+    const {error} = await db.auth.resetPasswordForEmail(email, {redirectTo:URL_APP()});
+    if(error) throw error;
+    toast('Link de redefinição enviado para '+email+'.');
+  }catch(e){ falha(e,'Erro ao enviar o link'); }
+}
+function ctConvite(){
+  copiar(`Acesso ao SOMA — NeuroDynamics
+1) Abra ${URL_APP()}
+2) Clique em "Criar conta" e use o e-mail que está no quadro de pessoal (NRO ou pessoal).
+3) Confirme o e-mail pelo link recebido e faça login.
+A conta começa com acesso de consulta; papéis adicionais são atribuídos pelo Depto de Pessoal.`);
 }
 
 /* ---------------- calendário ---------------- */
@@ -2465,13 +2736,20 @@ async function renderPessoal(){
   $('#view-pessoal').innerHTML = '<div class="empty">Carregando…</div>';
   try{
     const desde = new Date(Date.now()-30*864e5).toISOString().slice(0,10);
-    const [{data:sin},{data:av},{data:sin30}] = await Promise.all([
-      db.from('apontamento_itens').select('*, membro:membros(nome, departamento), apont:apontamentos(grupo, responsavel)')
+    const [rSin, rAv, rSin30] = await Promise.all([
+      db.from('apontamento_itens').select('*')
         .eq('sinalizado',true).order('criado_em',{ascending:false}).limit(150),
-      db.from('avaliacoes').select('*, membro:membros(nome, departamento)')
+      db.from('avaliacoes').select('*')
         .eq('encaminhar_pessoal',true).order('tratado').order('data',{ascending:false}).limit(100),
       db.from('apontamento_itens').select('registro').eq('sinalizado',true).gte('data',desde)
     ]);
+    const falhou = [rSin,rAv,rSin30].find(r=>r.error);
+    if(falhou) throw falhou.error;
+    /* membro e cabeçalho anexados no cliente (ver juntarCabecalhos) */
+    const membroDe = (reg)=> state.membros.find(m=>m.registro===reg)||null;
+    const sin = (await juntarCabecalhos(rSin.data||[])).map(s=>({...s, membro:membroDe(s.registro)}));
+    const av = (rAv.data||[]).map(a=>({...a, membro:membroDe(a.registro)}));
+    const sin30 = rSin30.data;
     const cont30 = {};
     (sin30||[]).forEach(s=>{ cont30[s.registro]=(cont30[s.registro]||0)+1; });
     const sinPend = (sin||[]).filter(s=>!s.tratado);
@@ -2648,6 +2926,13 @@ const MAPA_INST = {'REGISTRO':'registro','STATUS':'status','NOME':'nome','DEPART
   'DATA DE INGRESSO':'data_ingresso','FORMA DE INGRESSO':'forma_ingresso','DATA DE DESLIGAMENTO':'data_desligamento',
   'PROJETO REGISTRADO NO SISTEMA DE FOMENTO':'projeto_fomento','CLASSIFICAÇÃO':'classificacao','BOLSA':'bolsa',
   'DATA DE ENCERRAMENTO':'data_encerramento'};
+/* Cabeçalhos do Excel que o próprio SOMA exporta (Relatórios → Quadro
+   completo). Permitem reimportar o arquivo exportado — inclusive editado —
+   para manutenção em massa (renomear cargos, trocar grupos, e-mails etc.).
+   "Gestor imediato" traz o NOME do gestor; vira gestor_registro numa segunda
+   passada da importação. Os cabeçalhos oficiais acima têm prioridade. */
+const ALIAS_INST = {'CARGO':'cargo','E-MAIL NRO':'email_nro','E-MAIL PESSOAL':'email_pessoal',
+  'PROJETO NO FOMENTO':'projeto_fomento','GESTOR IMEDIATO':'_gestor_nome'};
 const MAPA_ACESSOS = {
   'POSSUI TERMO DE SIGILO DO LABBIO ASSINADO?':'Termo de sigilo — LABBIO',
   'POSSUI TERMO DE SIGILO DA VISURI ASSINADO?':'Termo de sigilo — Visuri',
@@ -2696,13 +2981,15 @@ function renderImportar(){
   pacote = null;
   setTopo(PAGE_TITLES.importar, "showView('operacoes')", '');
   $('#view-importar').innerHTML = `
-    <div class="card"><h3>Importar a planilha NRO-PES-005</h3>
+    <div class="card"><h3>Importar planilha do quadro</h3>
       <p class="small muted" style="line-height:1.65;margin-bottom:16px">
-        Selecione o arquivo .xlsx do quadro de pessoal. O sistema reconhece as abas
-        <b>INSTITUCIONAL</b> (membros), <b>FORM</b> (dados pessoais) e <b>ACESSOS</b> (concessões marcadas como TRUE).
-        Registros existentes são atualizados pelo número de registro — pode importar quantas vezes quiser sem duplicar.</p>
+        Dois formatos são aceitos: a planilha oficial <b>NRO-PES-005</b> (abas INSTITUCIONAL, FORM e
+        ACESSOS) e o <b>Excel exportado pelo próprio SOMA</b> (Relatórios → Quadro completo), inclusive
+        editado — ideal para manutenção em massa, como renomear cargos ou reorganizar grupos.
+        Só as colunas presentes no arquivo são atualizadas; registros existentes são casados pelo
+        número de registro — pode importar quantas vezes quiser sem duplicar.</p>
       <div class="dropzone" onclick="document.getElementById('imp-file').click()">
-        Clique para selecionar o arquivo<br><b>NRO-PES-005_QUADRO_DE_PESSOAL.xlsx</b>
+        Clique para selecionar o arquivo<br><b>NRO-PES-005 ou exportação do SOMA (.xlsx)</b>
       </div>
       <input id="imp-file" type="file" accept=".xlsx,.xls,.csv" hidden onchange="lerArquivo(this.files[0])">
     </div>
@@ -2713,24 +3000,33 @@ async function lerArquivo(file){
   try{
     const wb = XLSX.read(new Uint8Array(await file.arrayBuffer()), {type:'array'});
     const acha = (nome)=>{ const n = wb.SheetNames.find(s=>s.trim().toUpperCase()===nome); return n? wb.Sheets[n] : null; };
-    let wsInst = acha('INSTITUCIONAL'), wsForm = acha('FORM'), wsAcc = acha('ACESSOS');
+    let wsInst = acha('INSTITUCIONAL') || acha('QUADRO'), wsForm = acha('FORM'), wsAcc = acha('ACESSOS');
     if(!wsInst && wb.SheetNames.length===1){
       const unica = wb.Sheets[wb.SheetNames[0]];
       const teste = normLinhas(unica)[0]||{};
       if('REGISTRO' in teste && 'NOME' in teste) wsInst = unica;
     }
-    const membros = !wsInst ? [] : normLinhas(wsInst).map(r=>{
+    const linhasInst = wsInst ? normLinhas(wsInst) : [];
+    /* Só as colunas presentes no arquivo entram na atualização — uma planilha
+       com apenas REGISTRO e CARGO ATUAL, por exemplo, mexe só nos cargos e
+       preserva todo o resto do cadastro. */
+    const presentes = new Set(); linhasInst.forEach(r=> Object.keys(r).forEach(k=> presentes.add(k)));
+    const PARES_INST = [...Object.entries(MAPA_INST), ...Object.entries(ALIAS_INST)];
+    const jaExiste = new Set(state.membros.map(m=>m.registro));
+    const membros = linhasInst.map(r=>{
       const o={};
-      Object.entries(MAPA_INST).forEach(([h,k])=>{
+      PARES_INST.forEach(([h,k])=>{
+        if(!presentes.has(h) || (k in o)) return;
         const v=r[h];
         if(k==='registro') o[k] = v==null||v===''? null : Math.round(Number(v));
         else if(k==='grupos') o[k] = t(v)? String(v).split(',').map(x=>x.trim()).filter(Boolean) : [];
         else if(k.startsWith('data_')) o[k] = dataISO(v);
         else o[k] = t(v);
       });
-      if(!o.status) o.status='Ativo';
+      if(presentes.has('STATUS') && !o.status) o.status='Ativo';
       return o;
-    }).filter(o=>o.registro && o.nome);
+    }).filter(o=> o.registro && (o.nome || (!presentes.has('NOME') && jaExiste.has(o.registro))));
+    const colunasInst = PARES_INST.filter(([h])=>presentes.has(h)).map(([h])=>h);
     const pess = !wsForm ? [] : normLinhas(wsForm).map(r=>{
       const o={_nome: t(r['NOME COMPLETO'])};
       Object.entries(MAPA_FORM).forEach(([h,k])=>{
@@ -2749,12 +3045,14 @@ async function lerArquivo(file){
       Object.entries(MAPA_ACESSOS).forEach(([h,item])=>{ if(ehVerdade(r[h])) acessos.push({_nome:nome, _item:item}); });
     });
     if(!membros.length && !pess.length && !acessos.length){
-      toast('Não encontrei as abas esperadas nesse arquivo. Confira se é a planilha NRO-PES-005.', true); return;
+      toast('Não encontrei dados reconhecíveis nesse arquivo. Confira se é a planilha NRO-PES-005 ou uma exportação do SOMA.', true); return;
     }
     pacote = {membros, pess, acessos};
+    const nNovos = membros.filter(m=>!jaExiste.has(m.registro)).length;
     $('#imp-resumo').innerHTML = `<div class="card"><h3>Pronto para importar — ${esc(file.name)}</h3>
       <label class="check"><input type="checkbox" id="ck-m" ${membros.length?'checked':'disabled'}>
-        <span><b>${membros.length}</b> membros (aba INSTITUCIONAL)</span></label>
+        <span><b>${membros.length}</b> membros — ${nNovos} novo(s), ${membros.length-nNovos} atualização(ões)</span></label>
+      ${membros.length?`<p class="small muted" style="margin:2px 0 6px 26px">Colunas reconhecidas (só elas serão atualizadas): ${esc(colunasInst.join(', '))}</p>`:''}
       <label class="check"><input type="checkbox" id="ck-p" ${pess.length?'checked':'disabled'}>
         <span><b>${pess.length}</b> fichas de dados pessoais (aba FORM)</span></label>
       <label class="check"><input type="checkbox" id="ck-a" ${acessos.length?'checked':'disabled'}>
@@ -2772,11 +3070,39 @@ async function executarImport(){
   $('#imp-go').disabled = true;
   try{
     if($('#ck-m').checked && pacote.membros.length){
-      diz(`Importando ${pacote.membros.length} membros…`);
-      await upsertLotes('membros', pacote.membros, 'registro');
+      const jaExiste = new Set(state.membros.map(m=>m.registro));
+      /* o lote precisa ter as mesmas colunas em todas as linhas; além disso,
+         cadastros novos nascem com status mesmo quando a coluna não veio. */
+      const linhas = pacote.membros.map(({_gestor_nome, ...m})=>m);
+      const novos  = linhas.filter(m=>!jaExiste.has(m.registro)).map(m=>({status:'Ativo', ...m}));
+      const atuais = linhas.filter(m=> jaExiste.has(m.registro));
+      diz(`Importando ${linhas.length} membros (${novos.length} novo(s), ${atuais.length} atualização(ões))…`);
+      if(atuais.length) await upsertLotes('membros', atuais, 'registro');
+      if(novos.length)  await upsertLotes('membros', novos, 'registro');
       const {data} = await db.from('membros').select('*').order('registro');
       state.membros = data||[];
       diz(`✔ Membros importados. O quadro agora tem ${state.membros.length} registros.`);
+      /* 2ª passada: coluna "Gestor imediato" (arquivo exportado pelo SOMA)
+         traz o nome do gestor — resolvida aqui, depois que todos os membros
+         do arquivo já existem no quadro. Célula vazia desfaz o vínculo. */
+      const comGestor = pacote.membros.filter(m=>'_gestor_nome' in m);
+      if(comGestor.length){
+        const porNomeM = new Map(state.membros.map(m=>[norm(m.nome), m.registro]));
+        const vinc=[], semPar=[];
+        comGestor.forEach(m=>{
+          if(m._gestor_nome==null){ vinc.push({registro:m.registro, gestor_registro:null}); return; }
+          const g = porNomeM.get(norm(m._gestor_nome));
+          if(g && g!==m.registro) vinc.push({registro:m.registro, gestor_registro:g});
+          else semPar.push(`${m._gestor_nome} (reg. ${m.registro})`);
+        });
+        if(vinc.length){
+          await upsertLotes('membros', vinc, 'registro');
+          const r2 = await db.from('membros').select('*').order('registro');
+          state.membros = r2.data||[];
+          diz(`✔ Gestor imediato atualizado em ${vinc.length} registro(s).`);
+        }
+        if(semPar.length) diz(`⚠ Gestor não encontrado pelo nome em ${semPar.length} caso(s): ${semPar.join('; ')}`);
+      }
     }
     const porNome = new Map(state.membros.map(m=>[norm(m.nome), m.registro]));
     if($('#ck-p').checked && pacote.pess.length){
@@ -3539,7 +3865,7 @@ function psConfig(){
         ${promoviveis.map(p=>`<option value="${p.id}">${esc(p.nome||p.email)} (${esc(p.email)})</option>`).join('')}
       </select>
       <button class="btn btn-primary" onclick="psDarAcesso()">${ic('plus')} Incluir no comitê</button></div>
-      <p class="small muted" style="margin-top:8px">A pessoa precisa ter uma conta no SOMA (perfil criado no primeiro login). Contas admin/pessoal não aparecem aqui porque já têm acesso.</p>`:''}
+      <p class="small muted" style="margin-top:8px">A pessoa precisa ter uma conta no SOMA (criada por ela mesma na tela de login, em "Criar conta"). Contas admin/pessoal não aparecem aqui porque já têm acesso. A gestão completa fica em Operações → Contas e perfis.</p>`:''}
   </div>`;
 }
 async function psSalvarEdicao(){
