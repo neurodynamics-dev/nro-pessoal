@@ -1846,46 +1846,19 @@ const SOCIAIS_MAILER = [
   {k:'x',         l:'X / Twitter (URL)'},
   {k:'facebook',  l:'Facebook (URL)'},
 ];
-/* Recolorização da logo: recolore os pixels opacos (o preto original) para a
-   cor do tema mantendo o recorte da onda transparente. Resultado embutido
-   como data-URI — self-contained no HTML gerado. */
-function _hexRGB(h){ h=String(h).replace('#',''); if(h.length===3) h=h.split('').map(c=>c+c).join('');
-  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]; }
-let _logoImg=null; const _logoCache={};
-async function _garantirLogoImg(){
-  if(_logoImg) return _logoImg;
-  let src = LOGO_PDF?.dados;
-  if(!src){
-    const r = await fetch(LOGO_URL); const b = await r.blob();
-    src = await new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(b); });
-  }
-  const img = new Image(); img.crossOrigin='anonymous';
-  await new Promise((res,rej)=>{ img.onload=res; img.onerror=rej; img.src=src; });
-  _logoImg = img; return img;
-}
-async function logoRecolorida(hex){
-  if(_logoCache[hex]) return _logoCache[hex];
-  try{
-    const img = await _garantirLogoImg();
-    const c = document.createElement('canvas'); c.width = img.naturalWidth||1563; c.height = img.naturalHeight||265;
-    const ctx = c.getContext('2d'); ctx.drawImage(img,0,0);
-    const im = ctx.getImageData(0,0,c.width,c.height), px = im.data, [r,g,b] = _hexRGB(hex);
-    for(let i=0;i<px.length;i+=4){ if(px[i+3]>10){ px[i]=r; px[i+1]=g; px[i+2]=b; } }
-    ctx.putImageData(im,0,0);
-    const url = c.toDataURL('image/png'); _logoCache[hex]=url; return url;
-  }catch(e){ return LOGO_URL; }
-}
-function _socialSVG(k, cor){
-  const S = (inner)=>`<svg width="21" height="21" viewBox="0 0 24 24" fill="${cor}" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
-  switch(k){
-    case 'site': return S('<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.9 6h-2.7a15.7 15.7 0 00-1.2-3.3A8 8 0 0118.9 8zM12 4c.8 1 1.5 2.4 1.9 4h-3.8c.4-1.6 1.1-3 1.9-4zM4.3 14a8 8 0 010-4h3a18 18 0 000 4zm.8 2h2.7c.3 1.2.7 2.3 1.2 3.3A8 8 0 015.1 16zM7.8 8H5.1a8 8 0 013.9-3.3C8.5 5.7 8.1 6.8 7.8 8zM12 20c-.8-1-1.5-2.4-1.9-4h3.8c-.4 1.6-1.1 3-1.9 4zm2.3-6H9.7a16 16 0 010-4h4.6a16 16 0 010 4zm.6 5.3c.5-1 .9-2.1 1.2-3.3h2.7a8 8 0 01-3.9 3.3zM16.7 14a18 18 0 000-4h3a8 8 0 010 4z"/>');
-    case 'instagram': return S('<path d="M12 8.8A3.2 3.2 0 1012 15.2 3.2 3.2 0 0012 8.8zm0 5.3a2.1 2.1 0 110-4.2 2.1 2.1 0 010 4.2z"/><path d="M16 2H8a6 6 0 00-6 6v8a6 6 0 006 6h8a6 6 0 006-6V8a6 6 0 00-6-6zm4.8 14A4.8 4.8 0 0116 20.8H8A4.8 4.8 0 013.2 16V8A4.8 4.8 0 018 3.2h8A4.8 4.8 0 0120.8 8z"/><circle cx="15.4" cy="8.6" r=".9"/>');
-    case 'linkedin': return S('<path d="M6.9 8.4H3.6V20h3.3V8.4zM5.2 3.4a1.9 1.9 0 100 3.8 1.9 1.9 0 000-3.8zM20.4 20h-3.3v-5.6c0-1.4 0-3.1-1.9-3.1s-2.2 1.5-2.2 3v5.7H9.7V8.4H13v1.6h.1c.5-.9 1.6-1.9 3.3-1.9 3.5 0 4.1 2.3 4.1 5.3V20z"/>');
-    case 'youtube': return S('<path d="M23 7.5a3 3 0 00-2.1-2.1C19 4.9 12 4.9 12 4.9s-7 0-8.9.5A3 3 0 001 7.5C.5 9.4.5 12 .5 12s0 2.6.5 4.5a3 3 0 002.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 002.1-2.1c.5-1.9.5-4.5.5-4.5s0-2.6-.5-4.5zM9.8 15.3V8.7l5.7 3.3-5.7 3.3z"/>');
-    case 'x': return S('<path d="M17.5 3h3.1l-6.8 7.8L21.7 21h-6.2l-4.9-6.4L5 21H1.9l7.3-8.3L2.3 3h6.4l4.4 5.8L17.5 3zm-1.1 16.1h1.7L7.2 4.8H5.4l11 14.3z"/>');
-    case 'facebook': return S('<path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0022 12z"/>');
-  }
-  return '';
+/* Imagens do mailer POR LINK, nunca embutidas: clientes de e-mail tratam
+   imagens em data-URI como anexo do documento — ou as descartam (Gmail).
+   As variantes da logo (uma por cor de tema) e os ícones sociais (uma por
+   cor de acento) são PNGs na pasta /mailer deste repositório, servidos
+   pelo GitHub Pages no domínio do SOMA. Ao criar um TEMA NOVO em
+   THEMES_MAILER, gere os PNGs da nova cor (ver mailer/README.md). */
+const MAILER_IMG_BASE = 'https://pessoal.neurodynamics.dev/mailer/';
+const _hexArq = (hex)=> String(hex).replace('#','').toLowerCase();
+const mailerLogoURL = (hex)=> `${MAILER_IMG_BASE}logo-${_hexArq(hex)}.png`;
+function _socialImg(k, cor){
+  const alt = {site:'Site', instagram:'Instagram', linkedin:'LinkedIn', youtube:'YouTube', x:'X', facebook:'Facebook'}[k]||k;
+  return `<img src="${MAILER_IMG_BASE}ico-${k}-${_hexArq(cor)}.png" width="21" height="21" alt="${alt}"
+    style="display:block;border:0;outline:none;width:21px;height:21px">`;
 }
 const _escBr = (s)=> esc(s).replace(/\n/g,'<br>');
 function _mailerParas(txt){
@@ -1894,7 +1867,7 @@ function _mailerParas(txt){
 }
 function _mailerSocial(social, cor){
   const items = SOCIAIS_MAILER.filter(s=>social[s.k]).map(s=>
-    `<a href="${esc(social[s.k])}" target="_blank" style="text-decoration:none;display:inline-block;margin:0 8px;vertical-align:middle">${_socialSVG(s.k,cor)}</a>`).join('');
+    `<a href="${esc(social[s.k])}" target="_blank" style="text-decoration:none;display:inline-block;margin:0 8px;vertical-align:middle">${_socialImg(s.k,cor)}</a>`).join('');
   if(!items) return '';
   return `<tr><td style="padding:24px 12px 4px">
     <div style="border-top:2px solid ${cor};font-size:0;line-height:0">&nbsp;</div>
@@ -1903,7 +1876,7 @@ function _mailerSocial(social, cor){
   </td></tr>`;
 }
 function construirMailerHTML(cfg){
-  const th = cfg.tema, logo = cfg.logoData || LOGO_URL;
+  const th = cfg.tema, logo = cfg.logoUrl || mailerLogoURL(th.logo);
   const paras = _mailerParas(cfg.corpo);
   const cta = (cfg.ctaLabel && cfg.ctaUrl)
     ? `<div style="height:10px;line-height:10px">&nbsp;</div>
@@ -1962,10 +1935,10 @@ function mlLerCfg(){
 }
 function mlUpd(now){
   clearTimeout(_mailerTimer);
-  const run = async ()=>{
+  const run = ()=>{
     if(!$('#ml-prev')) return;
     const cfg = mlLerCfg();
-    cfg.logoData = await logoRecolorida(cfg.tema.logo);
+    cfg.logoUrl = mailerLogoURL(cfg.tema.logo);
     _mailerHTML = construirMailerHTML(cfg);
     const f = $('#ml-prev'); if(f) f.srcdoc = _mailerHTML;
   };
@@ -1995,7 +1968,7 @@ function mlAbrir(){
 function modalMailer(){
   const temaOpts = Object.entries(THEMES_MAILER).map(([k,v])=>`<option value="${k}">${esc(v.nome)}</option>`).join('');
   abreModal(`<h3>Full mailer — e-mail estilizado</h3>
-    <p class="mailer-sub">Monte um comunicado no padrão visual da NeuroDynamics. Escolha a área (sugere título e combinação de cores) ou crie um título próprio; a logo é recolorida conforme o tema. Ajuste os textos e copie/baixe o HTML pronto.</p>
+    <p class="mailer-sub">Monte um comunicado no padrão visual da NeuroDynamics. Escolha a área (sugere título e combinação de cores) ou crie um título próprio; a logo acompanha a cor do tema. As imagens (logo e ícones) entram por link do site do SOMA — nada é anexado ao e-mail. Ajuste os textos e copie/baixe o HTML pronto.</p>
     <div class="mailer-wrap">
       <div class="mailer-form">
         <div class="field"><label>Área / seção</label>
