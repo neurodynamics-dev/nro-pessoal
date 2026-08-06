@@ -343,6 +343,20 @@ table.tb{width:100%;border-collapse:collapse}
 .badge-pub{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:3px 10px}
 .badge-pub.sim{background:#E7F4EE;color:var(--ok)}
 .badge-pub.nao{background:var(--soft);color:var(--muted)}
+/* etiquetas de competência: um clique marca o que a pessoa tem,
+   outro passa para o que quer desenvolver, o terceiro solta */
+.comp-sel{display:flex;flex-wrap:wrap;gap:7px}
+.comp-sel .cch{border:1px solid var(--line2);border-radius:999px;padding:6px 13px;font-size:12.5px;
+  font-weight:600;color:var(--muted);background:#fff;cursor:pointer;transition:all .12s}
+.comp-sel .cch:hover{border-color:var(--muted)}
+.comp-sel .cch.tem{background:var(--deep);border-color:var(--deep);color:#fff}
+.comp-sel .cch.quer{border-color:var(--info);color:var(--info);background:#EEF2FB}
+.comp-sel .cch.quer::before{content:'+ ';font-weight:700}
+.comp-bloco{margin-bottom:14px}
+.comp-bloco > h5{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;margin-bottom:7px}
+.chip.tem{background:var(--deep);color:#fff}
+.chip.quer{background:#EEF2FB;color:var(--info)}
 /* ============ MÓDULO OKRs (SOMA 8.0) ============ */
 .okr-oes{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px;margin-bottom:20px}
 .okr-oe{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:10px 12px;text-align:left;
@@ -3181,10 +3195,11 @@ const PS_SETS = {
 };
 const PS_FASES_ETAPA = ['divulgacao','inscricao','dinamica','entrevista','trainee','resultado','outro'];
 const PS_TABS = [['geral','Visão geral'],['candidatos','Candidatos'],['avaliacao','Avaliação'],
-  ['agenda','Agenda'],['publicacoes','Publicações'],['config','Configurações']];
+  ['agenda','Agenda'],['publicacoes','Publicações'],['faq','FAQ'],['config','Configurações']];
 
 const PS = { pronto:false, erro:null, tab:'geral', edicoes:[], ed:null,
   candidatos:[], etapas:[], slots:[], agends:[], pubs:[], avals:[], perfis:[],
+  faq:[], competencias:[], v11:false,
   filtros:{q:'',status:''}, selecionados:new Set(), faseAval:'dinamica', faseAgenda:'dinamica' };
 
 const psPill = st=>{ const [l,d]=PS_ST[st]||[st,'dt-gray']; return `<span class="pill"><span class="dt ${d}"></span>${esc(l)}</span>`; };
@@ -3220,6 +3235,16 @@ async function psCarregar(){
   PS.agends = rs[3].data||[]; PS.pubs = rs[4].data||[];
   PS.avals = (rs[5].data||[]).map(x=>{ delete x.ps_candidatos; return x; });
   PS.perfis = rs[6]?.data||[];
+  /* FAQ e catálogo de competências dependem da soma_v11.sql. Se ela
+     ainda não rodou, o resto do módulo continua funcionando. */
+  try{
+    const [f, cp] = await Promise.all([
+      db.from('ps_faq').select('*').order('ordem'),
+      db.from('ps_competencias').select('*').order('ordem')
+    ]);
+    if(f.error || cp.error) throw f.error || cp.error;
+    PS.faq = f.data||[]; PS.competencias = cp.data||[]; PS.v11 = true;
+  }catch(e){ PS.faq = []; PS.competencias = []; PS.v11 = false; }
   PS.selecionados = new Set();
   PS.pronto = true;
 }
@@ -3265,7 +3290,7 @@ async function renderSelecao(){
       `<button class="${PS.tab===t?'active':''}" onclick="psTab('${t}')">${l}</button>`).join('')}</div>
     <div id="sel-corpo"></div>`;
   ({geral:psGeral, candidatos:psCandidatos, avaliacao:psAvaliacao, agenda:psAgenda,
-    publicacoes:psPublicacoes, config:psConfig}[PS.tab]||psGeral)();
+    publicacoes:psPublicacoes, faq:psFaq, config:psConfig}[PS.tab]||psGeral)();
 }
 
 /* ---------- Seleção · visão geral ---------- */
@@ -3457,6 +3482,13 @@ function psAbrirFicha(id){
       <div style="margin-top:14px" class="dl"><div class="it"><dt>Áreas de interesse</dt>
         <dd>${(c.areas_interesse||[]).map(a=>`<span class="chip">${esc(a)}</span>`).join('')||'—'}</dd></div>
         <div class="it" style="grid-column:1/-1"><dt>Links</dt><dd>${linksRow}</dd></div></div>
+      <div style="margin-top:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px">
+          <dt style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600">Competências</dt>
+          <button class="btn sm" onclick="psEditarComps('${c.id}')">${ic('pencil')} Editar</button>
+        </div>
+        <dl class="dl">${psCompsChips(c)}</dl>
+      </div>
       ${c.background?`<div style="margin-top:14px"><dt style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600">Experiências</dt>
         <p class="small" style="white-space:pre-wrap;line-height:1.6;margin-top:4px">${esc(c.background)}</p></div>`:''}
       ${c.motivacao?`<div style="margin-top:14px"><dt style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600">Motivação</dt>
@@ -3729,6 +3761,170 @@ async function psExcluirSlot(id, qtd){
     toast('Horário excluído.'); fechaModal();
     PS.pronto=false; renderSelecao();
   }catch(e){ falha(e,'Falha ao excluir'); }
+}
+
+/* ---------- Seleção · FAQ do site ---------- */
+const psFaltaV11 = (oque)=> `<div class="card"><h3>Falta aplicar a migração</h3>
+  <p class="small muted" style="line-height:1.7">Para editar ${oque} por aqui, rode a
+  <b>soma_v11.sql</b> no SQL Editor do Supabase. Enquanto isso o site continua no ar,
+  usando a lista de reserva que está no código dele.</p></div>`;
+
+function psFaq(){
+  if(!PS.v11){ $('#sel-corpo').innerHTML = psFaltaV11('as perguntas frequentes'); return; }
+  $('#sel-corpo').innerHTML = `
+  <div class="banner neutral">Estas são as perguntas frequentes da página inicial do site.
+    Só as <b>publicadas</b> aparecem, na ordem definida em cada uma. Deixe "vale para" em
+    <b>todas as edições</b> para a pergunta continuar valendo nos próximos processos.</div>
+  <div style="margin-bottom:14px"><button class="btn btn-primary" onclick="psEditarFaq()">${ic('plus')} Nova pergunta</button></div>
+  ${PS.faq.map(f=>`<div class="pub-row">
+    <div style="min-width:0;flex:1">
+      <div class="tt">${esc(f.pergunta)}</div>
+      <div class="mt">ordem ${f.ordem} · ${f.edicao_id ? esc(PS.edicoes.find(e=>e.id===f.edicao_id)?.nome||'edição específica') : 'todas as edições'}</div>
+    </div>
+    <span class="badge-pub ${f.publicada?'sim':'nao'}">${f.publicada?'No ar':'Oculta'}</span>
+    ${ibtn('pencil','Editar',`psEditarFaq('${f.id}')`,'sm')}
+    <button class="btn sm ${f.publicada?'':'btn-primary'}" onclick="psPublicarFaq('${f.id}',${!f.publicada})">
+      ${f.publicada?'Ocultar':'Publicar'}</button>
+    ${ibtn('trash','Excluir',`psExcluirFaq('${f.id}')`,'sm')}
+  </div>`).join('') || '<div class="empty">Nenhuma pergunta cadastrada.</div>'}`;
+}
+
+function psEditarFaq(id){
+  const f = id ? PS.faq.find(x=>x.id===id) : null;
+  const prox = Math.max(0, ...PS.faq.map(x=>x.ordem)) + 10;
+  abreModal(`
+    <h3>${f?'Editar pergunta':'Nova pergunta'}</h3>
+    <div class="field"><label>Pergunta</label>
+      <input id="ps-fq-perg" value="${esc(f?.pergunta||'')}" placeholder="Ex.: Preciso ser aluno da UFMG para participar?"></div>
+    <div class="field"><label>Resposta</label>
+      <textarea id="ps-fq-resp" style="min-height:150px" placeholder="A resposta como o candidato vai ler.">${esc(f?.resposta||'')}</textarea></div>
+    <p class="small muted" style="margin:-6px 0 12px">Formatação que o site entende:
+      <b>*negrito*</b>, <b>[texto](https://link)</b> e linha em branco para separar parágrafos.
+      HTML digitado aqui aparece como texto — não é interpretado.</p>
+    <div class="field"><label>Ordem no site</label>
+      <input id="ps-fq-ordem" type="number" value="${f?.ordem ?? prox}" step="10"></div>
+    <div class="field"><label>Vale para</label>
+      <select id="ps-fq-edicao">
+        <option value="">Todas as edições</option>
+        ${PS.edicoes.map(e=>`<option value="${e.id}" ${f?.edicao_id===e.id?'selected':''}>${esc(e.nome)}</option>`).join('')}
+      </select></div>
+    <div class="actions">
+      <button class="btn" onclick="fechaModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="psSalvarFaq(${f?`'${f.id}'`:'null'})">${ic('check')} Salvar</button>
+    </div>`);
+}
+
+async function psSalvarFaq(id){
+  const linha = { pergunta:$('#ps-fq-perg').value.trim(), resposta:$('#ps-fq-resp').value.trim(),
+    ordem: Number($('#ps-fq-ordem').value) || 100, edicao_id: $('#ps-fq-edicao').value || null };
+  if(!linha.pergunta || !linha.resposta){ toast('Preencha pergunta e resposta.', true); return; }
+  try{
+    const q = id ? db.from('ps_faq').update(linha).eq('id', id)
+                 : db.from('ps_faq').insert(linha);
+    const {error} = await q;
+    if(error) throw error;
+    toast('Pergunta salva.'); fechaModal();
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao salvar a pergunta'); }
+}
+
+async function psPublicarFaq(id, publicar){
+  try{
+    const {error} = await db.from('ps_faq').update({publicada:publicar}).eq('id', id);
+    if(error) throw error;
+    toast(publicar?'No ar. 📣':'Oculta no site.');
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao atualizar'); }
+}
+
+async function psExcluirFaq(id){
+  const f = PS.faq.find(x=>x.id===id);
+  if(!await confirma(`Excluir "<b>${esc(f?.pergunta||'')}</b>"?`,'Excluir')) return;
+  try{
+    const {error} = await db.from('ps_faq').delete().eq('id', id);
+    if(error) throw error;
+    toast('Pergunta excluída.');
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao excluir'); }
+}
+
+/* ---------- Seleção · competências do candidato ---------- */
+function psCompsChips(c){
+  const linha = (lista, cls)=> lista?.length
+    ? lista.map(t=>`<span class="chip ${cls}">${esc(t)}</span>`).join('') : '<span class="muted small">—</span>';
+  return `<div class="it"><dt>Já tem experiência</dt><dd>${linha(c.competencias,'tem')}</dd></div>
+    <div class="it"><dt>Quer desenvolver</dt><dd>${linha(c.competencias_desejadas,'quer')}</dd></div>`;
+}
+
+/* rascunho da edição; só vai ao banco quando a pessoa salva */
+let compEdit = null;
+function psEditarComps(id){
+  const c = psCand(id); if(!c) return;
+  if(!PS.v11 && !PS.competencias.length){ abreModal(psFaltaV11('as competências')+
+    `<div class="actions"><button class="btn" onclick="fechaModal()">Fechar</button></div>`); return; }
+  compEdit = { id, tem:[...(c.competencias||[])], quer:[...(c.competencias_desejadas||[])] };
+  abreModal(`
+    <h3>Competências de ${esc(c.nome.split(' ')[0])}</h3>
+    <p class="small muted" style="margin-bottom:14px">Um clique marca o que a pessoa <b>já tem</b>,
+      outro passa para o que <b>quer desenvolver</b>, o terceiro solta. Vale ajustar ao longo das
+      fases — a dinâmica e a entrevista costumam revelar o que a inscrição não mostrou.</p>
+    <div id="comp-corpo">${psCompsCorpo()}</div>
+    <div class="field" style="margin-top:14px"><label>Acrescentar uma etiqueta fora do catálogo</label>
+      <div style="display:flex;gap:8px">
+        <input id="comp-nova" placeholder="Ex.: Libras" onkeydown="if(event.key==='Enter'){event.preventDefault();psCompNova()}">
+        <button class="btn" onclick="psCompNova()">Incluir</button>
+      </div></div>
+    <div class="actions">
+      <button class="btn" onclick="fechaModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="psSalvarComps()">${ic('check')} Salvar</button>
+    </div>`);
+}
+
+function psCompsCorpo(){
+  const cat = PS.competencias.filter(c=>c.ativa);
+  const grupos = [];
+  for(const c of cat){
+    const g = grupos.find(x=>x[0]===c.grupo);
+    (g ? g[1] : (grupos.push([c.grupo,[]]), grupos[grupos.length-1][1])).push(c.nome);
+  }
+  /* etiqueta que a pessoa tem mas que saiu do catálogo continua à vista */
+  const fora = [...compEdit.tem, ...compEdit.quer].filter(t=>!cat.some(c=>c.nome===t));
+  if(fora.length) grupos.push(['Fora do catálogo', [...new Set(fora)]]);
+  const chip = n=>{
+    const cls = compEdit.tem.includes(n) ? 'tem' : compEdit.quer.includes(n) ? 'quer' : '';
+    return `<button type="button" class="cch ${cls}" onclick="psCompCicla(this,'${esc(n).replace(/'/g,"\\'")}')">${esc(n)}</button>`;
+  };
+  return grupos.map(([g,itens])=>`<div class="comp-bloco"><h5>${esc(g)}</h5>
+    <div class="comp-sel">${itens.map(chip).join('')}</div></div>`).join('')
+    || '<p class="small muted">Catálogo vazio — use o campo abaixo para incluir etiquetas.</p>';
+}
+
+function psCompCicla(btn, nome){
+  const t = compEdit.tem.indexOf(nome), q = compEdit.quer.indexOf(nome);
+  if(t<0 && q<0){ compEdit.tem.push(nome); btn.className='cch tem'; }
+  else if(t>=0){ compEdit.tem.splice(t,1); compEdit.quer.push(nome); btn.className='cch quer'; }
+  else { compEdit.quer.splice(q,1); btn.className='cch'; }
+}
+
+function psCompNova(){
+  const el = $('#comp-nova'), nome = el.value.trim();
+  if(!nome) return;
+  if(compEdit.tem.includes(nome) || compEdit.quer.includes(nome)){ toast('Essa etiqueta já está na ficha.', true); return; }
+  compEdit.tem.push(nome);
+  el.value = '';
+  $('#comp-corpo').innerHTML = psCompsCorpo();
+}
+
+async function psSalvarComps(){
+  try{
+    const {error} = await db.from('ps_candidatos')
+      .update({competencias: compEdit.tem, competencias_desejadas: compEdit.quer})
+      .eq('id', compEdit.id);
+    if(error) throw error;
+    toast('Competências atualizadas.');
+    fechaModal();
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao salvar as competências'); }
 }
 
 /* ---------- Seleção · publicações ---------- */
