@@ -1,0 +1,1499 @@
+<title>NRO-PD-000 · Plano de Viagem Técnica — São Paulo · Ensaio ASL 5000</title>
+<style>
+{{FONT_CSS}}
+
+/* ============================================================
+   TOKENS DA MARCA — brand.neurodynamics.dev (não altere os valores)
+   ============================================================ */
+:root{
+  --cortex:#00352F; --axon:#00594F; --soma:#0B7D6E; --synapse:#CEDC00;
+  --void:#050807; --painel:#0B1210; --blackout:#1D1D1F;
+  --ink:#F5F5F7; --aura:#F8F7FF; --nevoa:#9AA5A1; --grafite:#616C68;
+  --ion:#2DD4BF; --vital:#4ADE97; --mielina:#F5C36A; --pulso:#F1806F;
+  --plasma:#7FA7F2; --dendrito:#A78BFA;
+
+  --fd:'Archivo',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  --fm:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --f:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,Helvetica,sans-serif;
+
+  /* superfície do documento impresso */
+  --papel:#FFFFFF; --texto:var(--blackout); --secundario:var(--grafite);
+  --linha:#D9DEDC; --linha2:#EBEEED; --tinta-fraca:#F4F6F5;
+  --fundo:#E4E8E7;
+}
+:root:not([data-theme="light"]){ }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --fundo:#0B1210; } }
+:root[data-theme="dark"]{ --fundo:#0B1210; }
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--f); background:var(--fundo); color:var(--texto);
+  font-size:9.7pt; line-height:1.45; -webkit-font-smoothing:antialiased;
+  padding:26px 14px 60px;
+}
+h1,h2,h3,h4{font-family:var(--fd);letter-spacing:-.012em;color:var(--cortex)}
+a{color:var(--axon);text-decoration:none}
+strong{font-weight:600;color:var(--texto)}
+::selection{background:var(--synapse);color:var(--cortex)}
+
+/* ============================================================
+   FOLHA A4
+   ============================================================ */
+.sheet{
+  width:210mm; min-height:296mm; margin:0 auto 16px; background:var(--papel);
+  padding:10mm 14mm 12mm; position:relative; overflow:hidden;
+  box-shadow:0 10px 34px rgba(0,0,0,.20);
+}
+.sheet + .sheet{margin-top:0}
+
+/* ---------- cabeçalho no modelo NRO-PUB-002 ---------- */
+.nro-hd{display:flex;align-items:stretch;border:1px solid var(--cortex);margin-bottom:4mm}
+.nro-hd .marca{display:flex;align-items:center;justify-content:center;padding:0 5mm;
+  border-right:1px solid var(--cortex);background:var(--tinta-fraca);flex:0 0 34mm}
+.nro-hd .marca img{width:100%;height:auto;display:block}
+.nro-hd .meio{flex:1;display:flex;flex-direction:column;justify-content:center;padding:2.6mm 4mm;gap:1mm}
+.nro-hd .dep{font-family:var(--fd);font-weight:700;font-size:8.6pt;color:var(--cortex);
+  letter-spacing:.005em;line-height:1.2}
+.nro-hd .tit{font-size:8.6pt;color:var(--texto);line-height:1.25}
+.nro-hd .cod{flex:0 0 33mm;border-left:1px solid var(--cortex);display:flex;flex-direction:column;
+  align-items:flex-start;justify-content:center;gap:1mm;padding:2.6mm 3.5mm;background:var(--tinta-fraca)}
+.nro-hd .cod b{font-family:var(--fm);font-weight:500;font-size:8.2pt;color:var(--cortex);letter-spacing:.02em}
+.nro-hd .cod span{font-family:var(--fm);font-size:7pt;color:var(--secundario);letter-spacing:.06em;text-transform:uppercase}
+
+/* ---------- aba lateral (guia) ---------- */
+.aba{position:absolute;right:3mm;top:34mm;background:var(--cortex);color:var(--ink);
+  padding:3mm 4mm 3mm 5mm;display:flex;flex-direction:column;align-items:center;gap:1mm;
+  border-radius:3mm 0 0 3mm;min-width:15mm}
+.aba .n{font-family:var(--fm);font-weight:500;font-size:12pt;color:var(--synapse);line-height:1}
+.aba .l{font-family:var(--fm);font-size:6pt;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(245,245,247,.72);line-height:1}
+
+/* ---------- rodapé da folha ---------- */
+.pe{position:absolute;left:14mm;right:14mm;bottom:6mm;display:flex;justify-content:space-between;
+  gap:6mm;border-top:.6pt solid var(--linha);padding-top:2mm;
+  font-family:var(--fm);font-size:6.6pt;letter-spacing:.08em;text-transform:uppercase;color:var(--secundario)}
+
+/* ---------- tipografia de conteúdo ---------- */
+.eyebrow{display:inline-flex;align-items:center;gap:2.4mm;font-family:var(--fm);font-size:7pt;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--secundario);margin-bottom:1.4mm}
+.eyebrow::before{content:'';width:2.2mm;height:2.2mm;background:var(--synapse);flex:none}
+h2.guia{font-size:17pt;font-weight:600;line-height:1.08;letter-spacing:-.02em;margin-bottom:1.6mm;
+  max-width:150mm}
+.sub{color:var(--secundario);font-size:8.9pt;max-width:150mm;margin-bottom:4.4mm}
+h3{font-size:10.6pt;font-weight:600;margin:4.4mm 0 2mm;padding-bottom:1.2mm;
+  border-bottom:1.6pt solid var(--cortex)}
+h3:first-of-type{margin-top:0}
+h4{font-size:9.1pt;font-weight:600;color:var(--axon);margin:3mm 0 1.3mm}
+p{margin-bottom:1.9mm}
+ul,ol{margin:0 0 2.4mm 4.4mm}
+li{margin-bottom:.9mm;padding-left:.6mm}
+li::marker{color:var(--axon)}
+.mono{font-family:var(--fm)}
+.dim{color:var(--secundario)}
+.mini{font-size:8pt}
+
+/* ---------- tabelas ---------- */
+table{width:100%;border-collapse:collapse;margin-bottom:3.2mm;font-size:8.1pt}
+th{background:var(--cortex);color:var(--ink);font-family:var(--fd);font-weight:600;font-size:7.6pt;
+  letter-spacing:.05em;text-transform:uppercase;text-align:left;padding:1.6mm 2.2mm;vertical-align:middle}
+td{border-bottom:.6pt solid var(--linha);padding:1.5mm 2.2mm;vertical-align:top}
+tbody tr:nth-child(even) td{background:var(--tinta-fraca)}
+td.h{font-family:var(--fm);white-space:nowrap;color:var(--cortex);font-weight:500}
+table.compacta td,table.compacta th{padding:1.3mm 2mm;font-size:7.9pt}
+
+/* ---------- blocos de destaque ---------- */
+.caixa{border:.8pt solid var(--linha);border-left:2.2mm solid var(--axon);
+  background:var(--tinta-fraca);padding:2.4mm 3.2mm;margin-bottom:3.2mm;border-radius:0 2mm 2mm 0}
+.caixa .rot{font-family:var(--fm);font-size:6.8pt;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--axon);margin-bottom:1.1mm}
+.caixa p:last-child,.caixa ul:last-child,.caixa li:last-child{margin-bottom:0}
+.caixa.critico{border-left-color:var(--pulso);background:#FDF3F1}
+.caixa.critico .rot{color:#B3402F}
+.caixa.atencao{border-left-color:var(--mielina);background:#FDF8EF}
+.caixa.atencao .rot{color:#8A6520}
+.caixa.ok{border-left-color:var(--vital);background:#F0FBF5}
+.caixa.ok .rot{color:#1F7A4C}
+.caixa.info{border-left-color:var(--plasma);background:#F2F6FD}
+.caixa.info .rot{color:#3B62A8}
+
+/* ---------- pílulas ---------- */
+.pill{display:inline-block;font-family:var(--fm);font-size:6.8pt;letter-spacing:.1em;
+  text-transform:uppercase;padding:.9mm 2.2mm;border-radius:999px;border:.7pt solid var(--linha);
+  color:var(--secundario);white-space:nowrap}
+.pill.a{background:var(--cortex);color:var(--synapse);border-color:var(--cortex)}
+.pill.v{background:#E8F8EF;color:#1F7A4C;border-color:#BCE7CE}
+.pill.m{background:#FBF2E1;color:#8A6520;border-color:#EEDCB6}
+.pill.p{background:#FBE9E6;color:#B3402F;border-color:#F2CDC6}
+.pill.i{background:#EAF1FC;color:#3B62A8;border-color:#CBDBF6}
+
+/* ---------- grade ---------- */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:3.4mm}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:3mm}
+.cartao{border:.8pt solid var(--linha);border-radius:2mm;padding:2.4mm 3mm}
+.cartao h4{margin-top:0}
+.cartao p:last-child,.cartao ul:last-child{margin-bottom:0}
+
+/* ---------- linha do tempo ---------- */
+.tl{border-left:1.2pt solid var(--linha);margin-left:16mm;padding-left:5mm}
+.tl .ev{position:relative;padding-bottom:2.5mm}
+.tl .ev::before{content:'';position:absolute;left:-6.6mm;top:1.6mm;width:2.6mm;height:2.6mm;
+  border-radius:50%;background:var(--axon);border:1pt solid var(--papel)}
+.tl .ev.marco::before{background:var(--synapse);width:3.4mm;height:3.4mm;left:-7mm;
+  outline:1pt solid var(--cortex)}
+.tl .hr{position:absolute;left:-27mm;top:0;width:19mm;text-align:right;
+  font-family:var(--fm);font-weight:500;font-size:8.6pt;color:var(--cortex)}
+.tl .ti{font-weight:600;font-size:8.9pt;line-height:1.28}
+.tl .de{font-size:7.9pt;color:var(--secundario);line-height:1.35}
+
+/* ---------- campos para preencher à mão ---------- */
+.campo{border-bottom:.7pt dotted var(--secundario);display:inline-block;min-width:38mm}
+.linhas{background-image:repeating-linear-gradient(var(--papel) 0 7.4mm,var(--linha2) 7.4mm 7.6mm);
+  height:150mm;border:.8pt solid var(--linha);border-radius:2mm}
+.quadro{display:inline-block;width:3.2mm;height:3.2mm;border:.9pt solid var(--secundario);
+  border-radius:.6mm;margin-right:2mm;vertical-align:-.3mm;flex:none}
+ul.check{list-style:none;margin-left:0}
+ul.check li{display:flex;align-items:flex-start;gap:0;margin-bottom:1.3mm}
+
+/* ============================================================
+   CAPA
+   ============================================================ */
+.capa{background:linear-gradient(150deg,var(--void) 0%,var(--cortex) 48%,var(--axon) 100%);
+  color:var(--ink);padding:0;display:flex;flex-direction:column}
+.capa::after{content:'';position:absolute;right:-40mm;top:-40mm;width:150mm;height:150mm;border-radius:50%;
+  background:radial-gradient(circle,rgba(206,220,0,.20),transparent 68%)}
+.capa-in{position:relative;z-index:2;padding:14mm 15mm 12mm;display:flex;flex-direction:column;
+  flex:1;min-height:296mm}
+.capa img.logo{width:56mm;margin-bottom:auto}
+.capa h1{font-family:var(--fd);font-size:31pt;font-weight:600;line-height:1.04;letter-spacing:-.025em;
+  color:var(--ink);max-width:160mm;margin:7mm 0 3.4mm}
+.capa .eyebrow{color:rgba(245,245,247,.62)}
+.capa .lead{color:rgba(245,245,247,.80);font-size:10.4pt;max-width:145mm;margin-bottom:7mm}
+.capa-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:0;
+  border-top:.8pt solid rgba(206,220,0,.32);margin-top:8mm}
+.capa-meta div{padding:2.6mm 0;border-bottom:.8pt solid rgba(245,245,247,.12)}
+.capa-meta div:nth-child(odd){padding-right:6mm}
+.capa-meta dt{font-family:var(--fm);font-size:6.8pt;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(206,220,0,.85);margin-bottom:1mm}
+.capa-meta dd{font-size:9.6pt;color:var(--ink);line-height:1.35}
+.capa .rodape{margin-top:7mm;padding-top:3.4mm;border-top:.8pt solid rgba(245,245,247,.14);
+  display:flex;justify-content:space-between;gap:6mm;flex-wrap:wrap;
+  font-family:var(--fm);font-size:7pt;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(245,245,247,.55)}
+
+/* sumário na capa */
+.sumario{margin-top:6.5mm}
+.sumario ol{list-style:none;margin:0;columns:2;column-gap:9mm}
+.sumario li{break-inside:avoid;display:flex;gap:3mm;align-items:baseline;padding:1.15mm 0;
+  border-bottom:.6pt solid rgba(245,245,247,.10);margin:0}
+.sumario .n{font-family:var(--fm);font-size:8pt;color:var(--synapse);flex:none;width:7mm}
+.sumario .t{font-size:8.8pt;color:rgba(245,245,247,.88);line-height:1.3}
+
+/* ============================================================
+   BARRA DE TELA (não imprime)
+   ============================================================ */
+#barra{position:sticky;top:0;z-index:50;max-width:210mm;margin:0 auto 14px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:var(--cortex);color:var(--ink);border-radius:12px;padding:10px 14px}
+#barra .tag{font-family:var(--fm);font-size:8.5pt;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--synapse)}
+#barra .sep{flex:1}
+#barra button{font-family:var(--fd);font-weight:600;font-size:9.5pt;cursor:pointer;border:none;
+  background:var(--synapse);color:var(--cortex);border-radius:8px;padding:7px 15px}
+#barra .aviso{font-size:8.5pt;color:rgba(245,245,247,.72)}
+
+/* ============================================================
+   IMPRESSÃO
+   ============================================================ */
+@page{size:A4;margin:0}
+@media print{
+  html,body{background:#fff}
+  body{padding:0;font-size:9.7pt}
+  #barra{display:none !important}
+  .sheet{width:210mm;min-height:296mm;height:auto;overflow:hidden;margin:0;box-shadow:none;
+    page-break-after:always;break-after:page}
+  .sheet:last-child{page-break-after:auto;break-after:auto}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  h3,h4,tr,.caixa,.cartao,.tl .ev{break-inside:avoid;page-break-inside:avoid}
+}
+@media screen and (max-width:230mm){
+  .sheet{width:100%;min-height:0;padding:8mm 6mm 16mm}
+  .capa-in{min-height:0;padding:12mm 8mm}
+  .g2,.g3{grid-template-columns:1fr}
+  .sumario ol{columns:1}
+  .tl{margin-left:0;padding-left:4mm}
+  .tl .hr{position:static;width:auto;text-align:left;display:block;margin-bottom:.6mm}
+  .tl .ev::before{left:-5.3mm}
+  .tl .ev.marco::before{left:-5.7mm}
+  .aba{top:auto;bottom:8mm}
+  table{font-size:8pt}
+}
+</style>
+
+<div id="barra">
+  <span class="tag">NRO-PD-000 · Rev. A</span>
+  <span class="aviso">14 guias · 23 páginas A4 · imprima em frente e verso</span>
+  <span class="sep"></span>
+  <button onclick="window.print()">Imprimir</button>
+</div>
+
+<!-- ============================================================
+     CAPA
+     ============================================================ -->
+<section class="sheet capa">
+  <div class="capa-in">
+    <img class="logo" src="{{LOGO_WHITE}}" alt="NeuroDynamics">
+
+    <span class="eyebrow">Departamento de Pesquisa e Desenvolvimento</span>
+    <h1>Plano de viagem técnica<br>São&nbsp;Paulo · Ensaio do sistema de eletroestimulação diafragmática</h1>
+    <p class="lead">Documento de referência de campo para a missão de 11 a 14 de agosto de 2026:
+      validação do sistema NeuroDynamics contra o simulador pulmonar ASL 5000, na Faculdade de
+      Medicina da USP. Leve impresso; ele funciona sem bateria e sem sinal.</p>
+
+    <div class="capa-meta">
+      <div><dt>Código</dt><dd>NRO-PD-000 · Rev. A <span class="dim" style="color:rgba(245,245,247,.5)">(provisório)</span></dd></div>
+      <div><dt>Emissão</dt><dd>11 de agosto de 2026</dd></div>
+      <div><dt>Tipo · Subtipo</dt><dd>Documento · Manual ou guia</dd></div>
+      <div><dt>Validade</dt><dd>11/08/2026 a 14/08/2026</dd></div>
+      <div><dt>Equipe em campo</dt><dd>Matheus · Pedro · Sarah</dd></div>
+      <div><dt>Reserva aérea</dt><dd class="mono">{{PNR}}</dd></div>
+      <div><dt>Base em São Paulo</dt><dd>Rua Augusta, 2110 — {{APTO_CURTO}}</dd></div>
+      <div><dt>Destino técnico</dt><dd>FMUSP — Av. Dr. Arnaldo, 455</dd></div>
+    </div>
+
+    <div class="sumario">
+      <span class="eyebrow" style="color:rgba(245,245,247,.62)">Guias deste documento</span>
+      <ol>
+        <li><span class="n">01</span><span class="t">Resumo da missão</span></li>
+        <li><span class="n">02</span><span class="t">Cronograma hora a hora</span></li>
+        <li><span class="n">03</span><span class="t">Ida — voo e chegada</span></li>
+        <li><span class="n">04</span><span class="t">Hospedagem e acessos</span></li>
+        <li><span class="n">05</span><span class="t">Ensaio na FMUSP</span></li>
+        <li><span class="n">06</span><span class="t">Checklist técnico e de bagagem</span></li>
+        <li><span class="n">07</span><span class="t">Rotas e deslocamentos</span></li>
+        <li><span class="n">08</span><span class="t">Clima e vestuário</span></li>
+        <li><span class="n">09</span><span class="t">Alimentação</span></li>
+        <li><span class="n">10</span><span class="t">Volta — Plano A e Plano B</span></li>
+        <li><span class="n">11</span><span class="t">Contingências</span></li>
+        <li><span class="n">12</span><span class="t">Contatos úteis</span></li>
+        <li><span class="n">13</span><span class="t">Custos estimados</span></li>
+        <li><span class="n">14</span><span class="t">Anotações de campo</span></li>
+      </ol>
+    </div>
+
+    <div class="rodape">
+      <span>NeuroDynamics · LABBIO, Escola de Engenharia, UFMG</span>
+      <span>Uso interno</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     GUIA 01 — RESUMO DA MISSÃO
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Resumo da missão}}
+  <div class="aba"><span class="n">01</span><span class="l">Resumo</span></div>
+
+  <span class="eyebrow">Guia 01</span>
+  <h2 class="guia">Resumo da missão</h2>
+  <p class="sub">O que precisa ser verdade no fim da quinta-feira para a viagem ter valido.</p>
+
+  <h3>Objetivo</h3>
+  <p>Testar o sistema de <strong>eletroestimulação diafragmática</strong> da NeuroDynamics acoplado ao
+    <strong>simulador pulmonar ASL 5000</strong> (IngMar Medical), no laboratório da Faculdade de Medicina
+    da USP, com acompanhamento da <strong>Profa. Patrícia de Souza Nery</strong>. O ASL 5000 respira
+    espontaneamente enquanto é ventilado e reproduz mecânica pulmonar de neonato a adulto, o que permite
+    avaliar a resposta do sistema sob condições controladas e repetíveis — sem sujeito humano.</p>
+
+  <h3>Equipe</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:26%">Pessoa</th><th style="width:26%">Papel em campo</th><th>Documento · telefone</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Matheus</td><td>Coordenação e interlocução com a FMUSP</td><td class="dim"><span class="campo" style="min-width:62mm"></span></td></tr>
+      <tr><td class="h">Pedro</td><td><span class="campo" style="min-width:38mm"></span></td><td class="dim"><span class="campo" style="min-width:62mm"></span></td></tr>
+      <tr><td class="h">Sarah</td><td><span class="campo" style="min-width:38mm"></span></td><td class="dim"><span class="campo" style="min-width:62mm"></span></td></tr>
+    </tbody>
+  </table>
+  <p class="mini dim">A reserva aérea <span class="mono">{{PNR}}</span> lista três passageiros com as
+    iniciais <span class="mono">MO · PP · SC</span>. Confira, antes do embarque, se os nomes na reserva
+    batem exatamente com os documentos que cada um vai levar — divergência de nome é o motivo mais comum
+    de barrar no balcão.</p>
+
+  <h3>Endereços-chave</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:24%">Ponto</th><th>Endereço</th><th style="width:24%">Referência</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Base</td><td>Rua Augusta, 2110 — Cerqueira César, São Paulo/SP · {{UNIDADE_LONGA}}</td><td>Esquina com a Av. Paulista</td></tr>
+      <tr><td class="h">Ensaio</td><td>Faculdade de Medicina da USP — Av. Dr. Arnaldo, 455 — Cerqueira César · CEP 01246-903</td><td>Em frente ao Hospital das Clínicas</td></tr>
+      <tr><td class="h">Chegada</td><td>Aeroporto de Congonhas (CGH) — Av. Washington Luís, s/n</td><td>Terminal 1 (doméstico)</td></tr>
+      <tr><td class="h">Saída (Plano B)</td><td>Terminal Rodoviário do Tietê — Av. Cruzeiro do Sul, 1800, Santana · CEP 02030-000</td><td>Metrô Portuguesa-Tietê</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caixa info">
+    <div class="rot">Geografia útil</div>
+    <p>A base e o local do ensaio ficam no mesmo bairro, a <strong>2,1 km</strong> um do outro — uma
+      estação de metrô ou 25 minutos de caminhada. Isso é a maior vantagem logística da viagem: dá para
+      voltar ao apartamento no meio do dia para buscar um cabo esquecido sem perder a manhã.</p>
+  </div>
+
+  {{PE}}
+</section>
+
+<section class="sheet">
+  {{HD:Resumo da missão}}
+  <div class="aba"><span class="n">01</span><span class="l">Resumo</span></div>
+
+  <span class="eyebrow">Guia 01 · continuação</span>
+  <h2 class="guia">Janelas críticas e critério de sucesso</h2>
+  <p class="sub">Os horários que não admitem atraso, o ponto de decisão da viagem e a lista do que precisa estar feito ao fim da quinta-feira.</p>
+
+  <h3>Janelas críticas</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:20%">Quando</th><th style="width:42%">O que trava se passar</th><th>Margem</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Ter 16:55</td><td>Fechamento do balcão de despacho em Confins</td><td><span class="pill p">sem recuperação no dia</span></td></tr>
+      <tr><td class="h">Qua ~20:00</td><td>Decisão entre Plano A e Plano B da volta</td><td><span class="pill m">decidir com o laboratório antes</span></td></tr>
+      <tr><td class="h">Qui 11:00</td><td>Checkout do apartamento — vale para os dois planos</td><td><span class="pill m">pedir late checkout na quarta</span></td></tr>
+      <tr><td class="h">Qui 09:30</td><td>Despacho em Congonhas (Plano A)</td><td><span class="pill p">pico da manhã na Paulista</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="caixa critico">
+    <div class="rot">O ponto de decisão que costuma ser esquecido</div>
+    <p>No Plano B vocês ficam em São Paulo até a noite de quinta, mas o <strong>checkout é às 11:00 de
+      qualquer forma</strong>. Isso deixa cerca de <strong>doze horas com as malas na mão</strong>. Resolva
+      isso na quarta-feira, não na quinta de manhã: peça late checkout ao José Luís, combine deixar a
+      bagagem no laboratório ou reserve o guarda-volumes do Tietê. Detalhes no <strong>Guia 10</strong>.</p>
+  </div>
+
+  <h3>Critério de sucesso</h3>
+  <ul class="check">
+    <li><span class="quadro"></span><span>Sistema acoplado ao ASL 5000 e comunicando com a bancada.</span></li>
+    <li><span class="quadro"></span><span>Protocolo de estimulação executado nas condições previstas.</span></li>
+    <li><span class="quadro"></span><span>Dados coletados, conferidos <em>no local</em> e com duas cópias de backup.</span></li>
+    <li><span class="quadro"></span><span>Registro fotográfico da montagem (se o laboratório permitir).</span></li>
+    <li><span class="quadro"></span><span>Próximos passos combinados com a Profa. Patrícia por escrito.</span></li>
+  </ul>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 02 — CRONOGRAMA
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Cronograma hora a hora}}
+  <div class="aba"><span class="n">02</span><span class="l">Agenda</span></div>
+
+  <span class="eyebrow">Guia 02</span>
+  <h2 class="guia">Cronograma hora a hora</h2>
+  <p class="sub">Horários de voo e de check-in são fatos; o restante é estimativa com folga embutida.
+    Marcos em amarelo são irreversíveis.</p>
+
+  <h3>Terça, 11 de agosto — deslocamento</h3>
+  <div class="tl">
+    <div class="ev"><span class="hr">14:45</span><div class="ti">Saída de Belo Horizonte rumo a Confins</div>
+      <div class="de">Reserve 1h de trajeto (≈38 km pela Linha Verde) mais folga para trânsito.</div></div>
+    <div class="ev"><span class="hr">16:00</span><div class="ti">Chegada ao Aeroporto de Confins</div>
+      <div class="de">1h55 de antecedência. Faça o check-in online antes de sair de casa.</div></div>
+    <div class="ev marco"><span class="hr">16:55</span><div class="ti">Fechamento do despacho de bagagem</div>
+      <div class="de">Balcões domésticos fecham 1h antes da partida. Esteja lá às 16:25.</div></div>
+    <div class="ev"><span class="hr">17:15</span><div class="ti">Embarque</div>
+      <div class="de">Portão fecha por volta de 17:40. Equipamento sensível vai na bagagem de mão.</div></div>
+    <div class="ev marco"><span class="hr">17:55</span><div class="ti">Decolagem CNF → CGH · reserva {{PNR}}</div>
+      <div class="de">Voo de aproximadamente 1h15.</div></div>
+    <div class="ev"><span class="hr">19:10</span><div class="ti">Pouso em Congonhas</div>
+      <div class="de">Some 20 a 30 min até sair com a bagagem despachada.</div></div>
+    <div class="ev"><span class="hr">19:45</span><div class="ti">Saída do aeroporto rumo à Rua Augusta</div>
+      <div class="de">Carro por aplicativo, 25 a 45 min. Ver Guia 07.</div></div>
+    <div class="ev"><span class="hr">20:30</span><div class="ti">Chegada ao apartamento</div>
+      <div class="de">Entrada por senha, sem hora marcada. {{COD_LINHA}}</div></div>
+    <div class="ev"><span class="hr">21:00</span><div class="ti">Jantar na região</div>
+      <div class="de">Opções a menos de 200 m no Guia 09.</div></div>
+    <div class="ev"><span class="hr">22:30</span><div class="ti">Conferência do equipamento e briefing</div>
+      <div class="de">Ligue tudo hoje. Um cabo faltando descoberto às 22:30 ainda tem solução; às 8:30 na
+        USP, não.</div></div>
+  </div>
+
+  <h3>Quarta, 12 de agosto — dia principal de ensaio</h3>
+  <div class="tl">
+    <div class="ev"><span class="hr">07:00</span><div class="ti">Despertar · café da manhã</div></div>
+    <div class="ev"><span class="hr">08:15</span><div class="ti">Saída do apartamento</div>
+      <div class="de">Metrô Consolação → Clínicas. Porta a porta, 12 a 15 min.</div></div>
+    <div class="ev marco"><span class="hr">09:00</span><div class="ti">Recepção na FMUSP <span class="dim mono" style="font-size:8pt">(horário a confirmar)</span></div>
+      <div class="de">Leve documento com foto — a portaria pode exigir cadastro na entrada.</div></div>
+    <div class="ev"><span class="hr">09:30</span><div class="ti">Bloco 1 — montagem, calibração e linha de base</div>
+      <div class="de">Fotografe a montagem antes de começar a alterar parâmetros.</div></div>
+    <div class="ev"><span class="hr">12:00</span><div class="ti">Almoço</div>
+      <div class="de">Opções a menos de 500 m no Guia 09.</div></div>
+    <div class="ev"><span class="hr">13:00</span><div class="ti">Bloco 2 — protocolos de estimulação e coleta</div></div>
+    <div class="ev"><span class="hr">17:00</span><div class="ti">Backup dos dados e fechamento do dia</div>
+      <div class="de">Duas cópias em mídias diferentes antes de sair da sala. Nuvem não conta como
+        primeira cópia.</div></div>
+    <div class="ev"><span class="hr">17:30</span><div class="ti">Confirmar com a Profa. Patrícia a disponibilidade do laboratório na quinta</div>
+      <div class="de">Sem essa resposta, o Plano B não existe.</div></div>
+    <div class="ev"><span class="hr">19:00</span><div class="ti">Jantar</div></div>
+    <div class="ev marco"><span class="hr">20:00</span><div class="ti">Decisão: Plano A ou Plano B</div>
+      <div class="de">Plano B: comprar a passagem hoje e resolver a bagagem. Plano A: confirmar no app.</div></div>
+  </div>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 02 (cont.) — QUINTA E SEXTA
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Cronograma hora a hora}}
+  <div class="aba"><span class="n">02</span><span class="l">Agenda</span></div>
+
+  <span class="eyebrow">Guia 02 · continuação</span>
+  <h2 class="guia">Quinta e sexta — os dois desfechos</h2>
+  <p class="sub">A partir da quinta de manhã o dia se bifurca. Imprima os dois e risque o que não valer.</p>
+
+  <div class="g2">
+    <div>
+      <h3 style="border-bottom-color:var(--vital)">Plano A · volta de avião</h3>
+      <p class="mini"><span class="pill v">Padrão</span> <span class="pill">Quinta, 13/08</span></p>
+      <div class="tl" style="margin-left:14mm">
+        <div class="ev"><span class="hr">06:45</span><div class="ti">Despertar</div></div>
+        <div class="ev"><span class="hr">07:30</span><div class="ti">Café e arrumação final</div>
+          <div class="de">Confira tomadas, gavetas e o carregador atrás da cama.</div></div>
+        <div class="ev"><span class="hr">08:00</span><div class="ti">Checkout</div>
+          <div class="de">Limite é 11:00, mas o trânsito manda sair antes.</div></div>
+        <div class="ev"><span class="hr">08:15</span><div class="ti">Saída rumo a Congonhas</div>
+          <div class="de">Pico da manhã: 35 a 60 min de carro.</div></div>
+        <div class="ev marco"><span class="hr">09:00</span><div class="ti">Chegada a Congonhas</div>
+          <div class="de">1h30 de antecedência.</div></div>
+        <div class="ev marco"><span class="hr">09:30</span><div class="ti">Limite do despacho</div></div>
+        <div class="ev"><span class="hr">10:00</span><div class="ti">Embarque</div></div>
+        <div class="ev marco"><span class="hr">10:30</span><div class="ti">Decolagem CGH → CNF</div></div>
+        <div class="ev"><span class="hr">11:45</span><div class="ti">Pouso em Confins</div></div>
+        <div class="ev"><span class="hr">13:30</span><div class="ti">Chegada a Belo Horizonte</div></div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="border-bottom-color:var(--mielina)">Plano B · volta de ônibus</h3>
+      <p class="mini"><span class="pill m">Se precisar de mais tempo</span> <span class="pill">Qui 13 → Sex 14/08</span></p>
+      <div class="tl" style="margin-left:14mm">
+        <div class="ev"><span class="hr">07:00</span><div class="ti">Despertar · arrumar tudo</div></div>
+        <div class="ev marco"><span class="hr">11:00</span><div class="ti">Checkout impreterível</div>
+          <div class="de">Com late checkout negociado, some as horas ganhas.</div></div>
+        <div class="ev"><span class="hr">11:30</span><div class="ti">Destino das malas</div>
+          <div class="de">Guarda-volumes do Tietê, laboratório ou consigna combinada. Decidido na quarta.</div></div>
+        <div class="ev"><span class="hr">13:00</span><div class="ti">Bloco 3 na FMUSP</div>
+          <div class="de">Só existe se o laboratório confirmou disponibilidade.</div></div>
+        <div class="ev"><span class="hr">18:00</span><div class="ti">Encerramento e backup final</div></div>
+        <div class="ev"><span class="hr">18:30</span><div class="ti">Jantar</div></div>
+        <div class="ev"><span class="hr">20:30</span><div class="ti">Buscar bagagem e ir ao Tietê</div>
+          <div class="de">Metrô: 30 a 40 min e imune ao trânsito.</div></div>
+        <div class="ev marco"><span class="hr">21:30</span><div class="ti">Chegada ao Terminal do Tietê</div>
+          <div class="de">1h de folga antes do horário da passagem.</div></div>
+        <div class="ev marco"><span class="hr">22:30</span><div class="ti">Embarque no ônibus</div>
+          <div class="de">Horário conforme a passagem: saídas entre 20:00 e 23:59.</div></div>
+        <div class="ev"><span class="hr">06:00</span><div class="ti">Sexta — chegada a Belo Horizonte</div>
+          <div class="de">Viagem de 8h a 9h30. Terminal Governador Israel Pinheiro, Centro.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="caixa atencao">
+    <div class="rot">Compromissos de sexta</div>
+    <p>No Plano B ninguém está disponível na sexta antes das 9h — e depois de uma noite de ônibus, é
+      prudente não marcar nada crítico para sexta de manhã. Se houver compromisso inadiável na sexta,
+      o Plano A deixa de ser opcional.</p>
+  </div>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 03 — IDA
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Ida — voo e chegada}}
+  <div class="aba"><span class="n">03</span><span class="l">Ida</span></div>
+
+  <span class="eyebrow">Guia 03</span>
+  <h2 class="guia">Ida — voo e chegada</h2>
+  <p class="sub">Confins → Congonhas, terça-feira, 11 de agosto de 2026.</p>
+
+  <h3>O voo</h3>
+  <table>
+    <tbody>
+      <tr><td class="h" style="width:34%">Código da reserva</td><td class="mono" style="font-size:11pt;font-weight:500">{{PNR}}</td></tr>
+      <tr><td class="h">Companhia</td><td>Azul Linhas Aéreas</td></tr>
+      <tr><td class="h">Origem</td><td>Belo Horizonte / Confins — <span class="mono">CNF</span> · Aeroporto Internacional Tancredo Neves</td></tr>
+      <tr><td class="h">Destino</td><td>São Paulo / Congonhas — <span class="mono">CGH</span> · Terminal 1, doméstico</td></tr>
+      <tr><td class="h">Partida</td><td><strong>17:55</strong>, terça 11/08/2026</td></tr>
+      <tr><td class="h">Chegada prevista</td><td>≈ <strong>19:10</strong> (voo de cerca de 1h15)</td></tr>
+      <tr><td class="h">Passageiros</td><td>3 — iniciais <span class="mono">MO · PP · SC</span> na reserva</td></tr>
+      <tr><td class="h">Anotar no check-in</td><td class="dim">Voo <span class="campo" style="min-width:22mm"></span>
+        &nbsp;·&nbsp; Assentos <span class="campo" style="min-width:26mm"></span>
+        &nbsp;·&nbsp; Etiquetas de bagagem <span class="campo" style="min-width:30mm"></span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Antes de sair de casa</h3>
+  <ul class="check">
+    <li><span class="quadro"></span><span><strong>Check-in online</strong> pelo app da Azul — abre 72h antes e evita fila de balcão.</span></li>
+    <li><span class="quadro"></span><span><strong>Franquia de bagagem paga antes</strong> — no balcão sai mais caro.</span></li>
+    <li><span class="quadro"></span><span>Documento com foto de cada um, nome idêntico ao da reserva; bagagem despachada dentro de 23 kg e 115 cm somando as três dimensões.</span></li>
+    <li><span class="quadro"></span><span>Equipamento, notebook e HD na <strong>bagagem de mão</strong>; baterias de lítio soltas vão obrigatoriamente na cabine.</span></li>
+  </ul>
+
+  <div class="caixa atencao">
+    <div class="rot">O equipamento não pode ser despachado</div>
+    <p>Se a mala despachada atrasar, ela chega no voo seguinte — e o ensaio de quarta-feira já era.
+      Tudo que é insubstituível em 24 horas viaja com vocês na cabine: unidade de estimulação,
+      eletrodos, cabos de dados, notebook, HD. Roupa pode ir no porão.</p>
+  </div>
+
+  <h3>Chegada em Congonhas</h3>
+  <p>Congonhas é urbano e compacto: do portão à saída são poucos minutos a pé, mais 20 a 30 na esteira
+    de bagagem. O ponto de embarque de aplicativos fica em nível diferente do desembarque — siga as
+    placas, em vez de chamar o carro na porta.</p>
+
+  <div class="g2">
+    <div class="cartao">
+      <h4>Do aeroporto até a base</h4>
+      <p class="mini">8 km · 25 a 45 min por aplicativo · R$ 45 a 90. Endereço para o motorista:
+        <strong>Rua Augusta, 2110 — Cerqueira César</strong>, quase na esquina com a Av. Paulista.</p>
+    </div>
+    <div class="cartao">
+      <h4>Se preferir metrô</h4>
+      <p class="mini">Desde março de 2026 a <strong>Linha 17-Ouro</strong> atende o aeroporto: três
+        baldeações até a Consolação, 60 a 75 min. Alternativa se o preço do aplicativo disparar.</p>
+    </div>
+  </div>
+
+  <div class="caixa" style="margin-top:4mm">
+    <div class="rot">Primeira parada</div>
+    <p>Mercados e farmácias funcionam até tarde na Paulista e na Augusta. Abasteça o apartamento na
+      chegada com água, café e o café da manhã dos dois dias: na quarta às 7h, isso poupa meia hora
+      que vai fazer falta.</p>
+  </div>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 04 — HOSPEDAGEM
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Hospedagem e acessos}}
+  <div class="aba"><span class="n">04</span><span class="l">Base</span></div>
+
+  <span class="eyebrow">Guia 04</span>
+  <h2 class="guia">Hospedagem e acessos</h2>
+  <p class="sub">Airbnb na Rua Augusta, 2110 — {{APTO_CURTO}}. Coanfitrião: José Luís.</p>
+
+  <h3>Dados da reserva</h3>
+  <table class="compacta">
+    <tbody>
+      <tr><td class="h" style="width:30%">Endereço</td><td>Rua Augusta, 2110 — Cerqueira César, São Paulo/SP</td></tr>
+      <tr><td class="h">Unidade</td><td>{{UNIDADE_TAB}}</td></tr>
+      <tr><td class="h">Check-in · checkout</td><td>a partir das <strong>14:00</strong> de terça 11/08, por senha e sem hora marcada · saída até as <strong>11:00</strong> de quinta 13/08</td></tr>
+      <tr><td class="h">Coanfitrião</td><td>José Luís — pelo chat da reserva no app do Airbnb. O edifício tem porteiro, que pode estar ausente</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caixa critico">
+    <div class="rot">{{ROT_CODIGOS}}</div>
+    <table class="compacta" style="margin:0">
+      <tbody>
+        <tr><td class="h" style="width:38%;background:none">Entrada do prédio</td>
+          <td style="background:none">No interfone, clicar em <strong>"senha"</strong> e digitar
+            {{COD_PREDIO}}. Aguardar cerca de dois segundos —
+            a porta abre.</td></tr>
+        <tr><td class="h" style="background:none">Porta do apartamento</td>
+          <td style="background:none">Passar a mão <strong>lentamente</strong> sobre o teclado da fechadura
+            para acender os números, digitar {{COD_APTO}} e
+            confirmar na tecla <span class="mono">✓</span>.</td></tr>
+        <tr><td class="h" style="background:none">Para sair</td>
+          <td style="background:none">Do apartamento, pelo botão pequeno da fechadura; ao sair, fechar a
+            porta e segurar por alguns segundos. Do prédio, pelo botão ao lado do extintor de incêndio.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="caixa atencao">
+    <div class="rot">Instrução incompleta na mensagem original</div>
+    <p>A orientação sobre o procedimento ao sair — "feche a porta e segure por…" — está cortada na
+      captura que originou este documento. <strong>Peça a mensagem completa ao José Luís na terça à
+      noite</strong>: fechadura que não tranca direito só dá problema quando já se está longe.</p>
+  </div>
+
+  <h3>Rotina de chegada — terça à noite</h3>
+  <ul class="check">
+    <li><span class="quadro"></span><span>Testar o interfone antes de carregar tudo de uma vez; localizar o extintor no térreo.</span></li>
+    <li><span class="quadro"></span><span>Testar a fechadura pelos dois lados, com os três presentes.</span></li>
+    <li><span class="quadro"></span><span>Conferir wi-fi, chuveiro e tomadas; fotografar avaria já existente e achar a tomada para carregar o equipamento à noite.</span></li>
+    <li><span class="quadro"></span><span>Avisar o José Luís que entraram.</span></li>
+  </ul>
+
+  <h3>O que perguntar ao José Luís na quarta-feira</h3>
+  <ul>
+    <li><strong>Late checkout na quinta</strong> — decisivo para o Plano B. Pergunte cedo.</li>
+    <li><strong>Deixar bagagem</strong> no apartamento ou com a portaria após o checkout.</li>
+    <li>Procedimento completo de saída e destino das chaves, se houver.</li>
+  </ul>
+
+  <h3>O que a localização entrega</h3>
+  <p>O endereço fica praticamente na esquina da Av. Paulista, a cerca de 150 m — três minutos a pé — das
+    estações <strong>Consolação</strong> (Linha 2-Verde) e <strong>Paulista</strong> (Linha 4-Amarela).
+    Isso põe o local do ensaio a uma estação, o Terminal do Tietê a uma baldeação e o resto da cidade ao
+    alcance sem carro.</p>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 05 — ENSAIO NA FMUSP
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Ensaio na FMUSP}}
+  <div class="aba"><span class="n">05</span><span class="l">Ensaio</span></div>
+
+  <span class="eyebrow">Guia 05</span>
+  <h2 class="guia">Ensaio na FMUSP</h2>
+  <p class="sub">Eletroestimulação diafragmática contra o simulador pulmonar ASL 5000.</p>
+
+  <h3>Local</h3>
+  <table class="compacta">
+    <tbody>
+      <tr><td class="h" style="width:30%">Instituição</td><td>Faculdade de Medicina da Universidade de São Paulo — FMUSP</td></tr>
+      <tr><td class="h">Endereço</td><td><strong>Av. Dr. Arnaldo, 455</strong> — Cerqueira César, São Paulo/SP · CEP 01246-903</td></tr>
+      <tr><td class="h">Telefones</td><td class="mono">(11) 3061-7264 · (11) 3061-7430</td></tr>
+      <tr><td class="h">Metrô</td><td>Estação <strong>Clínicas</strong> (Linha 2-Verde) — saída para a Av. Dr. Arnaldo, 2 a 5 min a pé</td></tr>
+      <tr><td class="h">Referência</td><td>em frente ao complexo do Hospital das Clínicas, no Quadrilátero da Saúde</td></tr>
+      <tr><td class="h">Prédio · sala</td><td class="dim">confirmar com a Profa. Patrícia: <span class="campo" style="min-width:70mm"></span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="caixa info">
+    <div class="rot">Sobre o bairro</div>
+    <p>Você mencionou Pacaembu, e a referência faz sentido: a Av. Dr. Arnaldo faz divisa com o Pacaembu.
+      Mas o endereço oficial da FMUSP é <strong>Cerqueira César</strong> — use esse nome em aplicativos de
+      transporte para não ser levado ao outro lado do túnel.</p>
+  </div>
+
+  <h3>Contato local</h3>
+  <table class="compacta">
+    <tbody>
+      <tr><td class="h" style="width:30%">Nome</td><td><strong>Profa. Patrícia de Souza Nery</strong></td></tr>
+      <tr><td class="h">Telefone</td><td class="dim"><span class="campo" style="min-width:70mm"></span></td></tr>
+      <tr><td class="h">E-mail</td><td class="dim"><span class="campo" style="min-width:70mm"></span></td></tr>
+      <tr><td class="h">Horário combinado</td><td class="dim"><span class="campo" style="min-width:70mm"></span></td></tr>
+      <tr><td class="h">Contato reserva</td><td class="dim"><span class="campo" style="min-width:70mm"></span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="caixa atencao">
+    <div class="rot">Confirme a grafia do nome antes de se dirigir a ela</div>
+    <p>O registro público mais próximo que encontrei é de <strong>Patricia Nery de Souza</strong> —
+      fisioterapeuta formada pela USP, doutora em Ciências Médicas pela FMUSP na área de Pneumologia e
+      Cardiologia, com longa atuação em UTI. A ordem dos sobrenomes difere da que você me passou. Pode ser
+      a mesma pessoa, pode não ser. Confirme no e-mail de contato antes de imprimir o nome em qualquer
+      documento oficial ou de cumprimentá-la por escrito.</p>
+  </div>
+
+  {{PE}}
+</section>
+
+<section class="sheet">
+  {{HD:Ensaio na FMUSP}}
+  <div class="aba"><span class="n">05</span><span class="l">Ensaio</span></div>
+
+  <span class="eyebrow">Guia 05 · continuação</span>
+  <h2 class="guia">O simulador e o roteiro do ensaio</h2>
+  <p class="sub">O que o ASL 5000 permite fazer, o que precisa ser combinado antes e como os blocos de trabalho se distribuem entre quarta e quinta.</p>
+
+  <h3>O que é o ASL 5000</h3>
+  <p>Simulador de respiração da IngMar Medical, usado como referência no desenvolvimento e ensaio de
+    ventiladores, CPAPs e dispositivos respiratórios. O que o torna adequado para este teste:</p>
+  <ul>
+    <li><strong>Respira espontaneamente enquanto é ventilado</strong> — reproduz esforço inspiratório
+      próprio, que é exatamente o que a eletroestimulação diafragmática pretende modular.</li>
+    <li>Cobre a faixa de <strong>neonato a adulto</strong> e reproduz mecânica de DPOC, SDRA, pneumotórax
+      e fibrose.</li>
+    <li>Simula tosse, apneia, expiração ativa e reprodução de registros reais de pacientes.</li>
+    <li>Atende aos requisitos de pulmão de teste das normas ISO 80601-2-12 (ventiladores de terapia
+      intensiva) e ISO 10651-6.</li>
+  </ul>
+  <p>Na prática, isso permite repetir a mesma condição respiratória quantas vezes forem necessárias — o
+    ensaio vira comparação controlada em vez de observação.</p>
+
+  <h3>A confirmar com o laboratório antes de quarta-feira</h3>
+  <ul class="check">
+    <li><span class="quadro"></span><span>Horário de chegada e nome do responsável que vai recebê-los na portaria.</span></li>
+    <li><span class="quadro"></span><span>Documentos exigidos para acesso — cadastro prévio, RG, termo de responsabilidade.</span></li>
+    <li><span class="quadro"></span><span>Versão do software do ASL 5000 e formato de exportação dos dados.</span></li>
+    <li><span class="quadro"></span><span>Qual ventilador será acoplado e quais interfaces e conectores estarão disponíveis.</span></li>
+    <li><span class="quadro"></span><span>Bancada, tomadas livres e tensão da rede (110 V ou 220 V) na sala.</span></li>
+    <li><span class="quadro"></span><span>Política de registro fotográfico e de vídeo dentro do laboratório.</span></li>
+    <li><span class="quadro"></span><span>Exigências de biossegurança e EPI.</span></li>
+    <li><span class="quadro"></span><span>Se é possível deixar equipamento ou bagagem na sala entre os dias.</span></li>
+    <li><span class="quadro"></span><span><strong>Disponibilidade do laboratório na quinta-feira</strong> — pré-requisito do Plano B.</span></li>
+  </ul>
+
+  <h3>Roteiro sugerido do ensaio</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:16%">Bloco</th><th style="width:20%">Janela</th><th>Conteúdo</th></tr></thead>
+    <tbody>
+      <tr><td class="h">1</td><td>Qua 09:30–12:00</td><td>Reconhecimento da bancada, montagem, energização, calibração e registro da linha de base sem estimulação</td></tr>
+      <tr><td class="h">2</td><td>Qua 13:00–17:00</td><td>Execução dos protocolos de estimulação nas condições previstas; coleta e conferência dos dados no local</td></tr>
+      <tr><td class="h">3</td><td>Qui 13:00–18:00</td><td>Somente no Plano B: repetições, condições adicionais e fechamento das lacunas do dia anterior</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caixa">
+    <div class="rot">Regra de ouro do dado coletado</div>
+    <p>Confira os dados <strong>antes de desmontar</strong>. Abra o arquivo, veja se as formas de onda
+      fazem sentido e se os metadados estão corretos. Um arquivo vazio descoberto em Belo Horizonte custa
+      outra viagem inteira.</p>
+  </div>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 06 — CHECKLIST
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Checklist técnico e de bagagem}}
+  <div class="aba"><span class="n">06</span><span class="l">Checklist</span></div>
+
+  <span class="eyebrow">Guia 06</span>
+  <h2 class="guia">Checklist técnico e de bagagem</h2>
+  <p class="sub">Confira duas vezes: ao fechar a mala em Belo Horizonte e na noite de terça, no apartamento.</p>
+
+  <div class="g2">
+    <div>
+      <h3>Equipamento do ensaio <span class="pill a" style="vertical-align:2mm">bagagem de mão</span></h3>
+      <ul class="check">
+        <li><span class="quadro"></span><span>Unidade de eletroestimulação diafragmática</span></li>
+        <li><span class="quadro"></span><span>Fonte de alimentação e cabo de energia</span></li>
+        <li><span class="quadro"></span><span>Eletrodos — <strong>e um conjunto reserva</strong></span></li>
+        <li><span class="quadro"></span><span>Cabos de sinal e de dados, com reservas</span></li>
+        <li><span class="quadro"></span><span>Notebook de aquisição + carregador</span></li>
+        <li><span class="quadro"></span><span>Software instalado e testado <em>antes</em> de viajar</span></li>
+        <li><span class="quadro"></span><span>Licenças, chaves ou dongles necessários</span></li>
+        <li><span class="quadro"></span><span>HD externo e pendrive para backup</span></li>
+        <li><span class="quadro"></span><span>Adaptadores USB / serial / conversores</span></li>
+        <li><span class="quadro"></span><span>Extensão elétrica e régua de tomadas</span></li>
+        <li><span class="quadro"></span><span>Adaptadores de tomada 110/220 V</span></li>
+        <li><span class="quadro"></span><span>Multímetro</span></li>
+        <li><span class="quadro"></span><span>Ferramentas básicas, fita, abraçadeiras</span></li>
+        <li><span class="quadro"></span><span>Baterias sobressalentes (sempre na cabine)</span></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Documentação</h3>
+      <ul class="check">
+        <li><span class="quadro"></span><span>Este documento impresso — um por pessoa</span></li>
+        <li><span class="quadro"></span><span>Documento com foto de cada integrante</span></li>
+        <li><span class="quadro"></span><span>Carta de apresentação da NeuroDynamics</span></li>
+        <li><span class="quadro"></span><span>Protocolo de ensaio impresso</span></li>
+        <li><span class="quadro"></span><span>Formulário de registro de ensaio, em papel</span></li>
+        <li><span class="quadro"></span><span>Caderno de laboratório e canetas</span></li>
+        <li><span class="quadro"></span><span>Comprovantes de reserva: voo, hospedagem</span></li>
+        <li><span class="quadro"></span><span>Cartão corporativo e dinheiro em espécie</span></li>
+      </ul>
+
+      <h3>Pessoal</h3>
+      <ul class="check">
+        <li><span class="quadro"></span><span>Roupa em camadas — ver Guia 08</span></li>
+        <li><span class="quadro"></span><span>Calçado confortável para caminhar</span></li>
+        <li><span class="quadro"></span><span>Guarda-chuva compacto (terça)</span></li>
+        <li><span class="quadro"></span><span>Peça leve para quinta-feira (31 °C)</span></li>
+        <li><span class="quadro"></span><span>Medicamentos de uso contínuo</span></li>
+        <li><span class="quadro"></span><span>Carregador de celular e power bank</span></li>
+        <li><span class="quadro"></span><span>Garrafa de água reutilizável</span></li>
+        <li><span class="quadro"></span><span>Hidratante e colírio — o ar seca na quinta</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>No celular, antes de sair</h3>
+  <div class="g3">
+    <div class="cartao"><h4>Aplicativos</h4>
+      <p class="mini">Azul · Airbnb · Uber e 99 · Google Maps ou Moovit · iFood ou Rappi · app de compra
+        de passagem rodoviária</p></div>
+    <div class="cartao"><h4>Salvo offline</h4>
+      <p class="mini">Mapa de São Paulo baixado no Google Maps · este documento em PDF · comprovantes de
+        reserva · contatos do Guia 12</p></div>
+    <div class="cartao"><h4>Antes de dormir na terça</h4>
+      <p class="mini">Tudo carregado a 100%: notebook, celulares, power bank e o equipamento do ensaio.</p></div>
+  </div>
+
+  <div class="caixa">
+    <div class="rot">Teste de bancada na terça à noite</div>
+    <p>Monte o sistema no apartamento, ligue, abra o software e registre trinta segundos de dados. Não é
+      preciosismo: é a única oportunidade de descobrir um cabo defeituoso enquanto ainda existem lojas
+      abertas e o dia seguinte inteiro pela frente. A região da Santa Ifigênia, no Centro, concentra lojas
+      de eletrônica e fica a cerca de 4 km da base.</p>
+  </div>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 07 — ROTAS
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Rotas e deslocamentos}}
+  <div class="aba"><span class="n">07</span><span class="l">Rotas</span></div>
+
+  <span class="eyebrow">Guia 07</span>
+  <h2 class="guia">Rotas e deslocamentos</h2>
+  <p class="sub">Cada trecho com pelo menos duas opções. Tempos incluem caminhada e espera; valores são
+    estimativas de agosto de 2026.</p>
+
+  <h3>Tarifas de referência</h3>
+  <p class="mini">Metrô e trem: <strong>R$ 5,40</strong> por viagem. Ônibus municipal: <strong>R$ 5,30</strong>.
+    Integração ônibus + metrô: <strong>R$ 9,38</strong>, com até três embarques em ônibus em três horas.
+    Valores vigentes desde 6 de janeiro de 2026. Pagamento por aproximação com cartão ou celular funciona
+    nos bloqueios do metrô.</p>
+
+  <h3 style="margin-top:5mm">T1 · Congonhas → Rua Augusta, 2110 <span class="pill" style="vertical-align:1.5mm">terça, ~19:45</span></h3>
+  <table class="compacta">
+    <thead><tr><th style="width:22%">Opção</th><th style="width:14%">Tempo</th><th style="width:16%">Custo</th><th>Observações</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Aplicativo <span class="pill v">recomendado</span></td><td>25–45 min</td><td>R$ 45–90</td>
+        <td>8 km. Siga a sinalização até o ponto de embarque de aplicativos — não chame o carro na porta do desembarque.</td></tr>
+      <tr><td class="h">Táxi</td><td>30–50 min</td><td>R$ 70–110</td><td>Ponto oficial no desembarque, sem depender de app.</td></tr>
+      <tr><td class="h">Metrô</td><td>60–75 min</td><td>R$ 5,40</td>
+        <td>Linha 17-Ouro até Campo Belo → Linha 5-Lilás até Santa Cruz → Linha 1-Azul até Paraíso → Linha 2-Verde até Consolação. Três baldeações com bagagem.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>T2 · Base → FMUSP <span class="pill" style="vertical-align:1.5mm">quarta e quinta, manhã</span></h3>
+  <table class="compacta">
+    <thead><tr><th style="width:22%">Opção</th><th style="width:14%">Tempo</th><th style="width:16%">Custo</th><th>Observações</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Metrô <span class="pill v">recomendado</span></td><td>12–15 min</td><td>R$ 5,40</td>
+        <td>3 min a pé até a Consolação · <strong>uma estação</strong> na Linha 2-Verde até Clínicas · 2 a 5 min a pé pela saída da Av. Dr. Arnaldo. Previsível no horário de pico.</td></tr>
+      <tr><td class="h">A pé</td><td>25–30 min</td><td>—</td>
+        <td>2,1 km pela Av. Paulista até o fim, seguindo pela Av. Dr. Arnaldo. Subida leve. Boa opção com tempo firme e sem equipamento pesado.</td></tr>
+      <tr><td class="h">Aplicativo</td><td>10–25 min</td><td>R$ 15–30</td>
+        <td>Rápido fora do pico; no pico o metrô ganha. Melhor escolha no dia de levar o equipamento.</td></tr>
+      <tr><td class="h">Ônibus</td><td>15–30 min</td><td>R$ 5,30</td>
+        <td>Várias linhas cruzam a Av. Paulista rumo à Consolação e à Av. Dr. Arnaldo. Confira a linha no Moovit na hora.</td></tr>
+    </tbody>
+  </table>
+
+  {{PE}}
+</section>
+
+<section class="sheet">
+  {{HD:Rotas e deslocamentos}}
+  <div class="aba"><span class="n">07</span><span class="l">Rotas</span></div>
+
+  <span class="eyebrow">Guia 07 · continuação</span>
+  <h2 class="guia">Trechos de volta e regra de decisão</h2>
+  <p class="sub">Os deslocamentos da quinta-feira, nos dois planos, e o trecho de Belo Horizonte a Confins.</p>
+
+  <h3>T3 · Base → Congonhas <span class="pill m" style="vertical-align:1.5mm">Plano A · quinta, 08:15</span></h3>
+  <table class="compacta">
+    <thead><tr><th style="width:22%">Opção</th><th style="width:14%">Tempo</th><th style="width:16%">Custo</th><th>Observações</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Aplicativo <span class="pill v">recomendado</span></td><td>35–60 min</td><td>R$ 50–100</td>
+        <td>Pico da manhã. Saindo às 08:15 chega-se às 09:00, com 1h30 de antecedência para o voo das 10:30.</td></tr>
+      <tr><td class="h">Metrô</td><td>65–80 min</td><td>R$ 5,40</td>
+        <td>Percurso do T1 invertido. Mais lento, porém <strong>imune ao trânsito</strong> — é o plano de resgate se a Paulista travar.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>T4 · Base → Terminal do Tietê <span class="pill m" style="vertical-align:1.5mm">Plano B · quinta, 20:30</span></h3>
+  <table class="compacta">
+    <thead><tr><th style="width:22%">Opção</th><th style="width:14%">Tempo</th><th style="width:16%">Custo</th><th>Observações</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Metrô <span class="pill v">recomendado</span></td><td>30–40 min</td><td>R$ 5,40</td>
+        <td>Consolação (Linha 2-Verde) até Paraíso, baldeação para a Linha 1-Azul até <strong>Portuguesa-Tietê</strong>. A estação desemboca dentro do terminal.</td></tr>
+      <tr><td class="h">Aplicativo</td><td>25–45 min</td><td>R$ 35–60</td><td>Confortável com bagagem; sujeito ao trânsito da Marginal.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>T5 · Belo Horizonte → Confins <span class="pill" style="vertical-align:1.5mm">terça, 14:45</span></h3>
+  <table class="compacta">
+    <thead><tr><th style="width:22%">Opção</th><th style="width:14%">Tempo</th><th style="width:16%">Custo</th><th>Observações</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Carro / aplicativo</td><td>40–70 min</td><td>R$ 120–200</td>
+        <td>≈38 km pela Linha Verde. Com três pessoas e equipamento, é a opção lógica.</td></tr>
+      <tr><td class="h">Ônibus executivo</td><td>60–90 min</td><td>R$ 30–45</td>
+        <td>Linhas do Centro e da Savassi para Confins. Mais barato, menos flexível com carga.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caixa info">
+    <div class="rot">Regra prática de São Paulo</div>
+    <p>Nos horários de pico — das 7h às 10h e das 17h às 20h — o metrô quase sempre vence o carro em
+      tempo e sempre vence em previsibilidade. Fora desses horários, e quando houver equipamento para
+      carregar, o carro por aplicativo compensa. Nesta viagem, os dois trechos com maior risco de atraso
+      são a ida a Congonhas na quinta de manhã e a volta da FMUSP no fim da tarde.</p>
+  </div>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 08 — CLIMA
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Clima e vestuário}}
+  <div class="aba"><span class="n">08</span><span class="l">Clima</span></div>
+
+  <span class="eyebrow">Guia 08</span>
+  <h2 class="guia">Clima e vestuário</h2>
+  <p class="sub">Previsão para São Paulo consultada em 11 de agosto de 2026. Reconfira na véspera de cada
+    dia — previsão de três dias muda.</p>
+
+  <h3>Previsão</h3>
+  <table>
+    <thead><tr><th style="width:22%">Dia</th><th style="width:16%">Mínima</th><th style="width:16%">Máxima</th><th>Condições</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Terça, 11/08</td><td><strong>15 °C</strong></td><td><strong>21 °C</strong></td>
+        <td>Nublado e úmido, com probabilidade ocasional de chuva sem volume estimado. Dia mais frio da viagem.</td></tr>
+      <tr><td class="h">Quarta, 12/08</td><td><strong>15 °C</strong></td><td><strong>25 °C</strong></td>
+        <td>Nebulosidade diminuindo, umidade do ar em queda. Manhã fria, tarde agradável.</td></tr>
+      <tr><td class="h">Quinta, 13/08</td><td><strong>18 °C</strong></td><td><strong>31 °C</strong></td>
+        <td>Sol e tempo seco. Dia quente — e o de mais deslocamento com bagagem.</td></tr>
+    </tbody>
+  </table>
+
+  <p>O contexto: uma frente fria passou pelo litoral paulista na primeira semana de agosto e deixou o fim
+    de semana frio. A partir de quarta-feira uma alta pressão se instala sobre São Paulo e estabiliza o
+    tempo — céu limpo, umidade caindo e temperaturas subindo dia após dia.</p>
+
+  <div class="caixa atencao">
+    <div class="rot">Dezesseis graus de amplitude em três dias</div>
+    <p>Da mínima de terça (15 °C, com garoa) à máxima de quinta (31 °C, sol seco) são 16 graus de
+      diferença. Nenhuma peça isolada cobre isso. <strong>Vista-se em camadas removíveis</strong> e conte
+      com a variação dentro do próprio dia: em agosto, a diferença entre a madrugada e o meio da tarde em
+      São Paulo passa facilmente de 10 graus.</p>
+  </div>
+
+  <div class="g2">
+    <div class="cartao">
+      <h4>O que levar</h4>
+      <ul class="check" style="margin-bottom:0">
+        <li><span class="quadro"></span><span>Casaco ou moletom para terça e para as manhãs</span></li>
+        <li><span class="quadro"></span><span>Jaqueta corta-vento leve — chuva fina de terça</span></li>
+        <li><span class="quadro"></span><span>Camisetas e uma camisa para o ambiente do laboratório</span></li>
+        <li><span class="quadro"></span><span>Uma peça leve para quinta-feira</span></li>
+        <li><span class="quadro"></span><span>Guarda-chuva compacto</span></li>
+        <li><span class="quadro"></span><span>Calçado fechado e confortável</span></li>
+        <li><span class="quadro"></span><span>Protetor solar para quinta</span></li>
+      </ul>
+    </div>
+    <div class="cartao">
+      <h4>Ar seco na quinta</h4>
+      <p class="mini">A umidade cai junto com a chegada da alta pressão. Em São Paulo isso significa
+        garganta seca, olhos irritados e cansaço fora do normal — justamente no dia de arrumar mala e
+        pegar avião ou ônibus.</p>
+      <ul class="check" style="margin-bottom:0">
+        <li><span class="quadro"></span><span>Garrafa de água sempre cheia</span></li>
+        <li><span class="quadro"></span><span>Hidratante labial e colírio</span></li>
+        <li><span class="quadro"></span><span>Evitar as horas de sol forte na rua com equipamento</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Efeito sobre o plano</h3>
+  <ul>
+    <li><strong>Terça à noite:</strong> chuva fina eleva o preço dinâmico dos aplicativos na saída de
+      Congonhas. Se o valor estiver absurdo, espere quinze minutos dentro do terminal.</li>
+    <li><strong>Quarta:</strong> tempo bom torna a caminhada de 2,1 km até a FMUSP uma opção real,
+      se ninguém estiver carregando equipamento pesado.</li>
+    <li><strong>Quinta:</strong> 31 °C com bagagem — no Plano B, mais uma razão para resolver o
+      guarda-volumes logo cedo.</li>
+  </ul>
+
+  <h3>Belo Horizonte na chegada</h3>
+  <p class="mini dim">Não consultei previsão para Belo Horizonte. Nos dois planos a chegada é de manhã, e
+    manhã de agosto em BH costuma ser fresca e seca — leve algo para vestir na saída do terminal.</p>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 09 — ALIMENTAÇÃO
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Alimentação}}
+  <div class="aba"><span class="n">09</span><span class="l">Comida</span></div>
+
+  <span class="eyebrow">Guia 09</span>
+  <h2 class="guia">Alimentação</h2>
+  <p class="sub">Opções por proximidade dos dois pontos onde vocês realmente vão estar. Confirme horários
+    no dia — muita coisa na região fecha cedo em dia de semana.</p>
+
+  <h3>Perto da base — Rua Augusta com Av. Paulista</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:38%">Onde</th><th>Serve para</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Conjunto Nacional <span class="pill">≈50 m</span><br><span class="dim mini">Av. Paulista, 2073</span></td>
+        <td>Do outro lado da rua. Cafés, restaurantes e livraria — a melhor opção para café rápido e jantar sem deslocamento.</td></tr>
+      <tr><td class="h">Shopping Center 3 <span class="pill">≈100 m</span><br><span class="dim mini">Av. Paulista, 2064</span></td>
+        <td>Praça de alimentação. Prático, previsível e barato.</td></tr>
+      <tr><td class="h">Riviera Bar <span class="pill">≈600 m</span><br><span class="dim mini">Av. Paulista, 2584</span></td>
+        <td>Esquina com a Consolação. Clássico da cidade, para um jantar que valha sentar.</td></tr>
+      <tr><td class="h">Corredor da Rua Augusta <span class="pill">200 m+</span><br><span class="dim mini">descendo para o Centro</span></td>
+        <td>Bares e cozinhas variadas, boa parte até tarde. Saída natural para a noite de terça.</td></tr>
+      <tr><td class="h">Shopping Cidade São Paulo <span class="pill">≈1 km</span><br><span class="dim mini">Av. Paulista, 1230</span></td>
+        <td>Mais opções sentadas e praça de alimentação.</td></tr>
+      <tr><td class="h">Mercados e padarias <span class="pill">na quadra</span></td>
+        <td>Abastecer o apartamento na chegada: água, café, fruta e o café da manhã dos dois dias.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Perto da FMUSP — Av. Dr. Arnaldo</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:38%">Onde</th><th>Serve para</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Restaurante da FMUSP <span class="pill">no prédio</span><br><span class="dim mini">Av. Dr. Arnaldo, 455</span></td>
+        <td>A mais rápida nos dias de ensaio. Confirme o acesso de visitantes com a Profa. Patrícia.</td></tr>
+      <tr><td class="h">Complexo do Hospital das Clínicas <span class="pill">≈400 m</span><br><span class="dim mini">Av. Dr. Enéas de Carvalho Aguiar, 255</span></td>
+        <td>Lanchonetes e praça do Instituto Central. Horário amplo, inclusive quando o resto fecha.</td></tr>
+      <tr><td class="h">Rua Teodoro Sampaio <span class="pill">500 m+</span><br><span class="dim mini">saindo da estação Clínicas</span></td>
+        <td>A rua de maior variedade da região. Ex.: Degas Restaurante, Rua Teodoro Sampaio, 568.</td></tr>
+      <tr><td class="h">Consolação e Oscar Freire <span class="pill">≈1 km</span></td>
+        <td>Cafés e restaurantes para uma pausa mais longa, se o cronograma permitir.</td></tr>
+      <tr><td class="h">Padarias da Av. Dr. Arnaldo <span class="pill">na quadra</span></td>
+        <td>Café da manhã antes de entrar ou lanche entre blocos de ensaio.</td></tr>
+    </tbody>
+  </table>
+
+  {{PE}}
+</section>
+
+<section class="sheet">
+  {{HD:Alimentação}}
+  <div class="aba"><span class="n">09</span><span class="l">Comida</span></div>
+
+  <span class="eyebrow">Guia 09 · continuação</span>
+  <h2 class="guia">Plano de refeições e regras práticas</h2>
+  <p class="sub">Onde comer em cada momento do roteiro, e o que muda em relação a Belo Horizonte.</p>
+
+  <div class="caixa info">
+    <div class="rot">Delivery cobre bem os dois endereços</div>
+    <p>Os dois endereços estão em área de altíssima densidade de entrega. iFood e Rappi resolvem jantar
+      tarde, almoço sem sair do laboratório e o café da manhã de quinta.</p>
+  </div>
+
+  <h3>Planejamento por refeição</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:20%">Quando</th><th style="width:34%">Onde</th><th>Nota</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Ter · jantar</td><td>Conjunto Nacional ou Rua Augusta</td><td>Chegada por volta das 21h. Nada longe: o dia seguinte começa cedo.</td></tr>
+      <tr><td class="h">Qua · café</td><td>No apartamento, com o que foi comprado na terça</td><td>Poupa 30 min na manhã mais crítica.</td></tr>
+      <tr><td class="h">Qua · almoço</td><td>Restaurante da FMUSP ou complexo HC</td><td>Uma hora, sem se afastar do laboratório.</td></tr>
+      <tr><td class="h">Qua · jantar</td><td>Riviera Bar ou Rua Augusta</td><td>Noite da decisão A/B — vale sentar e conversar.</td></tr>
+      <tr><td class="h">Qui</td><td>Plano A: café antes de sair. Plano B: HC e região do Tietê</td><td>Não conte com o aeroporto; e jante <em>antes</em> de embarcar no ônibus.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Regras práticas da região</h3>
+  <table class="compacta">
+    <tbody>
+      <tr><td class="h" style="width:30%">Horários</td><td>Em dia de semana boa parte dos restaurantes da Paulista fecha entre 22h e 23h. A Rua Augusta e as praças de alimentação dos shoppings vão mais tarde. Confirme no mapa antes de sair.</td></tr>
+      <tr><td class="h">Almoço executivo</td><td>Das 11h30 às 15h, quase tudo na região tem menu de preço fixo — bem mais barato que o cardápio à noite.</td></tr>
+      <tr><td class="h">Pagamento</td><td>Cartão por aproximação e Pix são aceitos em praticamente todo lugar. Leve algum dinheiro só para imprevistos.</td></tr>
+      <tr><td class="h">Gorjeta</td><td>Os 10% costumam vir na conta e são opcionais.</td></tr>
+      <tr><td class="h">Água</td><td>O ar seca a partir de quarta. Encha a garrafa antes de sair — dentro do laboratório pode não haver bebedouro acessível a visitantes.</td></tr>
+    </tbody>
+  </table>
+
+  <p class="mini dim">Restrições alimentares da equipe: <span class="campo" style="min-width:120mm"></span></p>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 10 — VOLTA
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Volta — Plano A e Plano B}}
+  <div class="aba"><span class="n">10</span><span class="l">Volta</span></div>
+
+  <span class="eyebrow">Guia 10</span>
+  <h2 class="guia">Volta — Plano A e Plano B</h2>
+  <p class="sub">A decisão é da quarta-feira à noite e depende de duas respostas, não de uma.</p>
+
+  <h3>Como decidir</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:46%">Pergunta</th><th style="width:27%">Se sim</th><th style="width:27%">Se não</th></tr></thead>
+    <tbody>
+      <tr><td>A coleta de quarta cobriu o protocolo previsto?</td><td><span class="pill v">Plano A</span></td><td>siga para a próxima pergunta</td></tr>
+      <tr><td>O laboratório estará disponível na quinta-feira?</td><td><span class="pill m">Plano B é possível</span></td><td><span class="pill v">Plano A</span> — ficar sem laboratório não resolve nada</td></tr>
+      <tr><td>Alguém tem compromisso inadiável na sexta de manhã?</td><td><span class="pill v">Plano A</span></td><td><span class="pill m">Plano B liberado</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="caixa critico">
+    <div class="rot">Erro clássico</div>
+    <p>Decidir ficar mais um dia <strong>sem antes confirmar que o laboratório estará aberto e com o
+      ASL 5000 livre</strong>. Faça essa pergunta à Profa. Patrícia ainda na quarta à tarde, junto com o
+      pedido de acesso. Sem essa confirmação, o Plano B só adiciona custo.</p>
+  </div>
+
+  <h3 style="border-bottom-color:var(--vital)">Plano A · voo de quinta pela manhã</h3>
+  <table class="compacta">
+    <tbody>
+      <tr><td class="h" style="width:30%">Trecho</td><td>Congonhas (CGH) → Confins (CNF)</td></tr>
+      <tr><td class="h">Partida</td><td><strong>10:30</strong>, quinta 13/08/2026</td></tr>
+      <tr><td class="h">Chegada prevista</td><td>≈ <strong>11:45</strong></td></tr>
+      <tr><td class="h">Estar no aeroporto</td><td>09:00 — sair da base às 08:15</td></tr>
+      <tr><td class="h">Limite de despacho</td><td>09:30</td></tr>
+      <tr><td class="h">Checkout</td><td>08:00, bem antes do limite das 11:00</td></tr>
+    </tbody>
+  </table>
+  <ul class="check">
+    <li><span class="quadro"></span><span>Check-in online na quarta à noite, assim que a decisão for tomada.</span></li>
+    <li><span class="quadro"></span><span>Equipamento de novo na bagagem de mão.</span></li>
+    <li><span class="quadro"></span><span>Chamar o carro com folga: a Paulista às 8h da manhã não perdoa.</span></li>
+  </ul>
+
+  {{PE}}
+</section>
+
+<section class="sheet">
+  {{HD:Volta — Plano A e Plano B}}
+  <div class="aba"><span class="n">10</span><span class="l">Volta</span></div>
+
+  <span class="eyebrow">Guia 10 · continuação</span>
+  <h2 class="guia">Plano B · ônibus na noite de quinta</h2>
+  <p class="sub">O que precisa estar resolvido na quarta-feira para o Plano B funcionar sem improviso.</p>
+
+  <h3 style="border-bottom-color:var(--mielina)">Plano B · ônibus na noite de quinta</h3>
+  <table class="compacta">
+    <tbody>
+      <tr><td class="h" style="width:30%">Trecho</td><td>São Paulo (Terminal do Tietê) → Belo Horizonte (Terminal Governador Israel Pinheiro)</td></tr>
+      <tr><td class="h">Terminal de saída</td><td>Av. Cruzeiro do Sul, 1800 — Santana · <span class="mono">(11) 3866-1100</span> · aberto 24h · Metrô Portuguesa-Tietê</td></tr>
+      <tr><td class="h">Saídas noturnas</td><td>a partir das 20:00, com última por volta das 23:59</td></tr>
+      <tr><td class="h">Duração</td><td>8h a 9h30</td></tr>
+      <tr><td class="h">Chegada</td><td>madrugada e início da manhã de sexta, 14/08 — a partir de ≈05:30</td></tr>
+      <tr><td class="h">Empresas</td><td>Cometa, Gontijo, Util, Catedral, Santa Maria, FlixBus, entre outras</td></tr>
+      <tr><td class="h">Preço de referência</td><td>R$ 200 a 420 por pessoa, conforme empresa e categoria (executivo, leito, cama)</td></tr>
+      <tr><td class="h">Onde comprar</td><td>guichês do terminal ou aplicativos de passagem rodoviária</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caixa atencao">
+    <div class="rot">O problema das doze horas com mala</div>
+    <p>O checkout é às 11:00 e o ônibus sai por volta das 22:30. Escolha <strong>na quarta-feira</strong>
+      uma destas saídas:</p>
+    <ul style="margin-bottom:0">
+      <li><strong>Late checkout com o José Luís</strong> — a solução mais confortável, se houver
+        disponibilidade. Pergunte cedo.</li>
+      <li><strong>Guarda-volumes do Terminal do Tietê</strong> — o terminal opera 24h e tem serviço de
+        guarda-volumes. Deixar as malas lá de manhã libera o dia inteiro e já resolve o trajeto da noite.</li>
+      <li><strong>Deixar no laboratório</strong> — só se a Profa. Patrícia autorizar expressamente. Não
+        conte com isso sem confirmação.</li>
+    </ul>
+  </div>
+
+  <div class="caixa">
+    <div class="rot">Escolha da categoria</div>
+    <p>Vocês chegam de manhã e podem ter compromisso na sexta. Em viagem noturna de 8 horas, a diferença
+      entre executivo e leito é a diferença entre chegar funcional e chegar destruído. Para uma viagem a
+      trabalho, o leito costuma se pagar.</p>
+  </div>
+
+  <h3>Sobre a passagem aérea já emitida</h3>
+  <p>Se o Plano B prevalecer, o voo das 10:30 de quinta não será utilizado. Antes de simplesmente não
+    aparecer, verifique no app da Azul as regras de remarcação e reembolso da tarifa comprada — em muitas
+    tarifas, remarcar sai mais barato do que perder, e o <em>no-show</em> pode cancelar automaticamente
+    outros trechos associados à reserva <span class="mono">{{PNR}}</span>.</p>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 11 — CONTINGÊNCIAS
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Contingências}}
+  <div class="aba"><span class="n">11</span><span class="l">Plano C</span></div>
+
+  <span class="eyebrow">Guia 11</span>
+  <h2 class="guia">Contingências</h2>
+  <p class="sub">O que fazer quando algo sai do previsto. Consulte na hora do problema, não antes.</p>
+
+  <h3>Deslocamento</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:36%">Se acontecer</th><th>Então</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Voo de ida atrasado ou cancelado</td>
+        <td>A Azul deve reacomodar no próximo voo. A entrada no apartamento é por senha, sem hora limite — avise o José Luís pelo chat e vá quando der. Se o pernoite em BH for inevitável, o Tietê opera 24h e há ônibus BH → SP durante toda a noite, chegando a tempo do ensaio de quarta.</td></tr>
+      <tr><td class="h">Perda ou atraso de bagagem despachada</td>
+        <td>Registre a ocorrência no balcão da companhia <strong>antes de sair da área de desembarque</strong> — depois disso o processo fica muito mais difícil. Guarde o comprovante e a etiqueta.</td></tr>
+      <tr><td class="h">Preço de aplicativo disparado</td>
+        <td>Espere 10 a 15 minutos, tente o outro aplicativo, ou use o táxi oficial. Em Congonhas, o ponto de táxi fica no próprio desembarque.</td></tr>
+      <tr><td class="h">Trânsito travado a caminho de Congonhas na quinta</td>
+        <td>Desça no metrô mais próximo e siga pela Linha 2-Verde. Mais lento, mas com hora de chegada conhecida — que é o que importa quando há voo marcado.</td></tr>
+      <tr><td class="h">Metrô com falha ou estação fechada</td>
+        <td>A Av. Paulista tem oferta densa de ônibus em ambos os sentidos, e todos os trechos desta viagem são curtos o bastante para aplicativo.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Hospedagem</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:36%">Se acontecer</th><th>Então</th></tr></thead>
+    <tbody>
+      <tr><td class="h">A senha do interfone não abre</td>
+        <td>Chame o porteiro. Se estiver ausente, mande mensagem ao José Luís pelo chat do Airbnb — é o canal registrado da reserva e vale como prova. A linha de emergência do Airbnb está no menu de ajuda do aplicativo.</td></tr>
+      <tr><td class="h">A fechadura do apartamento não responde</td>
+        <td>Passe a mão bem devagar sobre o teclado até os números acenderem — pressa é a causa mais comum da falha. Se os números não acenderem de jeito nenhum, a bateria pode estar fraca: contate o coanfitrião imediatamente.</td></tr>
+      <tr><td class="h">Ficar trancado do lado de fora à noite</td>
+        <td>Há hotéis e hostels em quantidade na Av. Paulista e na Rua Augusta, a poucos metros. Não fique na rua esperando resposta.</td></tr>
+      <tr><td class="h">Problema no apartamento (chuveiro, energia, wi-fi)</td>
+        <td>Registre com foto e comunique pelo chat da reserva. Wi-fi ruim é problema real aqui: leve o roteamento pelo celular como alternativa para o backup dos dados.</td></tr>
+    </tbody>
+  </table>
+
+  {{PE}}
+</section>
+
+<section class="sheet">
+  {{HD:Contingências}}
+  <div class="aba"><span class="n">11</span><span class="l">Plano C</span></div>
+
+  <span class="eyebrow">Guia 11 · continuação</span>
+  <h2 class="guia">Contingências — ensaio e pessoal</h2>
+  <p class="sub">Falhas técnicas no laboratório e ocorrências com a equipe.</p>
+
+  <h3>Ensaio</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:36%">Se acontecer</th><th>Então</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Acesso negado na portaria</td>
+        <td>Ligue para a Profa. Patrícia. Sem resposta, use a secretaria da FMUSP: <span class="mono">(11) 3061-7264</span> ou <span class="mono">(11) 3061-7430</span>. Tenha em mãos o nome completo do contato, o departamento e a carta de apresentação.</td></tr>
+      <tr><td class="h">O contato não aparece ou está indisponível</td>
+        <td>Não vá embora sem falar com alguém do departamento. Um ensaio remarcado para a quinta ainda cabe no Plano B; um dia perdido em silêncio, não.</td></tr>
+      <tr><td class="h">Falha de cabo, fonte ou eletrodo</td>
+        <td>Use o reserva. Sem reserva: a Santa Ifigênia, no Centro, concentra lojas de eletrônica e fica a cerca de 4 km — cerca de 20 minutos de metrô pela Linha 2-Verde com baldeação. Confira o horário de funcionamento antes de ir.</td></tr>
+      <tr><td class="h">Incompatibilidade com o ASL 5000</td>
+        <td>Registre em detalhe o que não encaixou: conector, protocolo, versão de software, tensão. Um ensaio que falha documentado é resultado; um que falha sem registro é viagem perdida.</td></tr>
+      <tr><td class="h">Coleta incompleta ao fim de quarta</td>
+        <td>Aciona a avaliação do Plano B, com a regra do Guia 10: confirmar o laboratório antes de decidir.</td></tr>
+      <tr><td class="h">Suspeita de dado corrompido</td>
+        <td>Não desmonte. Reabra o arquivo ali mesmo, confira as formas de onda e refaça a aquisição enquanto o sistema ainda está montado.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Pessoal</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:36%">Se acontecer</th><th>Então</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Emergência médica</td>
+        <td>SAMU <span class="mono">192</span>. Vocês estarão trabalhando em frente ao maior complexo hospitalar da América Latina — o Hospital das Clínicas fica na Av. Dr. Enéas de Carvalho Aguiar, 255, a poucos metros do local do ensaio.</td></tr>
+      <tr><td class="h">Perda de documento ou furto</td>
+        <td>Registre boletim de ocorrência pela Delegacia Eletrônica de São Paulo, pela internet. Para embarcar sem documento físico, procure a companhia com antecedência maior que a normal.</td></tr>
+      <tr><td class="h">Alguém se separa do grupo</td>
+        <td>Ponto de encontro combinado: entrada do <strong>Conjunto Nacional, Av. Paulista, 2073</strong> — referência conhecida, aberta e a 50 m da base.</td></tr>
+    </tbody>
+  </table>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 12 — CONTATOS
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Contatos úteis}}
+  <div class="aba"><span class="n">12</span><span class="l">Contatos</span></div>
+
+  <span class="eyebrow">Guia 12</span>
+  <h2 class="guia">Contatos úteis</h2>
+  <p class="sub">Preencha à mão os campos em branco antes de sair de Belo Horizonte.</p>
+
+  <h3>Emergências</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:44%">Serviço</th><th>Número</th></tr></thead>
+    <tbody>
+      <tr><td class="h">SAMU · resgate médico</td><td class="mono" style="font-size:11pt"><strong>192</strong></td></tr>
+      <tr><td class="h">Bombeiros</td><td class="mono" style="font-size:11pt"><strong>193</strong></td></tr>
+      <tr><td class="h">Polícia Militar</td><td class="mono" style="font-size:11pt"><strong>190</strong></td></tr>
+      <tr><td class="h">Polícia Civil</td><td class="mono">197</td></tr>
+      <tr><td class="h">Defesa Civil</td><td class="mono">199</td></tr>
+      <tr><td class="h">Disque Denúncia</td><td class="mono">181</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Da viagem</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:32%">Contato</th><th style="width:32%">Telefone</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Azul Linhas Aéreas</td><td class="mono">4003-1118 · 0800 884 4040</td><td>Reserva <span class="mono">{{PNR}}</span>. Prefira o app para remarcar.</td></tr>
+      <tr><td class="h">José Luís · coanfitrião</td><td class="dim"><span class="campo" style="min-width:40mm"></span></td><td>Canal oficial é o chat da reserva no app do Airbnb.</td></tr>
+      <tr><td class="h">Airbnb · suporte</td><td class="dim">pelo app</td><td>Menu de ajuda → linha de emergência da estadia.</td></tr>
+      <tr><td class="h">FMUSP · secretaria</td><td class="mono">(11) 3061-7264 · (11) 3061-7430</td><td>Av. Dr. Arnaldo, 455.</td></tr>
+      <tr><td class="h">Profa. Patrícia de Souza Nery</td><td class="dim"><span class="campo" style="min-width:40mm"></span></td><td>Confirmar telefone e e-mail antes de viajar.</td></tr>
+      <tr><td class="h">Hospital das Clínicas · FMUSP</td><td class="mono">(11) 2661-0000</td><td>Av. Dr. Enéas de Carvalho Aguiar, 255.</td></tr>
+      <tr><td class="h">Terminal Rodoviário do Tietê</td><td class="mono">(11) 3866-1100</td><td>Av. Cruzeiro do Sul, 1800. Aberto 24h.</td></tr>
+      <tr><td class="h">Metrô de São Paulo</td><td class="mono">0800 770 7722</td><td>Informações de linhas e ocorrências.</td></tr>
+      <tr><td class="h">CET · trânsito de São Paulo</td><td class="mono">1188</td><td>Condições de tráfego.</td></tr>
+      <tr><td class="h">Aeroporto de Congonhas</td><td class="dim">aenabrasil.com.br</td><td>Status de voos e serviços do terminal.</td></tr>
+    </tbody>
+  </table>
+
+  {{PE}}
+</section>
+
+<section class="sheet">
+  {{HD:Contatos úteis}}
+  <div class="aba"><span class="n">12</span><span class="l">Contatos</span></div>
+
+  <span class="eyebrow">Guia 12 · continuação</span>
+  <h2 class="guia">Contatos da equipe e da empresa</h2>
+  <p class="sub">Preencha à mão antes de sair de Belo Horizonte e fotografe esta página para o grupo.</p>
+
+  <h3>Equipe em campo</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:26%">Nome</th><th style="width:34%">Celular</th><th>Contato de emergência</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Matheus</td><td class="dim"><span class="campo" style="min-width:44mm"></span></td><td class="dim"><span class="campo" style="min-width:52mm"></span></td></tr>
+      <tr><td class="h">Pedro</td><td class="dim"><span class="campo" style="min-width:44mm"></span></td><td class="dim"><span class="campo" style="min-width:52mm"></span></td></tr>
+      <tr><td class="h">Sarah</td><td class="dim"><span class="campo" style="min-width:44mm"></span></td><td class="dim"><span class="campo" style="min-width:52mm"></span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>NeuroDynamics</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:32%">Contato</th><th style="width:32%">Telefone</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Retaguarda em BH</td><td class="dim"><span class="campo" style="min-width:40mm"></span></td><td>Quem aciona a empresa se algo der errado.</td></tr>
+      <tr><td class="h">LABBIO · UFMG</td><td class="dim"><span class="campo" style="min-width:40mm"></span></td><td>Escola de Engenharia, UFMG.</td></tr>
+      <tr><td class="h">Suporte técnico remoto</td><td class="dim"><span class="campo" style="min-width:40mm"></span></td><td>Quem atende se o sistema falhar durante o ensaio.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Registro de contatos e ocorrências</h3>
+  <p class="mini dim">Anote aqui quem foi acionado, quando e o que ficou combinado. Serve de prova e de
+    memória para o relatório de volta.</p>
+  <table class="compacta">
+    <thead><tr><th style="width:14%">Dia · hora</th><th style="width:26%">Quem</th><th>Assunto e desfecho</th></tr></thead>
+    <tbody>
+      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+      <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caixa info">
+    <div class="rot">Antes de embarcar</div>
+    <p>Salve estes contatos no celular dos três, não só no de quem coordena. E mande a foto deste guia no
+      grupo da equipe: quando o celular de alguém acabar a bateria, a cópia impressa e a foto no aparelho
+      do colega são o que resta.</p>
+  </div>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 13 — CUSTOS
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Custos estimados}}
+  <div class="aba"><span class="n">13</span><span class="l">Custos</span></div>
+
+  <span class="eyebrow">Guia 13</span>
+  <h2 class="guia">Custos estimados</h2>
+  <p class="sub">Faixas de referência para agosto de 2026, sem passagens aéreas e hospedagem já
+    contratadas. Estimativa de planejamento, não cotação.</p>
+
+  <h3>Deslocamentos — três pessoas</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:44%">Trecho</th><th style="width:18%">Mínimo</th><th style="width:18%">Máximo</th><th>Nota</th></tr></thead>
+    <tbody>
+      <tr><td class="h">BH → Confins</td><td>R$ 120</td><td>R$ 200</td><td>um carro</td></tr>
+      <tr><td class="h">Congonhas → base</td><td>R$ 45</td><td>R$ 90</td><td>um carro</td></tr>
+      <tr><td class="h">Metrô durante a estadia</td><td>R$ 65</td><td>R$ 130</td><td>4 a 8 viagens por pessoa</td></tr>
+      <tr><td class="h">Corridas avulsas</td><td>R$ 60</td><td>R$ 150</td><td>equipamento, chuva</td></tr>
+      <tr><td class="h">Saída: Congonhas (A) ou Tietê (B)</td><td>R$ 16</td><td>R$ 100</td><td>carro no pico, ou metrô</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Alimentação — três pessoas</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:44%">Item</th><th style="width:18%">Mínimo</th><th style="width:18%">Máximo</th><th>Nota</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Compras para o apartamento</td><td>R$ 80</td><td>R$ 150</td><td>café da manhã dos dois dias</td></tr>
+      <tr><td class="h">Almoços (2 a 3 dias)</td><td>R$ 240</td><td>R$ 540</td><td>R$ 40 a 60 por pessoa</td></tr>
+      <tr><td class="h">Jantares e lanches</td><td>R$ 390</td><td>R$ 900</td><td>R$ 50 a 80 por jantar, mais cafés</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Específico do Plano B</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:44%">Item</th><th style="width:18%">Mínimo</th><th style="width:18%">Máximo</th><th>Nota</th></tr></thead>
+    <tbody>
+      <tr><td class="h">Passagens de ônibus SP → BH</td><td>R$ 600</td><td>R$ 1.260</td><td>3 × R$ 200 a 420, conforme categoria</td></tr>
+      <tr><td class="h">Guarda-volumes no Tietê</td><td>R$ 40</td><td>R$ 120</td><td>3 volumes por um dia</td></tr>
+      <tr><td class="h">Refeições extras de quinta</td><td>R$ 150</td><td>R$ 300</td><td>almoço e jantar adicionais</td></tr>
+      <tr><td class="h">Passagem aérea não usada</td><td colspan="2">a apurar</td><td>ver regra de remarcação</td></tr>
+    </tbody>
+  </table>
+
+  <div class="g2">
+    <div class="caixa ok">
+      <div class="rot">Plano A · total variável estimado</div>
+      <p style="font-size:14pt;font-family:var(--fd);font-weight:600;color:var(--cortex);margin-bottom:1mm">
+        R$ 1.000 a R$ 2.200</p>
+      <p class="mini">Deslocamentos e alimentação dos três, sem passagens aéreas e hospedagem.</p>
+    </div>
+    <div class="caixa atencao">
+      <div class="rot">Plano B · total variável estimado</div>
+      <p style="font-size:14pt;font-family:var(--fd);font-weight:600;color:var(--cortex);margin-bottom:1mm">
+        R$ 1.800 a R$ 3.900</p>
+      <p class="mini">Acrescenta ônibus, guarda-volumes, refeições de quinta e a provável perda da
+        passagem aérea.</p>
+    </div>
+  </div>
+
+  <h3>Prestação de contas</h3>
+  <ul class="check">
+    <li><span class="quadro"></span><span>Fotografar cada comprovante na hora — nota de restaurante desbota em dois dias.</span></li>
+    <li><span class="quadro"></span><span>Exportar os recibos dos aplicativos e guardar os bilhetes de embarque, aéreos e rodoviários.</span></li>
+    <li><span class="quadro"></span><span>Definir antes da viagem quem paga o quê e por qual meio.</span></li>
+  </ul>
+
+  <p class="mini dim">Adiantamento: <span class="campo" style="min-width:30mm"></span> &nbsp;·&nbsp; Responsável pela prestação: <span class="campo" style="min-width:36mm"></span></p>
+
+  {{PE}}
+</section>
+
+<!-- ============================================================
+     GUIA 14 — ANOTAÇÕES
+     ============================================================ -->
+<section class="sheet">
+  {{HD:Anotações de campo}}
+  <div class="aba"><span class="n">14</span><span class="l">Notas</span></div>
+
+  <span class="eyebrow">Guia 14</span>
+  <h2 class="guia">Anotações de campo</h2>
+  <p class="sub">Registre aqui o que só se descobre no local: número de sala, ramais, nomes, ajustes de
+    montagem e o que fazer diferente na próxima.</p>
+
+  <div class="linhas" style="height:193mm"></div>
+
+  <div class="caixa" style="margin-top:5mm;margin-bottom:0">
+    <div class="rot">Ao voltar</div>
+    <p class="mini">Transcreva estas anotações para o relatório de ensaio e registre este documento na
+      planilha <strong>NRO-PUB-001 Controle de Documentos e Registros</strong>, substituindo o código
+      provisório <span class="mono">NRO-PD-000</span> pelo definitivo.</p>
+  </div>
+
+  {{PE}}
+</section>
