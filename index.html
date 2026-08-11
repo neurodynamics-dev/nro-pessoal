@@ -3559,16 +3559,16 @@ function psTextoConfirmacao(c){
   const ed = PS.ed, prim = String(c.nome||'').trim().split(/\s+/)[0] || '';
   const prot = c.protocolo || '(protocolo não gerado)';
   const din = PS.etapas.find(e=>e.fase==='dinamica');
-  const assunto = `Inscrição deferida — protocolo ${prot}${ed?` · ${ed.nome}`:''}`;
+  const assunto = `NeuroDynamics — Inscrição deferida, protocolo ${prot}${ed?` ${ed.nome}`:''}`;
   const corpo = [
     `Olá, ${prim}!`,
     `Confirmamos o recebimento e a análise da sua inscrição no ${ed?ed.nome:'processo seletivo'} da NeuroDynamics.`,
     `A sua inscrição foi DEFERIDA: você segue para a primeira fase do processo seletivo.`,
     `Protocolo: ${prot}\nSituação: inscrição deferida\nInscrição recebida em: ${c.criado_em?fmtDT(c.criado_em):'—'}`,
     `Guarde o número do protocolo. É com ele e com o e-mail cadastrado (${c.email}) que você acompanha todas as fases em ${SITE_PS}/#/acompanhar.`,
-    `Próximo passo: acesse a página "Acompanhar", informe o protocolo e o e-mail e escolha o horário da sua dinâmica em grupo${din?`, prevista para ${fmtD(din.data_inicio)}`:''}.`,
-    `Qualquer dúvida, é só responder a este e-mail.`,
-    `Comitê de Seleção\nNeuroDynamics · Escola de Engenharia da UFMG`
+    `Ao final do período de inscrições acesse a página "Acompanhar", informe o protocolo e o e-mail e escolha o horário da sua dinâmica em grupo${din?`, prevista para ${fmtD(din.data_inicio)}`:''}.`,
+    `Este é um e-mail automático, não é necessário respondê-lo.`,
+    `Comitê de Seleção\nNeuroDynamics\nEscola de Engenharia da UFMG`
   ].join('\n\n');
   return {assunto, corpo};
 }
