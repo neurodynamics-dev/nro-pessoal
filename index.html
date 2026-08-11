@@ -3559,7 +3559,7 @@ function psTextoConfirmacao(c){
   const ed = PS.ed, prim = String(c.nome||'').trim().split(/\s+/)[0] || '';
   const prot = c.protocolo || '(protocolo não gerado)';
   const din = PS.etapas.find(e=>e.fase==='dinamica');
-  const assunto = `NeuroDynamics — Inscrição deferida protocolo ${prot}`;
+  const assunto = `NeuroDynamics — Inscrição deferida sob o protocolo #${prot}`;
   const corpo = [
     `Olá, ${prim}!`,
     `Confirmamos o recebimento e a análise da sua inscrição no ${ed?ed.nome:'processo seletivo'} da NeuroDynamics.`,
