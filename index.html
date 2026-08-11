@@ -1702,6 +1702,7 @@ function renderRelatorios(){
   if(can()) tiles.push(['door','Lista para acesso na portaria','Autorização de entrada na Escola de Engenharia, com espaços para assinatura e envio direto à SLOG.','modalPortaria()']);
   if(can()) tiles.push(['clip','Lista para assinatura em evento','Lista de presença de membros ativos para imprimir, com nome do evento e data.','modalAssinatura()']);
   tiles.push(['mail','Lista de e-mails','Copie os e-mails dos membros por grupo e status para enviar comunicados.','modalEmails()']);
+  if(podeSelecao()) tiles.push(['flag','Lista de e-mails · candidatos','Monte o envio para os candidatos do processo seletivo, escolhendo os status da fase que quer comunicar.','modalEmailsCandidatos()']);
   tiles.push(['mailer','Full mailer','Monte um e-mail estilizado no padrão NeuroDynamics — tema por área, logo recolorida e HTML pronto.','modalMailer()']);
   tiles.push(['key','Lista de autorizados','Quem tem acesso ativo a um sistema, local ou documento — em PDF.','modalAutorizados()']);
   tiles.push(['down','Quadro completo','Exportação geral do quadro em Excel ou PDF, com filtros.','modalQuadro()']);
@@ -2051,6 +2052,112 @@ Qualquer dúvida, é só responder a este e-mail — estamos à disposição.</t
   const m = document.querySelector('.modal'); if(m) m.classList.add('larga','mailer');
   $('#ml-tema').value = AREAS_MAILER[0].tema;
   _mailerHTML=''; mlUpd(true);
+}
+/* --- 3c. lista de e-mails dos candidatos (processo seletivo) ---
+   Só aparece para quem acessa o módulo Seleção. Busca os candidatos da
+   edição escolhida direto do Supabase — a cada geração, para não repetir
+   status que mudaram no módulo Seleção durante a sessão. */
+const REL_PS = {edicoes:null};
+/* Conjuntos prontos de status — os mesmos recortes usados nas publicações
+   do processo, para não errar quem já passou por cada fase. */
+const PS_CONJ_EMAIL = [
+  ['Aguardando análise', ['inscrito']],
+  ['Inscrições deferidas', 'deferimento'],
+  ['Indeferidos', ['indeferido']],
+  ['Aprovados na dinâmica', 'resultado_dinamica'],
+  ['Aprovados na entrevista', 'resultado_entrevista'],
+  ['Trainees', ['trainee']],
+  ['Aprovados no final', 'resultado_final'],
+  ['Todos', null]
+];
+async function modalEmailsCandidatos(){
+  abreModal('<h3>Lista de e-mails · candidatos</h3><div class="empty">Carregando o processo seletivo…</div>');
+  try{
+    if(!REL_PS.edicoes){
+      const {data, error} = await db.from('ps_edicoes').select('id,nome,slug').order('criado_em',{ascending:false});
+      if(error) throw error;
+      REL_PS.edicoes = data||[];
+    }
+  }catch(e){ fechaModal(); falha(e,'Não foi possível carregar as edições'); return; }
+  if(!REL_PS.edicoes.length){
+    abreModal(`<h3>Lista de e-mails · candidatos</h3>
+      <div class="empty">Nenhuma edição do processo seletivo cadastrada ainda.</div>
+      <div class="actions"><button class="btn" onclick="fechaModal()">Fechar</button></div>`);
+    return;
+  }
+  abreModal(`<h3>Lista de e-mails · candidatos</h3>
+    <div class="form-grid">
+      <div class="field full"><label>Edição</label>
+        <select id="emlc-ed" onchange="relEmlCandsLimpa()">
+          ${REL_PS.edicoes.map(e=>`<option value="${e.id}">${esc(e.nome)}</option>`).join('')}</select></div>
+      <div class="field full"><label>Status no processo seletivo <span class="muted">(vazio = todos)</span></label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+          ${PS_CONJ_EMAIL.map(([l],i)=>`<button class="btn sm" onclick="relEmlCandsConj(${i})">${esc(l)}</button>`).join('')}
+        </div>
+        <div class="multi">${Object.keys(PS_ST).map(s=>`<label class="check">
+          <input type="checkbox" class="s-emlc" value="${s}" onchange="relEmlCandsLimpa()"> ${esc(PS_ST[s][0])}</label>`).join('')}</div></div>
+      <div class="field full"><label>Assunto do e-mail <span class="muted">(opcional, vai preenchido na tela de envio)</span></label>
+        <input id="emlc-assunto" placeholder="ex.: Processo Seletivo 2026 — resultado da 1ª fase"></div>
+      <div class="field full"><label>Destinatários</label>
+        <select id="emlc-modo">
+          <option value="bcc">Cco — endereçado a mim, candidatos em cópia oculta (recomendado)</option>
+          <option value="to">Para — todos os candidatos visíveis entre si</option>
+        </select></div>
+    </div>
+    <div id="emlc-result"></div>
+    <div class="actions"><button class="btn" onclick="fechaModal()">Fechar</button>
+    <button class="btn btn-primary" onclick="gerarEmailsCandidatos()">${ic('mail')} Gerar lista</button></div>`);
+}
+function relEmlCandsLimpa(){ const r = $('#emlc-result'); if(r) r.innerHTML=''; }
+function relEmlCandsConj(i){
+  const conj = PS_CONJ_EMAIL[i][1];
+  const sts = conj===null ? [] : (Array.isArray(conj) ? conj : PS_SETS[conj]||[]);
+  document.querySelectorAll('input.s-emlc').forEach(cb=> cb.checked = sts.includes(cb.value));
+  relEmlCandsLimpa();
+}
+async function gerarEmailsCandidatos(){
+  const edId = $('#emlc-ed').value, sts = marcados('s-emlc');
+  let todos;
+  try{
+    const {data, error} = await db.from('ps_candidatos')
+      .select('nome,email,status,protocolo').eq('edicao_id', edId).order('numero');
+    if(error) throw error;
+    todos = data||[];
+  }catch(e){ falha(e,'Não foi possível carregar os candidatos'); return; }
+  const lista = todos.filter(c=> !sts.length || sts.includes(c.status));
+  const emails = [...new Set(lista.map(c=>(c.email||'').trim().toLowerCase()).filter(Boolean))];
+  const porStatus = {};
+  lista.forEach(c=>{ porStatus[c.status] = (porStatus[c.status]||0) + 1; });
+  const eu = state.perfil?.email || '';
+  $('#emlc-result').innerHTML = emails.length ? `
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin:-2px 0 10px">
+      ${Object.keys(porStatus).map(s=>`<span class="chip">${esc((PS_ST[s]||[s])[0])}: ${porStatus[s]}</span>`).join('')}</div>
+    <div class="field"><label>${emails.length} e-mail(s) · separados por vírgula <span class="muted">(dá para editar antes de enviar)</span></label>
+      <textarea id="emlc-texto" style="min-height:110px;font-size:12.5px">${esc(emails.join(', '))}</textarea></div>
+    <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+      <button class="btn" onclick="copiar(document.getElementById('emlc-texto').value)">${ic('copy')} Copiar</button>
+      <button class="btn" onclick="relEmlCandsEnviar('mailto')">${ic('mail')} App de e-mail</button>
+      <button class="btn" onclick="relEmlCandsEnviar('gmail')">${ic('mail')} Abrir no Gmail</button>
+    </div>
+    ${emails.length>60?`<p class="small muted" style="margin-top:6px">São muitos endereços: alguns apps de e-mail truncam listas longas.
+      Se faltar alguém no rascunho, copie a lista e cole no campo Cco, ou divida o envio em blocos.</p>`:''}
+    ${eu?`<p class="small muted" style="margin-top:6px">Em Cco, o e-mail abre endereçado a você (${esc(eu)}) com os candidatos em cópia oculta,
+      preservando a privacidade dos endereços. Se o “App de e-mail” não abrir nada, não há um configurado no computador — use o Gmail.</p>`:''}`
+    : `<div class="empty">Nenhum candidato ${todos.length?'com esses status':'inscrito nesta edição'}.</div>`;
+}
+function relEmlCandsEnviar(via){
+  const ta = $('#emlc-texto'); if(!ta) return;
+  const dest = ta.value.split(/[,;\s]+/).map(s=>s.trim()).filter(Boolean);
+  if(!dest.length){ toast('Nenhum e-mail na lista.', true); return; }
+  const cco = $('#emlc-modo').value==='bcc', su = $('#emlc-assunto').value.trim();
+  const eu = state.perfil?.email || '';
+  const alvo = cco ? {to:eu, bcc:dest.join(',')} : {to:dest.join(',')};
+  if(via==='gmail'){ window.open(gmailCompose({...alvo, su}), '_blank', 'noopener'); return; }
+  const enc = l=> l.split(',').map(encodeURIComponent).join(',');
+  const p = [];
+  if(alvo.bcc) p.push('bcc='+enc(alvo.bcc));
+  if(su) p.push('subject='+encodeURIComponent(su));
+  abrirEmail(`mailto:${enc(alvo.to||'')}${p.length?'?'+p.join('&'):''}`);
 }
 /* --- 4. lista de autorizados --- */
 function modalAutorizados(){
@@ -3382,10 +3489,10 @@ function psCandidatos(){
   <div class="card" style="padding:8px 12px">
     <table class="tb"><thead><tr>
       <th style="width:34px"><input type="checkbox" onchange="psSelTodos(this.checked)" ${lista.length&&lista.every(c=>PS.selecionados.has(c.id))?'checked':''}></th>
-      <th>Protocolo</th><th>Nome</th><th>Curso / período</th><th>Status</th><th>Dinâmica</th><th>Entrevista</th><th>Média</th>
+      <th>Protocolo</th><th>Nome</th><th>Curso / período</th><th>Status</th><th>Dinâmica</th><th>Entrevista</th><th>Média</th><th style="width:64px;white-space:nowrap">E-mail</th>
     </tr></thead>
     <tbody>${lista.map(psLinhaCand).join('') ||
-      `<tr><td colspan="8"><div class="empty">Nenhum candidato ${PS.candidatos.length?'com esses filtros':'inscrito ainda'}.</div></td></tr>`}</tbody>
+      `<tr><td colspan="9"><div class="empty">Nenhum candidato ${PS.candidatos.length?'com esses filtros':'inscrito ainda'}.</div></td></tr>`}</tbody>
     </table>
   </div>
   <div id="ps-selbar"></div>`;
@@ -3404,6 +3511,7 @@ function psLinhaCand(c){
     <td class="small">${agTxt(ad)}</td>
     <td class="small">${agTxt(ae)}</td>
     <td>${md!=null?`<span class="nota-badge">★ ${md.toFixed(1)}</span>`:'<span class="muted small">—</span>'}</td>
+    <td onclick="event.stopPropagation()">${ibtn('mail','E-mail de confirmação da inscrição',`psEmailConfirmacao('${c.id}')`,'sm ghost')}</td>
   </tr>`;
 }
 const psFiltra = (function(){ let t; return function(){ clearTimeout(t); t=setTimeout(psCandidatos,200); }; })();
@@ -3441,6 +3549,66 @@ function psExportCSV(){
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob(['﻿'+linhas.join('\n')],{type:'text/csv;charset=utf-8'}));
   a.download='candidatos-'+(PS.ed.slug||'ps')+'.csv'; a.click(); URL.revokeObjectURL(a.href);
+}
+
+/* ---------- Seleção · e-mail de confirmação da inscrição ----------
+   Botão em cada linha da lista (e na ficha) que abre a tela de e-mail já
+   com o texto de deferimento e o número do protocolo. O texto fica
+   editável antes de seguir para o app de e-mail ou para o Gmail. */
+function psTextoConfirmacao(c){
+  const ed = PS.ed, prim = String(c.nome||'').trim().split(/\s+/)[0] || '';
+  const prot = c.protocolo || '(protocolo não gerado)';
+  const din = PS.etapas.find(e=>e.fase==='dinamica');
+  const assunto = `Inscrição deferida — protocolo ${prot}${ed?` · ${ed.nome}`:''}`;
+  const corpo = [
+    `Olá, ${prim}!`,
+    `Confirmamos o recebimento e a análise da sua inscrição no ${ed?ed.nome:'processo seletivo'} da NeuroDynamics.`,
+    `A sua inscrição foi DEFERIDA: você segue para a primeira fase do processo seletivo.`,
+    `Protocolo: ${prot}\nSituação: inscrição deferida\nInscrição recebida em: ${c.criado_em?fmtDT(c.criado_em):'—'}`,
+    `Guarde o número do protocolo. É com ele e com o e-mail cadastrado (${c.email}) que você acompanha todas as fases em ${SITE_PS}/#/acompanhar.`,
+    `Próximo passo: acesse a página "Acompanhar", informe o protocolo e o e-mail e escolha o horário da sua dinâmica em grupo${din?`, prevista para ${fmtD(din.data_inicio)}`:''}.`,
+    `Qualquer dúvida, é só responder a este e-mail.`,
+    `Comitê de Seleção\nNeuroDynamics · Escola de Engenharia da UFMG`
+  ].join('\n\n');
+  return {assunto, corpo};
+}
+function psEmailConfirmacao(id, voltaFicha){
+  const c = psCand(id); if(!c) return;
+  const t = psTextoConfirmacao(c);
+  const jaDeferido = PS_SETS.deferimento.includes(c.status);
+  const fechar = voltaFicha ? `psAbrirFicha('${c.id}')` : 'fechaModal()';
+  psModal(`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <div><h3 style="margin:0">Confirmação da inscrição</h3>
+        <div class="small muted" style="margin-top:4px"><b>${esc(c.nome)}</b> ·
+          <span class="reg">${esc(c.protocolo||'sem protocolo')}</span></div></div>
+      <div style="display:flex;gap:8px;align-items:center">${psPill(c.status)}${ibtn('x','Fechar',fechar,'sm ghost')}</div>
+    </div>
+    ${!c.protocolo?`<div class="banner red">Este candidato ainda não tem número de protocolo gravado.
+      Ajuste o texto antes de enviar.</div>`:''}
+    ${!jaDeferido?`<div class="banner amber">O candidato está como <b>${esc((PS_ST[c.status]||[c.status])[0])}</b> e o
+      texto abaixo comunica o <b>deferimento</b> da inscrição. Confira a movimentação na aba Ações da ficha antes de enviar.</div>`:''}
+    <div class="form-grid">
+      <div class="field full"><label>Para</label><input id="pse-para" value="${esc(c.email)}"></div>
+      <div class="field full"><label>Assunto</label><input id="pse-assunto" value="${esc(t.assunto)}"></div>
+      <div class="field full"><label>Mensagem</label>
+        <textarea id="pse-corpo" style="min-height:250px;font-size:13px;line-height:1.6">${esc(t.corpo)}</textarea></div>
+    </div>
+    <p class="small muted" style="margin:-4px 0 0">Edite o que precisar: o texto vai para o e-mail exatamente como estiver aqui.
+    Se o “App de e-mail” não abrir nada, não há um configurado no computador — use o Gmail.</p>
+    <div class="actions">
+      <button class="btn" onclick="${fechar}">${voltaFicha?'Voltar à ficha':'Fechar'}</button>
+      <button class="btn" onclick="psEmailCopiar()">${ic('copy')} Copiar texto</button>
+      <button class="btn" onclick="psEmailAbrir('mailto')">${ic('mail')} App de e-mail</button>
+      <button class="btn btn-primary" onclick="psEmailAbrir('gmail')">${ic('mail')} Abrir no Gmail</button>
+    </div>`);
+}
+function psEmailCopiar(){ copiar($('#pse-assunto').value + '\n\n' + $('#pse-corpo').value); }
+function psEmailAbrir(via){
+  const para = $('#pse-para').value.trim(), su = $('#pse-assunto').value, corpo = $('#pse-corpo').value;
+  if(!para){ toast('Informe o destinatário.', true); return; }
+  if(via==='gmail'){ window.open(gmailCompose({to:para, su, body:corpo}), '_blank', 'noopener'); return; }
+  abrirEmail(`mailto:${encodeURIComponent(para)}?subject=${encodeURIComponent(su)}&body=${encodeURIComponent(corpo)}`);
 }
 
 /* ---------- Seleção · ficha do candidato ---------- */
@@ -3521,6 +3689,10 @@ function psAbrirFicha(id){
         </div>
         <p class="small muted" style="margin-top:7px">O candidato só vê o novo resultado no site depois que a publicação da fase for publicada.</p>
       </div>
+      <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
+      <h3 style="font-size:14px;margin-bottom:8px">Confirmação da inscrição</h3>
+      <p class="small muted" style="margin-bottom:12px">Abre a tela de e-mail com o texto de deferimento da inscrição e o número do protocolo.</p>
+      <button class="btn" onclick="psEmailConfirmacao('${c.id}', true)">${ic('mail')} Escrever e-mail de confirmação</button>
       <hr style="border:none;border-top:1px solid var(--line);margin:16px 0">
       <h3 style="font-size:14px;margin-bottom:8px">Integrar como membro</h3>
       ${podeIntegrar ? `
