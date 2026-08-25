@@ -607,54 +607,8 @@ const STATUS_LIST = ['Ativo','Em pausa / avaliação','Sob demanda','Desligado',
 const STATUS_DOT = {'Ativo':'dt-ok','Em pausa / avaliação':'dt-warn','Sob demanda':'dt-info','Desligado':'dt-bad','Egresso':'dt-gray'};
 const CAT_LABEL = {documento:'Termos e documentos', local:'Acessos físicos', sistema:'Sistemas e contas'};
 const LOCAIS_PORTARIA = ['PORTARIA PRINCIPAL (HALL)','PORTARIA DO GALPÃO DA MECÂNICA'];
-const EVENTO_TIPOS = ['Reunião geral','Teste','Reunião de gerência','Confraternização','Reunião com stakeholder','Visita de externos','Viagem','Outro'];
-const JUSTIFICATIVAS = ['Faltas recorrentes sem justificativa','Atrasos recorrentes','Baixa participação nas reuniões',
-  'Atraso ou não entrega de atividades','Qualidade insuficiente das entregas','Dificuldade de comunicação com a equipe',
-  'Descumprimento de acordos anteriores','Outra (descrever nos detalhes)'];
-const CHECKLISTS = {
-  'Reunião geral': [
-    'Enviar e-mail de convite aos membros ativos com agendamento no Google Agenda (RSVP), usando o modelo padrão',
-    'Enviar a lista de convidados (PDF) para slog@eng.ufmg.br, cc marcondes@neurodynamics.dev, com portaria, data e horário — até 17h da sexta anterior',
-    'Reservar o local: auditórios pelo SisCAS; fins de semana por reservas@eng.ufmg.br; LABBIO por office.pinotti@gmail.com',
-    'Orçar e confirmar o coffee break com henriquerm@gmail.com (quando aplicável)',
-    'Criar os slides na pasta Eventos > Reunião Geral do Drive e enviar aos supervisores/gerentes com 1 semana de antecedência',
-    'Convidar o Prof. Henrique Martins via dir@adm.eng.ufmg.br, cc henriquerm@gmail.com',
-    'Enviar lembrete por e-mail e no grupo Geral do WhatsApp, com local, portaria e instruções de acesso',
-    'Designar responsável por fotos e vídeos do evento (upload na pasta do Drive depois)',
-    'Imprimir a lista de presença e as placas de sinalização da sala',
-    'Pegar a chave no Centro de Audiovisual no dia útil anterior'],
-  'Reunião de gerência': [
-    'Definir pauta e objetivos com a Diretoria','Enviar convite com agendamento na agenda (RSVP)',
-    'Reservar sala de reuniões','Compartilhar materiais de apoio com antecedência',
-    'Enviar lembrete com local e instruções','Registrar ata e encaminhamentos'],
-  'Confraternização': [
-    'Definir data, local e orçamento','Convidar os membros e coletar confirmações',
-    'Organizar alimentação / coffee','Reservar ou preparar o espaço',
-    'Designar responsável por registros fotográficos','Enviar lembrete com local e horário'],
-  'Reunião com stakeholder': [
-    'Alinhar objetivos e pauta com a Diretoria','Enviar convite e confirmar a agenda do stakeholder',
-    'Reservar sala adequada','Preparar a apresentação institucional',
-    'Solicitar autorização de entrada na portaria (slog@eng.ufmg.br)','Enviar lembrete e instruções de acesso',
-    'Registrar ata e encaminhamentos'],
-  'Visita de externos': [
-    'Confirmar data, horário e lista de visitantes','Enviar a lista para autorização na portaria (slog@eng.ufmg.br), com local, data e horário',
-    'Reservar os espaços a serem visitados','Definir roteiro e anfitriões da visita',
-    'Enviar instruções de acesso aos visitantes','Designar responsável por registros fotográficos'],
-  'Viagem': [
-    'Definir roteiro e objetivos da viagem','Levantar orçamento (transporte, hospedagem, alimentação)',
-    'Solicitar aprovações e recursos','Reservar transporte e hospedagem',
-    'Confirmar agenda com os anfitriões','Conferir documentos dos participantes',
-    'Comunicar itinerário e contatos de emergência'],
-  'Teste': [
-    'Definir protocolo e objetivos do teste',
-    'Reservar o espaço e confirmar a agenda dos participantes',
-    'Preparar equipamentos, materiais e instrumentação',
-    'Verificar termos e autorizações necessárias (sigilo, imagem, segurança)',
-    'Executar e registrar os resultados (relatório de execução NRO)',
-    'Organizar e limpar o espaço ao final'],
-  'Outro': ['Definir pauta e objetivos','Enviar convite com agendamento (RSVP)','Reservar local',
-    'Enviar lembrete com instruções de acesso','Registrar ata ou resumo']
-};
+/* Tipos de evento e checklists ficam em evento_tipos (SOMA 13.0):
+   criar um tipo novo virou uma linha no banco, não um deploy. */
 const PAGE_TITLES = {dashboard:'Visão geral', membros:'Membros', ficha:'Ficha do membro', organizacao:'Organização',
   okrs:'OKRs · Planejamento estratégico',
   relatorios:'Relatórios', calendario:'Calendário', operacoes:'Operações', apontamento:'Apontamento semanal', eventos:'Eventos', evento:'Evento',
@@ -665,7 +619,7 @@ const state = {
   perfil:null, membros:[], itens:[], tipos:[], view:'dashboard',
   filtros:{q:'', status:'Ativo', dep:'', grupo:''},
   ficha:{reg:null, tab:'dados', ocorr:[], acessos:[], avals:[], aponts:[], pess:null, editando:false},
-  apont:null, eventos:[], evento:null,
+  apont:null, eventos:[], evento:null, evTipos:[],
   cal:{ano:new Date().getFullYear(), mes:new Date().getMonth(), eventos:[], marcos:[]}
 };
 let db = null, booted = false, recuperandoSenha = false;
@@ -921,13 +875,17 @@ async function entrar(){
   }catch(e){ booted=false; falha(e,'Não foi possível carregar seu perfil'); }
 }
 async function carregarBase(){
-  const [m,i,t] = await Promise.all([
+  const [m,i,t,ev] = await Promise.all([
     db.from('membros').select('*').order('registro'),
     db.from('itens_de_acesso').select('*').order('ordem'),
-    db.from('tipos_ocorrencia').select('*').eq('ativo',true).order('nome')
+    db.from('tipos_ocorrencia').select('*').eq('ativo',true).order('nome'),
+    // Os tipos de evento (e os checklists de cada um) moram no banco
+    // desde a SOMA 13.0 — o portal e a gestão leem a mesma lista.
+    db.from('evento_tipos').select('*').eq('ativo',true).order('ordem')
   ]);
   if(m.error) throw m.error;
   state.membros = m.data||[]; state.itens = i.data||[]; state.tipos = t.data||[];
+  state.evTipos = ev.error ? [] : (ev.data||[]);
 }
 
 /* ---------------- navegação ---------------- */
@@ -2365,6 +2323,10 @@ const TIPOS_MARCO = {
   ferias:            {l:'Férias',            cor:'#4C6FBF'},
   processo_seletivo: {l:'Processo seletivo', cor:'#7C5CBF'},
   prazo:             {l:'Prazo',             cor:'#B7791F'},
+  feriado:           {l:'Feriado e recesso', cor:'#C2410C'},
+  equipe:            {l:'Marco da equipe',   cor:'#4D7C0F'},
+  ufmg:              {l:'Calendário UFMG',   cor:'#2563EB'},
+  evento:            {l:'Evento externo',    cor:'#7C5CBF'},
   outro:             {l:'Outro',             cor:'#8E8E93'}
 };
 async function renderCalendario(){
@@ -2627,19 +2589,35 @@ async function renderEventos(){
 }
 function modalEvento(){
   const ativos = state.membros.filter(m=>m.status==='Ativo').sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+  const tipos = state.evTipos.length ? state.evTipos : [{nome:'Outro', checklist:[], visibilidade:'convidados'}];
   abreModal(`<h3>Novo evento</h3>
     <div class="form-grid">
-      <div class="field"><label>Tipo</label><select id="ev-tipo">${EVENTO_TIPOS.map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div class="field"><label>Tipo</label><select id="ev-tipo" onchange="evTipoMudou()">
+        ${tipos.map(t=>`<option>${esc(t.nome)}</option>`).join('')}</select></div>
       <div class="field"><label>Título</label><input id="ev-tit" placeholder="ex.: Reunião Geral de Julho"></div>
       <div class="field"><label>Data</label><input id="ev-data" type="date"></div>
       <div class="field"><label>Início</label><input id="ev-hini" type="time"></div>
       <div class="field"><label>Fim</label><input id="ev-hfim" type="time"></div>
       <div class="field"><label>Espaço (LABBIO)</label><select id="ev-espaco"><option value="">Outro / fora do LABBIO</option></select></div>
       <div class="field"><label>Local</label><input id="ev-local" placeholder="ex.: Auditório do LABBIO"></div>
-      <div class="field"><label>Recorrência</label><select id="ev-rec">${['Única','Semanal','Quinzenal','Mensal'].map(r=>`<option>${r}</option>`).join('')}</select></div>
+      <div class="field"><label>Link da chamada (Meet)</label><input id="ev-meet" type="url" placeholder="https://meet.google.com/…"></div>
+      <div class="field"><label>Repetição</label><select id="ev-rec" onchange="evRecMudou()">
+        ${['Única','Semanal','Quinzenal','Mensal'].map(r=>`<option>${r}</option>`).join('')}</select>
+        <div class="small muted">Semanal, quinzenal ou mensal cria as ocorrências futuras de verdade,
+          cada uma com os seus convidados.</div></div>
+      <div class="field" id="ev-ate-wrap" style="display:none"><label>Repetir até</label><input id="ev-ate" type="date"></div>
+      <div class="field"><label>Quem vê</label><select id="ev-vis">
+        <option value="">Padrão do tipo</option>
+        <option value="equipe">Toda a equipe</option>
+        <option value="convidados">Só os convidados</option>
+        <option value="privado">Só o organizador e o Depto de Pessoal</option></select></div>
       <div class="field full"><label>Organizador (owner)</label><select id="ev-owner">
-        ${ativos.map(m=>`<option value="${m.registro}">${esc(m.nome)}</option>`).join('')}</select></div>
+        ${ativos.map(m=>`<option value="${m.registro}">${esc(m.nome)}</option>`).join('')}</select>
+        <div class="small muted">O evento é criado em nome de quem está logado; o organizador entra
+          como convidado obrigatório.</div></div>
       <div class="field full"><label>Grupos convidados</label>${grupoCheckboxes('g-ev')}</div>
+      <div class="field full"><label class="check" id="ev-chk-wrap" style="display:none">
+        <input type="checkbox" id="ev-chk" checked> Criar o checklist de preparação deste tipo</label></div>
       <div class="field full"><label>Participantes adicionais (fora dos grupos)</label>
         <div class="multi">${ativos.map(m=>`<label class="check"><input type="checkbox" class="p-ev" value="${m.registro}"> ${esc(m.nome)}</label>`).join('')}</div></div>
     </div>
@@ -2650,33 +2628,53 @@ function modalEvento(){
       '<option value="">Outro / fora do LABBIO</option>' +
       data.map(e=>`<option value="${e.id}">${esc(e.nome)}</option>`).join('');
   });
+  evTipoMudou();
+}
+function evTipoMudou(){
+  const t = state.evTipos.find(x=>x.nome===$('#ev-tipo').value);
+  const w = $('#ev-chk-wrap');
+  if(w) w.style.display = (t && t.checklist && t.checklist.length) ? '' : 'none';
+}
+function evRecMudou(){
+  const w = $('#ev-ate-wrap');
+  if(w) w.style.display = $('#ev-rec').value === 'Única' ? 'none' : '';
 }
 async function criarEvento(){
-  const tipo = $('#ev-tipo').value, dataEv = $('#ev-data').value||null;
-  const titulo = $('#ev-tit').value.trim() || `${tipo}${dataEv?' — '+fmtD(dataEv):''}`;
-  const grupos = marcados('g-ev'), extras = marcados('p-ev').map(Number);
+  const espSel = $('#ev-espaco'), espId = espSel && espSel.value ? parseInt(espSel.value,10) : null;
   const owner = parseInt($('#ev-owner').value,10)||null;
+  const extras = marcados('p-ev').map(Number);
+  if(owner) extras.push(owner);
   try{
-    const hi = $('#ev-hini').value||null, hf = $('#ev-hfim').value||null;
-    const espSel = $('#ev-espaco'), espId = espSel && espSel.value ? parseInt(espSel.value,10) : null;
-    const localTxt = espId ? espSel.selectedOptions[0].text : ($('#ev-local').value.trim()||null);
-    const {data:ev, error} = await db.from('eventos').insert({titulo, tipo, data:dataEv,
-      hora: hi ? (hf ? `${hi} às ${hf}` : hi) : null,
-      hora_inicio: hi, hora_fim: hf, espaco_id: espId, local: localTxt,
-      recorrencia:$('#ev-rec').value, owner_registro:owner, grupos, criado_por:quemSouEu()}).select('*').single();
+    // Uma porta só para criar evento — a mesma do portal. Ela resolve
+    // convidados, visibilidade, checklist e recorrência no banco.
+    const {data, error} = await db.rpc('agenda_criar_evento', { p: {
+      tipo: $('#ev-tipo').value,
+      titulo: $('#ev-tit').value.trim() || null,
+      data: $('#ev-data').value || null,
+      hora_inicio: $('#ev-hini').value || null,
+      hora_fim: $('#ev-hfim').value || null,
+      espaco_id: espId,
+      local: espId ? espSel.selectedOptions[0].text : ($('#ev-local').value.trim()||null),
+      meet_url: $('#ev-meet').value.trim() || null,
+      recorrencia: $('#ev-rec').value,
+      repetir_ate: $('#ev-ate') ? ($('#ev-ate').value || null) : null,
+      visibilidade: $('#ev-vis').value || null,
+      grupos: marcados('g-ev'),
+      obrigatorios: extras,
+      checklist: !!($('#ev-chk') && $('#ev-chk').checked && $('#ev-chk-wrap').style.display !== 'none')
+    }});
     if(error) throw error;
-    const regs = new Set(extras);
-    if(owner) regs.add(owner);
-    state.membros.filter(m=>m.status==='Ativo' && (m.grupos||[]).some(g=>grupos.includes(g))).forEach(m=>regs.add(m.registro));
-    if(regs.size){
-      const parts = [...regs].map(r=>({evento_id:ev.id, registro:r, origem: extras.includes(r)&&!grupos.length?'manual':'grupo'}));
-      const r1 = await db.from('evento_participantes').insert(parts); if(r1.error) throw r1.error;
+    if(data?.status !== 'ok'){
+      const msgs = {sem_vinculo:'Sua conta não está vinculada a um registro de membro.',
+        data:'Informe a data.', horario:'O fim precisa ser depois do começo.',
+        recorrencia:'Repetição inválida.'};
+      toast(msgs[data?.campo] || msgs[data?.status] || 'Não foi possível criar o evento.', true);
+      return;
     }
-    const modelo = CHECKLISTS[tipo]||CHECKLISTS['Outro'];
-    const r2 = await db.from('evento_checklist').insert(modelo.map((item,ix)=>({evento_id:ev.id, item, ordem:(ix+1)*10})));
-    if(r2.error) throw r2.error;
-    fechaModal(); toast(`Evento EVT-${pad3(ev.numero)} criado.`);
-    abrirEvento(ev.id);
+    fechaModal();
+    toast(`Evento EVT-${pad3(data.numero)} criado` +
+      (data.ocorrencias ? ` com mais ${data.ocorrencias} ocorrência(s).` : '.'));
+    abrirEvento(data.id);
   }catch(e){ falha(e,'Erro ao criar o evento'); }
 }
 async function abrirEvento(id){

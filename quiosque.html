@@ -222,13 +222,15 @@ body.nocursor{cursor:none}
    CONFIG DO PAINEL
    - SUPABASE: mesmos dados do SOMA · Gestão
    - SEGREDO_QUIOSQUE: o MESMO valor gravado em config_sistema
-   - APP_URL: endereço público do app de eventos e presença
+   - APP_URL: endereço do Portal do Membro (onde o QR leva)
    ============================================================ */
 const CONFIG = {
   SUPABASE_URL: 'https://rxzmkyjttzzpwtodqkve.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_MJFR-aaQqTS1BthxYJG2kg_5XGhs9wg',
   SEGREDO_QUIOSQUE: 'Zurich1410',
-  APP_URL: 'https://pessoal.neurodynamics.dev/app',
+  // O check-in agora acontece no Portal do Membro, que é onde a
+  // equipe já vive. O /app continua encaminhando os QRs antigos.
+  APP_URL: 'https://membro.neurodynamics.dev/',
   LAT: -19.8657, LON: -43.9648,  // Campus Pampulha, UFMG
   FOTOS_BASE: 'https://raw.githubusercontent.com/neurodynamics-dev/nro-pessoal/refs/heads/main/fotos/'
 };
