@@ -3306,6 +3306,7 @@ const PS = { pronto:false, erro:null, tab:'geral', edicoes:[], ed:null,
   candidatos:[], etapas:[], slots:[], agends:[], pubs:[], avals:[], perfis:[],
   faq:[], competencias:[], v11:false,
   dinCfg:null, dinItens:[], v12:false, dinSub:'painel', dinJanela:null,
+  mesaSel:new Set(), mesaBusca:'',
   filtros:{q:'',status:''}, selecionados:new Set(), faseAval:'dinamica', faseAgenda:'dinamica' };
 
 const psPill = st=>{ const [l,d]=PS_ST[st]||[st,'dt-gray']; return `<span class="pill"><span class="dt ${d}"></span>${esc(l)}</span>`; };
@@ -4014,19 +4015,21 @@ function psDinamica(){
 }
 
 /* ---------- listas genéricas de item ---------- */
-function psDinLista(tipo, slot, titulo, ajuda){
+function psDinLista(tipo, slot, titulo, ajuda, extra){
   const itens = psDinItens(tipo, slot);
   const rot = PS_DIN_ROTULO[tipo] || tipo;
   return `<div class="card">
     <h3>${titulo}</h3>
     ${ajuda ? `<p class="small muted" style="margin:-8px 0 12px;line-height:1.6">${ajuda}</p>`:''}
-    <div style="margin-bottom:12px">
-      <button class="btn btn-primary" onclick="psDinEditar('${tipo}',null,${slot?`'${slot}'`:'null'})">
+    <div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap">
+      ${extra||''}
+      <button class="btn ${extra?'':'btn-primary'}" onclick="psDinEditar('${tipo}',null,${slot?`'${slot}'`:'null'})">
         ${ic('plus')} Novo ${rot}</button></div>
     ${itens.map(i=>`<div class="pub-row">
       <div style="min-width:0;flex:1">
         <div class="tt">${esc(psDinTitulo(i))}</div>
         <div class="mt">ordem ${i.ordem}${i.tipo==='bloco'&&i.dados?.minutos?` · ${i.dados.minutos} min`:''}${
+          i.tipo==='avaliador'&&i.dados?.registro!=null?` · ficha ${i.dados.registro}`:''}${
           i.edicao_id===null?' · todas as edições':''}</div>
       </div>
       <span class="badge-pub ${i.ativo?'sim':'nao'}">${i.ativo?'No ar':'Oculto'}</span>
@@ -4052,8 +4055,13 @@ function psDinEditar(tipo, id, slot){
     return `<div class="field"><label>${l}</label>${corpo}
       ${aj?`<p class="small muted" style="margin-top:5px">${aj}</p>`:''}</div>`;
   };
+  const daFicha = tipo==='avaliador' && d.registro!=null;
   abreModal(`
     <h3>${it?'Editar':'Novo'} ${PS_DIN_ROTULO[tipo]||tipo}</h3>
+    ${daFicha ? `<div class="banner neutral" style="margin-bottom:14px">Veio da ficha
+      <b>${esc(nomeDe(d.registro)||('registro '+d.registro))}</b>. Editar aqui não mexe no quadro.
+      <button class="btn sm" style="margin-left:8px" onclick="psDinMesaAtualizar('${it.id}')">
+        Atualizar pela ficha</button></div>` : ''}
     ${campos.map(entrada).join('')}
     <div class="field"><label>Ordem</label>
       <input id="din-ordem" type="number" step="10" value="${it?.ordem ?? prox}"></div>
@@ -4298,7 +4306,8 @@ function psDinJanela(s){
   </div>
 
   ${psDinLista('avaliador', s.id, 'A mesa desta janela',
-    'Quem aparece na tela "Quem avalia" do projetor. Cadastre só quem vai estar na sala neste horário — cada janela tem a sua lista.')}
+    'Quem aparece na tela "Quem avalia" do projetor. Escolha pelo quadro: nome, cargo, curso e foto vêm da ficha da pessoa. Cadastre só quem vai estar na sala neste horário, porque cada janela tem a sua lista.',
+    `<button class="btn btn-primary" onclick="psDinMesaEscolher('${s.id}')">${ic('users')} Escolher do quadro</button>`)}
 
   <div class="card">
     <h3>Quem vem</h3>
@@ -4310,6 +4319,152 @@ function psDinJanela(s){
       </tbody></table>`
     : '<div class="empty">Ninguém agendado ainda.</div>'}
   </div>`;
+}
+
+/* ---------- Seleção · a mesa da janela, a partir do quadro ----------
+   Quem avalia já está cadastrado em Membros: nome, cargo, foto e, nos
+   dados pessoais, o curso. Digitar tudo de novo é retrabalho e é como
+   o painel acaba projetando um cargo desatualizado.
+
+   Aqui a pessoa é escolhida na lista do quadro e os campos vêm dela.
+   O que fica gravado em ps_din_itens é uma cópia, não uma junção: o
+   painel é público e nunca toca em membros nem em dados_pessoais.
+   O "registro" fica junto para dar o botão de atualizar depois. */
+
+/* A cascata de extensões de fotos/<registro>.<ext> é do SOMA; o painel
+   é outra página e não a tem. Resolvemos aqui e gravamos a URL que
+   carrega de verdade, para não sobrar foto quebrada no projetor. */
+function psDinFoto(m){
+  if(m.foto_url) return Promise.resolve(m.foto_url);
+  if(m.registro == null) return Promise.resolve('');
+  return new Promise(res=>{
+    let i = 0, pronto = false;
+    const fim = (v)=>{ if(!pronto){ pronto = true; res(v); } };
+    setTimeout(()=>fim(''), 6000);          /* rede lenta não trava o salvamento */
+    const tenta = ()=>{
+      if(pronto) return;
+      if(i >= FOTO_EXTS.length) return fim('');
+      const url = FOTOS_BASE + m.registro + '.' + FOTO_EXTS[i++];
+      const img = new Image();
+      img.onload = ()=> fim(url);
+      img.onerror = tenta;
+      img.src = url;
+    };
+    tenta();
+  });
+}
+
+/* O curso mora em dados_pessoais, que só admin/pessoal lê. Quem prepara
+   a mesa com papel "selecao" recebe o campo vazio e preenche à mão. */
+async function psDinCursos(regs){
+  if(!can() || !regs.length) return {};
+  try{
+    const {data, error} = await db.from('dados_pessoais').select('registro,curso').in('registro', regs);
+    if(error) throw error;
+    return Object.fromEntries((data||[]).map(d=>[d.registro, d.curso||'']));
+  }catch(e){ return {}; }
+}
+
+const psDinMesaDe = (slot)=> psDinItens('avaliador', slot);
+const psDinRegDe  = (i)=> i?.dados?.registro ?? null;
+
+function psDinMesaEscolher(slot){
+  const jaTem = new Set(psDinMesaDe(slot).map(psDinRegDe).filter(r=>r!=null));
+  PS.mesaSel = new Set(jaTem);
+  PS.mesaBusca = '';
+  abreModal(`
+    <h3>Montar a mesa pelo quadro</h3>
+    <p class="small muted" style="margin:-8px 0 12px;line-height:1.7">Marque quem vai estar na sala
+      neste horário. Nome, cargo, curso e foto vêm da ficha da pessoa; depois dá para ajustar cada
+      um e escrever a linha de apresentação.</p>
+    <div class="field"><input id="mesa-q" placeholder="Buscar por nome, cargo ou departamento"
+      oninput="PS.mesaBusca=this.value;psDinMesaCorpo()"></div>
+    <div id="mesa-lista" style="max-height:46vh;overflow:auto;margin-bottom:6px"></div>
+    <div class="actions">
+      <button class="btn" onclick="fechaModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="psDinMesaSalvar('${slot}')">${ic('check')} Salvar mesa</button>
+    </div>`);
+  psDinMesaCorpo();
+  setTimeout(()=>$('#mesa-q')?.focus(), 60);
+}
+
+function psDinMesaCorpo(){
+  const q = (PS.mesaBusca||'').trim().toLowerCase();
+  const lista = state.membros
+    .filter(m=> m.status === 'Ativo')
+    .filter(m=> !q || [m.nome, m.cargo, m.departamento].some(v=>String(v||'').toLowerCase().includes(q)))
+    .sort((a,b)=> String(a.nome||'').localeCompare(String(b.nome||''), 'pt-BR'));
+  const el = $('#mesa-lista'); if(!el) return;
+  el.innerHTML = lista.map(m=>{
+    const on = PS.mesaSel.has(m.registro);
+    return `<button class="pub-row" style="width:100%;text-align:left;${on?'border-color:var(--green);background:#F2F8F6':''}"
+      onclick="psDinMesaMarca(${m.registro})">
+      ${avatarFoto(m, 'flex:0 0 auto')}
+      <div style="min-width:0;flex:1">
+        <div class="tt">${esc(m.nome||'')}</div>
+        <div class="mt">${esc(m.cargo||'sem cargo')}${m.departamento?' · '+esc(m.departamento):''}</div>
+      </div>
+      <span class="badge-pub ${on?'sim':'nao'}">${on?'na mesa':'incluir'}</span>
+    </button>`;
+  }).join('') || '<div class="empty">Nenhum membro ativo bate com a busca.</div>';
+}
+
+function psDinMesaMarca(reg){
+  PS.mesaSel.has(reg) ? PS.mesaSel.delete(reg) : PS.mesaSel.add(reg);
+  psDinMesaCorpo();
+}
+
+async function psDinMesaSalvar(slot){
+  const atuais = psDinMesaDe(slot);
+  const porReg = new Map(atuais.filter(i=>psDinRegDe(i)!=null).map(i=>[psDinRegDe(i), i]));
+  const novos  = [...PS.mesaSel].filter(r=>!porReg.has(r));
+  const saem   = [...porReg.entries()].filter(([r])=>!PS.mesaSel.has(r)).map(([,i])=>i.id);
+
+  if(!novos.length && !saem.length){ toast('Nada mudou na mesa.'); fechaModal(); return; }
+
+  try{
+    if(saem.length){
+      const {error} = await db.from('ps_din_itens').delete().in('id', saem);
+      if(error) throw error;
+    }
+    if(novos.length){
+      const cursos = await psDinCursos(novos);
+      let ordem = Math.max(0, ...atuais.map(i=>i.ordem));
+      const linhas = [];
+      for(const reg of novos){
+        const m = state.membros.find(x=>x.registro===reg); if(!m) continue;
+        ordem += 10;
+        linhas.push({tipo:'avaliador', edicao_id:PS.ed.id, slot_id:slot, ordem,
+          dados:{registro:reg, nome:m.nome||'', cargo:m.cargo||'',
+                 curso:cursos[reg]||'', foto_url: await psDinFoto(m), fala:''}});
+      }
+      if(linhas.length){
+        const {error} = await db.from('ps_din_itens').insert(linhas);
+        if(error) throw error;
+      }
+    }
+    toast(`Mesa salva: ${novos.length} incluído(s), ${saem.length} retirado(s).`);
+    fechaModal(); PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao salvar a mesa'); }
+}
+
+/* Cargo mudou no quadro depois que a mesa foi montada? Um botão relê a
+   ficha e regrava nome, cargo, curso e foto, preservando a linha de fala. */
+async function psDinMesaAtualizar(id){
+  const it = PS.dinItens.find(x=>x.id===id);
+  const reg = psDinRegDe(it);
+  const m = reg!=null && state.membros.find(x=>x.registro===reg);
+  if(!m){ toast('Este avaliador não veio do quadro.', true); return; }
+  try{
+    const cursos = await psDinCursos([reg]);
+    const dados = {...it.dados, nome:m.nome||'', cargo:m.cargo||'',
+                   curso: cursos[reg] ?? it.dados.curso ?? '',
+                   foto_url: await psDinFoto(m)};
+    const {error} = await db.from('ps_din_itens').update({dados}).eq('id', id);
+    if(error) throw error;
+    toast('Atualizado pela ficha de '+(m.nome||'').split(' ')[0]+'.');
+    fechaModal(); PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao atualizar'); }
 }
 
 async function psDinGerarCodigo(slotId){
