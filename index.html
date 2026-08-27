@@ -3300,11 +3300,12 @@ const PS_SETS = {
 };
 const PS_FASES_ETAPA = ['divulgacao','inscricao','dinamica','entrevista','trainee','resultado','outro'];
 const PS_TABS = [['geral','Visão geral'],['candidatos','Candidatos'],['avaliacao','Avaliação'],
-  ['agenda','Agenda'],['publicacoes','Publicações'],['faq','FAQ'],['config','Configurações']];
+  ['agenda','Agenda'],['dinamica','Dinâmica'],['publicacoes','Publicações'],['faq','FAQ'],['config','Configurações']];
 
 const PS = { pronto:false, erro:null, tab:'geral', edicoes:[], ed:null,
   candidatos:[], etapas:[], slots:[], agends:[], pubs:[], avals:[], perfis:[],
   faq:[], competencias:[], v11:false,
+  dinCfg:null, dinItens:[], v12:false, dinSub:'painel', dinJanela:null,
   filtros:{q:'',status:''}, selecionados:new Set(), faseAval:'dinamica', faseAgenda:'dinamica' };
 
 const psPill = st=>{ const [l,d]=PS_ST[st]||[st,'dt-gray']; return `<span class="pill"><span class="dt ${d}"></span>${esc(l)}</span>`; };
@@ -3350,6 +3351,18 @@ async function psCarregar(){
     if(f.error || cp.error) throw f.error || cp.error;
     PS.faq = f.data||[]; PS.competencias = cp.data||[]; PS.v11 = true;
   }catch(e){ PS.faq = []; PS.competencias = []; PS.v11 = false; }
+  /* conteúdo da dinâmica em grupo: depende da soma_v12.sql. Sem ela, a
+     aba avisa e o resto do módulo continua igual. */
+  try{
+    const [cfg, itens] = await Promise.all([
+      db.from('ps_din_config').select('*').eq('edicao_id', id).maybeSingle(),
+      db.from('ps_din_itens').select('*').order('tipo').order('ordem')
+    ]);
+    if(itens.error) throw itens.error;
+    PS.dinCfg = cfg.data || null;
+    PS.dinItens = itens.data || [];
+    PS.v12 = true;
+  }catch(e){ PS.dinCfg = null; PS.dinItens = []; PS.v12 = false; }
   PS.selecionados = new Set();
   PS.pronto = true;
 }
@@ -3395,7 +3408,7 @@ async function renderSelecao(){
       `<button class="${PS.tab===t?'active':''}" onclick="psTab('${t}')">${l}</button>`).join('')}</div>
     <div id="sel-corpo"></div>`;
   ({geral:psGeral, candidatos:psCandidatos, avaliacao:psAvaliacao, agenda:psAgenda,
-    publicacoes:psPublicacoes, faq:psFaq, config:psConfig}[PS.tab]||psGeral)();
+    dinamica:psDinamica, publicacoes:psPublicacoes, faq:psFaq, config:psConfig}[PS.tab]||psGeral)();
 }
 
 /* ---------- Seleção · visão geral ---------- */
@@ -3931,6 +3944,382 @@ async function psExcluirSlot(id, qtd){
     toast('Horário excluído.'); fechaModal();
     PS.pronto=false; renderSelecao();
   }catch(e){ falha(e,'Falha ao excluir'); }
+}
+
+/* ---------- Seleção · dinâmica em grupo ----------
+   O que a sala vê no dia — painel projetado, roteiro, casos do
+   desafio, campos do registro, critérios e a mesa de cada janela —
+   é editado aqui, e só aqui. As três páginas do site
+   (dinamica.html, dinamica-painel.html, dinamica-avaliador.html)
+   leem tudo do banco; nenhuma delas tem texto no código.
+
+   Prepare-se por esta aba, não pela mesa do avaliador: aquela só
+   abre durante o horário da janela, de propósito.
+   Requer a migração soma_v12.sql. */
+
+const PS_DIN_SUB = [['painel','Painel'],['roteiro','Roteiro'],['desafio','Desafio'],
+                    ['criterios','Critérios'],['janelas','Janelas']];
+
+/* campos de cada tipo de item: [chave, rótulo, formato, ajuda]
+   formatos: txt (linha), area (parágrafo), num, lista (uma por linha) */
+const PS_DIN_CAMPOS = {
+  cartao:   [['titulo','Título','txt'],['texto','Texto','area','Duas ou três linhas. Vai grande no projetor.']],
+  regra:    [['texto','A regra','area','Uma frase que se lê de longe.']],
+  bloco:    [['nome','Nome do bloco','txt'],['minutos','Minutos','num'],
+             ['fala','O que o avaliador faz','lista','Uma ação por linha. É o que ele lê no celular durante o bloco.'],
+             ['projetor','O que vai no projetor','txt'],
+             ['corte','Se atrasar','txt','O que cortar primeiro neste bloco — ou "Nunca".']],
+  caso:     [['titulo','Título do caso','txt'],
+             ['pessoa','Quem é a pessoa','area','Idade, condição e o que ela consegue fazer hoje.'],
+             ['necessidade','O que ela precisa','area','Em termos de vida, não de engenharia.'],
+             ['restricoes','O que limita','lista','Uma por linha. É a restrição que força a escolha.'],
+             ['pista','Pista de destravamento','area','A pergunta que o avaliador faz se o grupo travar.']],
+  campo:    [['chave','Chave','txt','Sem espaço nem acento: é o nome interno do campo.'],
+             ['rotulo','Rótulo','txt'],['ajuda','Texto de ajuda','area'],
+             ['limite','Limite de caracteres','num'],['linhas','Altura em linhas','num']],
+  criterio: [['nome','Critério','txt','Use o mesmo nome dos critérios da fase dinâmica, para a nota casar com a ficha.'],
+             ['a1','Âncora — nota 1','area'],['a3','Âncora — nota 3','area'],['a5','Âncora — nota 5','area']],
+  avaliador:[['nome','Nome','txt'],['cargo','Cargo na equipe','txt'],['curso','Curso','txt'],
+             ['foto_url','Endereço da foto','txt','Opcional. Sem foto, o painel desenha as iniciais.'],
+             ['fala','Uma linha sobre a pessoa','area','O que ela faz aqui, na voz de quem apresenta.']]
+};
+const PS_DIN_ROTULO = {cartao:'cartão', regra:'regra', bloco:'bloco', caso:'caso',
+                       campo:'campo', criterio:'critério', avaliador:'avaliador'};
+
+const psDinFaltaV12 = ()=> `<div class="card"><h3>Falta aplicar a migração</h3>
+  <p class="small muted" style="line-height:1.7">A dinâmica em grupo depende da
+  <b>soma_v12.sql</b> (raiz deste repositório). Rode o arquivo inteiro no SQL Editor do
+  Supabase e recarregue esta página. Enquanto isso, as três páginas do site
+  (<b>dinamica.html</b>, <b>dinamica-painel.html</b> e <b>dinamica-avaliador.html</b>)
+  não têm de onde ler o conteúdo.</p>
+  <button class="btn" onclick="psRecarregar()">Tentar de novo</button></div>`;
+
+const psDinItens = (tipo, slot)=> PS.dinItens.filter(i=> i.tipo===tipo
+  && (i.edicao_id===null || i.edicao_id===PS.ed.id)
+  && (slot ? i.slot_id===slot : i.slot_id===null));
+const psDinTitulo = (i)=> {
+  const c = PS_DIN_CAMPOS[i.tipo]?.[0]?.[0];
+  const v = i.dados?.[c];
+  return v ? String(v).slice(0,90) : '(sem título)';
+};
+
+function psDinamica(){
+  if(!PS.v12){ $('#sel-corpo').innerHTML = psDinFaltaV12(); return; }
+  $('#sel-corpo').innerHTML = `
+    <div class="fase-chips">${PS_DIN_SUB.map(([k,l])=>
+      `<button class="${PS.dinSub===k?'on':''}" onclick="PS.dinSub='${k}';psDinamica()">${l}</button>`).join('')}</div>
+    <div id="din-corpo"></div>`;
+  ({painel:psDinPainel, roteiro:psDinRoteiro, desafio:psDinDesafio,
+    criterios:psDinCriterios, janelas:psDinJanelas}[PS.dinSub]||psDinPainel)();
+}
+
+/* ---------- listas genéricas de item ---------- */
+function psDinLista(tipo, slot, titulo, ajuda){
+  const itens = psDinItens(tipo, slot);
+  const rot = PS_DIN_ROTULO[tipo] || tipo;
+  return `<div class="card">
+    <h3>${titulo}</h3>
+    ${ajuda ? `<p class="small muted" style="margin:-8px 0 12px;line-height:1.6">${ajuda}</p>`:''}
+    <div style="margin-bottom:12px">
+      <button class="btn btn-primary" onclick="psDinEditar('${tipo}',null,${slot?`'${slot}'`:'null'})">
+        ${ic('plus')} Novo ${rot}</button></div>
+    ${itens.map(i=>`<div class="pub-row">
+      <div style="min-width:0;flex:1">
+        <div class="tt">${esc(psDinTitulo(i))}</div>
+        <div class="mt">ordem ${i.ordem}${i.tipo==='bloco'&&i.dados?.minutos?` · ${i.dados.minutos} min`:''}${
+          i.edicao_id===null?' · todas as edições':''}</div>
+      </div>
+      <span class="badge-pub ${i.ativo?'sim':'nao'}">${i.ativo?'No ar':'Oculto'}</span>
+      ${ibtn('pencil','Editar',`psDinEditar('${i.tipo}','${i.id}',${slot?`'${slot}'`:'null'})`,'sm')}
+      <button class="btn sm ${i.ativo?'':'btn-primary'}" onclick="psDinAtivo('${i.id}',${!i.ativo})">
+        ${i.ativo?'Ocultar':'Publicar'}</button>
+      ${ibtn('trash','Excluir',`psDinExcluir('${i.id}')`,'sm')}
+    </div>`).join('') || `<div class="empty">Nenhum ${rot} cadastrado.</div>`}
+  </div>`;
+}
+
+function psDinEditar(tipo, id, slot){
+  const it = id ? PS.dinItens.find(x=>x.id===id) : null;
+  const campos = PS_DIN_CAMPOS[tipo] || [];
+  const d = it?.dados || {};
+  const prox = Math.max(0, ...psDinItens(tipo, slot).map(x=>x.ordem)) + 10;
+  const entrada = ([k,l,f,aj])=>{
+    const v = d[k];
+    const corpo = f==='area'  ? `<textarea id="din-${k}" style="min-height:90px">${esc(v||'')}</textarea>`
+                : f==='lista' ? `<textarea id="din-${k}" style="min-height:110px">${esc((v||[]).join('\n'))}</textarea>`
+                : f==='num'   ? `<input id="din-${k}" type="number" value="${esc(v ?? '')}">`
+                :               `<input id="din-${k}" value="${esc(v||'')}">`;
+    return `<div class="field"><label>${l}</label>${corpo}
+      ${aj?`<p class="small muted" style="margin-top:5px">${aj}</p>`:''}</div>`;
+  };
+  abreModal(`
+    <h3>${it?'Editar':'Novo'} ${PS_DIN_ROTULO[tipo]||tipo}</h3>
+    ${campos.map(entrada).join('')}
+    <div class="field"><label>Ordem</label>
+      <input id="din-ordem" type="number" step="10" value="${it?.ordem ?? prox}"></div>
+    <div class="actions">
+      <button class="btn" onclick="fechaModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="psDinSalvar('${tipo}',${it?`'${it.id}'`:'null'},${slot?`'${slot}'`:'null'})">
+        ${ic('check')} Salvar</button>
+    </div>`);
+}
+
+async function psDinSalvar(tipo, id, slot){
+  const dados = {};
+  for(const [k,l,f] of (PS_DIN_CAMPOS[tipo]||[])){
+    const el = $('#din-'+k); if(!el) continue;
+    const v = el.value;
+    if(f==='lista') dados[k] = v.split('\n').map(x=>x.trim()).filter(Boolean);
+    else if(f==='num') dados[k] = v === '' ? null : Number(v);
+    else dados[k] = v.trim();
+  }
+  const primeiro = PS_DIN_CAMPOS[tipo]?.[0]?.[0];
+  if(primeiro && !dados[primeiro]){ toast('Preencha pelo menos o primeiro campo.', true); return; }
+  const linha = {tipo, ordem: Number($('#din-ordem').value)||100, dados,
+                 edicao_id: PS.ed.id, slot_id: slot || null};
+  try{
+    const q = id ? db.from('ps_din_itens').update({ordem:linha.ordem, dados}).eq('id', id)
+                 : db.from('ps_din_itens').insert(linha);
+    const {error} = await q;
+    if(error) throw error;
+    toast('Salvo.'); fechaModal(); PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e, 'Falha ao salvar'); }
+}
+
+async function psDinAtivo(id, ativo){
+  try{
+    const {error} = await db.from('ps_din_itens').update({ativo}).eq('id', id);
+    if(error) throw error;
+    toast(ativo?'No ar na próxima janela.':'Oculto.');
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao atualizar'); }
+}
+
+async function psDinExcluir(id){
+  const i = PS.dinItens.find(x=>x.id===id);
+  if(!await confirma(`Excluir "<b>${esc(psDinTitulo(i||{}))}</b>"?`,'Excluir')) return;
+  try{
+    const {error} = await db.from('ps_din_itens').delete().eq('id', id);
+    if(error) throw error;
+    toast('Excluído.'); PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao excluir'); }
+}
+
+/* ---------- configuração da edição ---------- */
+const psDinCfg = ()=> PS.dinCfg || {titulo:'Dinâmica em grupo', desafio_titulo:'Sprint da bancada',
+  minutos_total:75, tam_grupo:5, tolerancia_antes:30, tolerancia_depois:30};
+
+async function psDinSalvarCfg(campos){
+  const linha = {edicao_id: PS.ed.id, atualizado_por: quemSouEu(), atualizado_em: new Date().toISOString()};
+  for(const k of campos){
+    const el = $('#dcfg-'+k); if(!el) continue;
+    linha[k] = el.type === 'number' ? (Number(el.value) || null) : (el.value.trim() || null);
+  }
+  /* colunas not null não aceitam vazio: devolve o padrão */
+  if(!linha.titulo) linha.titulo = 'Dinâmica em grupo';
+  if(!linha.desafio_titulo) linha.desafio_titulo = 'Sprint da bancada';
+  for(const [k,v] of [['minutos_total',75],['tam_grupo',5],['tolerancia_antes',30],['tolerancia_depois',30]])
+    if(k in linha && !linha[k]) linha[k] = v;
+  try{
+    const {error} = await db.from('ps_din_config').upsert(linha, {onConflict:'edicao_id'});
+    if(error) throw error;
+    toast('Configuração salva.'); PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao salvar'); }
+}
+
+/* ---------- sub-aba: painel ---------- */
+function psDinPainel(){
+  const c = psDinCfg();
+  $('#din-corpo').innerHTML = `
+  <div class="banner neutral">O que está aqui é o que aparece no projetor durante a dinâmica.
+    O painel abre em <b>selecao.neurodynamics.dev/dinamica-painel.html</b>, com o código da janela.</div>
+
+  <div class="card">
+    <h3>Abertura</h3>
+    <div class="form-grid">
+      <div class="field"><label>Título</label><input id="dcfg-titulo" value="${esc(c.titulo||'')}"></div>
+      <div class="field"><label>Subtítulo</label><input id="dcfg-subtitulo" value="${esc(c.subtitulo||'')}"></div>
+    </div>
+    <div class="field"><label>Resumo da equipe</label>
+      <textarea id="dcfg-resumo_equipe" style="min-height:90px">${esc(c.resumo_equipe||'')}</textarea>
+      <p class="small muted" style="margin-top:5px">Duas ou três linhas, na tela "A NeuroDynamics".</p></div>
+    <div class="field"><label>Aviso de imagem e registro</label>
+      <textarea id="dcfg-aviso_lgpd" style="min-height:70px">${esc(c.aviso_lgpd||'')}</textarea></div>
+    <div class="form-grid">
+      <div class="field"><label>Wi-Fi da sala</label><input id="dcfg-wifi_rede" value="${esc(c.wifi_rede||'')}"
+        placeholder="Nome da rede"></div>
+      <div class="field"><label>Senha do Wi-Fi</label><input id="dcfg-wifi_senha" value="${esc(c.wifi_senha||'')}"></div>
+    </div>
+    <button class="btn btn-primary" onclick="psDinSalvarCfg(['titulo','subtitulo','resumo_equipe','aviso_lgpd','wifi_rede','wifi_senha'])">
+      ${ic('check')} Salvar abertura</button>
+  </div>
+
+  ${psDinLista('cartao', null, 'Cartões da equipe',
+    'Os blocos da tela "A NeuroDynamics". Três ou quatro funcionam melhor que seis: quem está na sala lê de longe.')}
+
+  ${psDinLista('regra', null, 'Regras da sala',
+    'O combinado que o avaliador lê em voz alta na abertura. Uma frase cada.')}`;
+}
+
+/* ---------- sub-aba: roteiro ---------- */
+function psDinRoteiro(){
+  const c = psDinCfg();
+  const blocos = psDinItens('bloco', null);
+  const soma = blocos.filter(b=>b.ativo).reduce((s,b)=>s + (Number(b.dados?.minutos)||0), 0);
+  const cabe = soma <= (c.minutos_total||75);
+  $('#din-corpo').innerHTML = `
+  <div class="banner ${cabe?'neutral':'amber'}">
+    Os blocos somam <b>${soma} min</b> de <b>${c.minutos_total||75} min</b> de janela.
+    ${cabe ? `Sobram ${(c.minutos_total||75)-soma} min de folga — é a margem para a sala que atrasa.`
+           : 'Não cabe. Corte blocos ou aumente a duração da janela abaixo.'}
+  </div>
+
+  <div class="card">
+    <h3>A janela</h3>
+    <div class="form-grid">
+      <div class="field"><label>Duração total (min)</label>
+        <input id="dcfg-minutos_total" type="number" value="${c.minutos_total||75}"></div>
+      <div class="field"><label>Pessoas por grupo</label>
+        <input id="dcfg-tam_grupo" type="number" value="${c.tam_grupo||5}"></div>
+      <div class="field"><label>Abre quantos min antes</label>
+        <input id="dcfg-tolerancia_antes" type="number" value="${c.tolerancia_antes ?? 30}"></div>
+      <div class="field"><label>Fecha quantos min depois</label>
+        <input id="dcfg-tolerancia_depois" type="number" value="${c.tolerancia_depois ?? 30}"></div>
+    </div>
+    <p class="small muted" style="margin:-4px 0 12px;line-height:1.7">
+      As duas tolerâncias definem quando as páginas da dinâmica existem. Antes e depois desse
+      intervalo, a mesa do avaliador, o painel e a página do candidato não devolvem nada —
+      nem para quem tem login. Trinta minutos dão folga para montar a sala sem deixar a página
+      aberta o dia inteiro.</p>
+    <button class="btn btn-primary" onclick="psDinSalvarCfg(['minutos_total','tam_grupo','tolerancia_antes','tolerancia_depois'])">
+      ${ic('check')} Salvar</button>
+  </div>
+
+  ${psDinLista('bloco', null, 'Blocos do roteiro',
+    'A ordem aqui é a ordem da dinâmica. O que estiver em "o que o avaliador faz" aparece na mesa dele, no celular, quando o bloco chega.')}`;
+}
+
+/* ---------- sub-aba: desafio ---------- */
+function psDinDesafio(){
+  const c = psDinCfg();
+  $('#din-corpo').innerHTML = `
+  <div class="card">
+    <h3>O briefing</h3>
+    <div class="field"><label>Título do desafio</label>
+      <input id="dcfg-desafio_titulo" value="${esc(c.desafio_titulo||'')}"></div>
+    <div class="field"><label>Contexto lido em voz alta</label>
+      <textarea id="dcfg-desafio_contexto" style="min-height:110px">${esc(c.desafio_contexto||'')}</textarea>
+      <p class="small muted" style="margin-top:5px">Aparece no projetor e no celular do candidato.
+        Diga o que se espera e o que não se cobra — quem nunca viu uma bancada precisa ouvir isso.</p></div>
+    <button class="btn btn-primary" onclick="psDinSalvarCfg(['desafio_titulo','desafio_contexto'])">
+      ${ic('check')} Salvar briefing</button>
+  </div>
+
+  ${psDinLista('caso', null, 'Casos',
+    'Um caso por grupo, distribuídos na hora pela mesa. Tenha pelo menos tantos casos quanto o maior número de grupos que uma janela pode ter — com 15 candidatos e grupos de 5, três casos.')}
+
+  ${psDinLista('campo', null, 'Campos do registro',
+    'O que cada grupo preenche no celular. Cinco campos curtos rendem mais que dois longos: obrigam a decidir. Mudar a <b>chave</b> de um campo depois da dinâmica desliga o texto já gravado — crie um campo novo em vez disso.')}`;
+}
+
+/* ---------- sub-aba: critérios ---------- */
+function psDinCriterios(){
+  const crits = psDinItens('criterio', null).filter(c=>c.ativo).map(c=>c.dados?.nome);
+  const oficiais = PS_FASES_AVAL.dinamica.crit;
+  const fora = crits.filter(c=>c && !oficiais.includes(c));
+  $('#din-corpo').innerHTML = `
+  <div class="banner ${fora.length?'amber':'neutral'}">
+    A nota lançada na mesa cai na ficha do candidato, fase <b>dinâmica</b>, com o nome de quem avaliou.
+    ${fora.length ? `Estes critérios não batem com os da aba Avaliação e vão aparecer separados na ficha:
+      <b>${fora.map(esc).join(', ')}</b>.`
+    : 'Os critérios daqui batem com os da aba Avaliação — as duas telas mostram a mesma coisa.'}
+  </div>
+  ${psDinLista('criterio', null, 'Critérios e âncoras',
+    'A âncora é o que separa uma nota 3 de uma nota 5 na cabeça de dois avaliadores diferentes. Escreva comportamento observável, não qualidade abstrata — é o que faz duas mesas darem notas comparáveis.')}`;
+}
+
+/* ---------- sub-aba: janelas ---------- */
+function psDinJanelas(){
+  const slots = PS.slots.filter(s=>s.fase==='dinamica');
+  const ocup = s=> PS.agends.filter(a=>a.slot_id===s.id).length;
+  const site = SITE_PS;
+  if(PS.dinJanela){
+    const s = slots.find(x=>x.id===PS.dinJanela);
+    if(s) return psDinJanela(s);
+    PS.dinJanela = null;
+  }
+  $('#din-corpo').innerHTML = `
+  <div class="banner neutral">Cada janela tem um <b>código de quatro letras</b>: é ele que o candidato
+    digita, que vira o QR do painel e que abre a mesa do avaliador. A janela em si é criada na aba
+    <b>Agenda</b>.</div>
+  ${slots.map(s=>`<div class="pub-row">
+    <div style="min-width:0;flex:1">
+      <div class="tt">${fmtD(s.data)} · ${psHm(s.hora_inicio)}–${psHm(s.hora_fim)}</div>
+      <div class="mt">${esc(s.local||'sem local')} · ${ocup(s)}/${s.capacidade} agendados${s.ativo?'':' · inativa'}</div>
+    </div>
+    <span class="pill" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em">${
+      s.codigo ? esc(s.codigo) : '— sem código —'}</span>
+    <button class="btn sm" onclick="PS.dinJanela='${s.id}';psDinamica()">Preparar</button>
+  </div>`).join('') || '<div class="empty">Nenhuma janela de dinâmica na agenda. Crie em Seleção → Agenda.</div>'}
+  <p class="small muted" style="margin-top:12px;line-height:1.7">
+    Endereços do dia: painel em <b>${esc(site)}/dinamica-painel.html</b>,
+    mesa do avaliador em <b>${esc(site)}/dinamica-avaliador.html</b>,
+    registro do candidato em <b>${esc(site)}/dinamica.html</b>.</p>`;
+}
+
+function psDinJanela(s){
+  const site = SITE_PS;
+  const ags = PS.agends.filter(a=>a.slot_id===s.id);
+  const cod = s.codigo || '';
+  $('#din-corpo').innerHTML = `
+  <button class="btn sm" style="margin-bottom:12px" onclick="PS.dinJanela=null;psDinamica()">← Todas as janelas</button>
+
+  <div class="card">
+    <h3>${fmtD(s.data)}, ${psHm(s.hora_inicio)}–${psHm(s.hora_fim)}</h3>
+    <p class="small muted" style="margin:-8px 0 14px">${esc(s.local||'sem local definido')} ·
+      ${ags.length} de ${s.capacidade} lugares ocupados</p>
+
+    ${cod ? `<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+      <div><div class="small muted">Código da sala</div>
+        <div style="font-size:34px;font-weight:700;letter-spacing:.16em">${esc(cod)}</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a class="btn sm" href="${esc(site)}/dinamica-painel.html#${esc(cod)}" target="_blank" rel="noopener">Abrir painel</a>
+        <a class="btn sm" href="${esc(site)}/dinamica-avaliador.html" target="_blank" rel="noopener">Abrir a mesa</a>
+        <button class="btn sm" onclick="copiar('${esc(site)}/dinamica.html#${esc(cod)}')">Copiar link do candidato</button>
+      </div></div>`
+    : `<div class="banner amber" style="margin-bottom:14px">Esta janela ainda não tem código
+        (foi criada antes da migração).
+        <button class="btn sm" style="margin-left:8px" onclick="psDinGerarCodigo('${s.id}')">Gerar código</button></div>`}
+
+    <p class="small muted" style="line-height:1.7">A mesa e o painel só respondem entre
+      <b>${psHm(s.hora_inicio)} menos ${psDinCfg().tolerancia_antes ?? 30} min</b> e
+      <b>${psHm(s.hora_fim)} mais ${psDinCfg().tolerancia_depois ?? 30} min</b> do dia
+      ${fmtD(s.data)}. Fora disso não sai candidato, grupo nem roteiro — nem com login.</p>
+  </div>
+
+  ${psDinLista('avaliador', s.id, 'A mesa desta janela',
+    'Quem aparece na tela "Quem avalia" do projetor. Cadastre só quem vai estar na sala neste horário — cada janela tem a sua lista.')}
+
+  <div class="card">
+    <h3>Quem vem</h3>
+    ${ags.length ? `<table class="tb"><thead><tr><th>Candidato</th><th>Curso</th><th>Acessibilidade</th></tr></thead>
+      <tbody>${ags.map(a=>{ const c = psCand(a.candidato_id); return `<tr>
+        <td><b>${esc(c?.nome||'—')}</b><br><span class="reg">${esc(c?.protocolo||'')}</span></td>
+        <td class="small">${esc(c?.curso||'—')}</td>
+        <td class="small">${c?.acessibilidade ? esc(c.acessibilidade) : '—'}</td></tr>`; }).join('')}
+      </tbody></table>`
+    : '<div class="empty">Ninguém agendado ainda.</div>'}
+  </div>`;
+}
+
+async function psDinGerarCodigo(slotId){
+  try{
+    const {data, error} = await db.rpc('ps_din_codigo_gerar', {p_slot:slotId});
+    if(error) throw error;
+    if(data?.status !== 'ok') throw new Error(data?.status || 'erro');
+    toast('Código '+data.codigo+' gerado.');
+    PS.pronto=false; renderSelecao();
+  }catch(e){ falha(e,'Falha ao gerar o código'); }
 }
 
 /* ---------- Seleção · FAQ do site ---------- */
