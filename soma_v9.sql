@@ -82,28 +82,31 @@ grant execute on function public.site_projetos_publico() to anon, authenticated;
 -- 4. CARGA INICIAL — só roda com a tabela vazia; depois disso
 --    a gestão é toda pelo painel site/admin.html.
 -- ------------------------------------------------------------
+-- Nota: os textos abaixo evitam travessão (—) e palavras-chave
+-- SQL soltas dentro das strings; algumas ferramentas que rodam
+-- SQL corrompem esses trechos ao fatiar o script.
 insert into public.site_projetos
   (slug, nome, tagline, resumo, descricao, status, tags, ordem)
 select * from (values
   ('calima', 'Calima', 'Monitoring that follows the patient',
    'An intelligent monitoring platform that pairs embedded sensing with on-device intelligence, built to follow patients beyond the clinic.',
-   'Calima pairs embedded sensing with on-device intelligence to follow patients beyond the walls of the clinic. The project covers the full stack — sensor hardware, real-time firmware and the models that turn raw signal into information a clinician can trust.',
+   'Calima pairs embedded sensing with on-device intelligence to follow patients beyond the walls of the clinic. The project covers the full stack: sensor hardware, real-time firmware and the models that distill raw signal to information a clinician can trust.',
    'In development', array['Embedded systems','Firmware','AI'], 10),
   ('opalina', 'Opalina', 'Clinical data, made legible',
-   'A software platform that turns fragmented clinical data into clear, usable insight for the teams who act on it.',
-   'Opalina is a software platform that turns fragmented clinical data into clear, usable insight. It began as a research question about how care teams actually make decisions — and grew into an exploration of what decision support should look like when it is designed around people, not dashboards.',
+   'A software platform that makes fragmented clinical data clear and usable for the teams who act on it.',
+   'Opalina is a software platform that makes fragmented clinical data clear and usable. It began as a research question about how care teams actually make decisions, and grew to explore what decision support should look like when it is designed around people, not dashboards.',
    'Applied research', array['Software','Clinical data','AI'], 20),
   ('orion', 'Órion', 'Instrumentation without compromise',
-   'Instrumentation engineered for procedures where precision is non-negotiable — hardware, firmware and software designed as one.',
+   'Instrumentation engineered for procedures where precision is non-negotiable: hardware, firmware and software designed as one.',
    'Órion is instrumentation for procedures where precision is non-negotiable. Hardware, firmware and software are engineered as a single system, with every layer designed, simulated and tested in-house.',
    'Prototype', array['Hardware','Instrumentation','Embedded systems'], 30),
   ('deriva', 'Deriva', 'Movement, measured',
-   'Technology that reads human movement and turns it into objective measures for rehabilitation and follow-up.',
-   'Deriva reads human movement and turns it into objective measures for rehabilitation and follow-up. Wearable sensing, signal processing and machine intelligence work together so that progress can be seen — not just felt.',
+   'Technology that reads human movement and translates it to objective measures for rehabilitation and follow-up.',
+   'Deriva reads human movement and translates it to objective measures for rehabilitation and follow-up. Wearable sensing, signal processing and machine intelligence work together so that progress can be seen, not just felt.',
    'In development', array['Signal processing','Wearables','AI'], 40),
   ('nebula', 'Nebula', 'The connective layer',
    'Secure infrastructure that lets devices, software and people speak the same language across our ecosystem.',
-   'Nebula is the connective layer of our ecosystem: the infrastructure that lets devices, software and people speak the same language. Quiet by design, it carries data securely from every other project to wherever it needs to be.',
+   'Nebula is the connective layer of our ecosystem: the infrastructure that lets devices, software and people speak the same language. Quiet by design, it carries data securely between every project and wherever it needs to be.',
    'Applied research', array['Software','Infrastructure','Interoperability'], 50)
 ) as seed(slug, nome, tagline, resumo, descricao, status, tags, ordem)
 where not exists (select 1 from public.site_projetos);
