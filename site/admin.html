@@ -85,6 +85,14 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;
 .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
 .fgrid .full{grid-column:1/-1}
 @media (max-width:640px){.fgrid{grid-template-columns:1fr}}
+.abas{display:flex;align-items:center;gap:5px;margin-bottom:14px}
+.abas button{font-family:var(--fm);font-size:11px;letter-spacing:.08em;color:var(--dim);
+  border:1px solid var(--line2);border-radius:9px;padding:6px 13px;transition:all .15s}
+.abas button:hover{color:var(--ink)}
+.abas button.on{color:var(--deep);background:var(--syn);border-color:var(--syn);font-weight:500}
+.abas .nota{margin-left:auto;font-family:var(--fm);font-size:10px;color:var(--dim);
+  letter-spacing:.04em;text-align:right}
+.i18n{border:1px solid var(--line);border-radius:14px;padding:18px 18px 6px;background:rgba(255,255,255,.02)}
 .check{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--muted);
   border:1px solid var(--line2);border-radius:11px;padding:10px 13px;cursor:pointer}
 .check input{width:16px;height:16px;accent-color:var(--syn);cursor:pointer}
@@ -128,9 +136,11 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;
 
   <!-- EDITOR -->
   <div id="v-editor" hidden>
-    <div class="aviso info">Os textos aparecem <b>em inglês</b> no site público
-      (neurodynamics.dev) — preencha os campos já em inglês. Alterações entram no ar
-      assim que você salva; deixe a URL da imagem em branco para manter o placeholder.</div>
+    <div class="aviso info">O site é publicado em <b>três idiomas</b> (inglês, português e
+      francês): cada projeto tem uma aba por idioma nos campos de texto, e o que ficar vazio
+      em PT/FR cai automaticamente no inglês. Nome, status e tags são únicos — o site traduz
+      status e tags sozinho. Alterações entram no ar assim que você salva; deixe a URL da
+      imagem em branco para manter o placeholder.</div>
     <div class="editor">
       <div>
         <div class="lista" id="lista"></div>
@@ -161,7 +171,15 @@ const esc = v => v == null ? '' : String(v).replace(/[&<>"']/g, c =>
 function toast(msg, err){ const t=document.createElement('div'); t.className='toast'+(err?' err':'');
   t.textContent=msg; $('#toast').appendChild(t); setTimeout(()=>t.remove(), 4600); }
 
-const state = { projetos: [], sel: null };
+const state = { projetos: [], sel: null, aba: 'en' };
+
+/* Idiomas do site: o inglês mora nas colunas originais e os
+   demais em colunas com sufixo (soma_v13.sql). */
+const IDIOMAS = [
+  { k:'en', lb:'EN', sf:'' },
+  { k:'pt', lb:'PT', sf:'_pt' },
+  { k:'fr', lb:'FR', sf:'_fr' }
+];
 
 function mostra(view){
   ['v-login','v-editor','v-carregando'].forEach(id => $('#'+id).hidden = (id !== view));
@@ -219,7 +237,7 @@ function desenha(){
       <span><span class="nm">${esc(p.nome)}</span><br><span class="sl">/${esc(p.slug)}</span></span>
       ${p.publicado ? '' : '<span class="off">oculto</span>'}
     </button>`).join('')
-    : '<div class="vazio">Nenhum projeto ainda.<br>A migração <b>soma_v9.sql</b> foi aplicada?</div>';
+    : '<div class="vazio">Nenhum projeto ainda.<br>As migrações <b>soma_v9.sql</b> e <b>soma_v13.sql</b> foram aplicadas?</div>';
   desenhaForm();
 }
 
@@ -236,12 +254,22 @@ function desenhaForm(){
       <div class="fld"><label>Nome</label><input id="f-nome" value="${esc(p.nome)}"></div>
       <div class="fld"><label>Slug (url)</label><input id="f-slug" value="${esc(p.slug)}">
         <p class="mini">minúsculas, sem espaço ou acento</p></div>
-      <div class="fld full"><label>Tagline (linha curta sob o título)</label>
-        <input id="f-tagline" value="${esc(p.tagline||'')}"></div>
-      <div class="fld full"><label>Resumo (cartão da home, 1–2 frases)</label>
-        <textarea id="f-resumo" rows="2">${esc(p.resumo||'')}</textarea></div>
-      <div class="fld full"><label>Descrição (página de projetos)</label>
-        <textarea id="f-descricao" rows="5">${esc(p.descricao||'')}</textarea></div>
+      <div class="full i18n">
+        <div class="abas">
+          ${IDIOMAS.map(l => `<button class="${l.k===state.aba?'on':''}" data-ab="${l.k}"
+            onclick="trocaAba('${l.k}')">${l.lb}</button>`).join('')}
+          <span class="nota">o que ficar vazio em PT/FR<br>cai no texto em inglês</span>
+        </div>
+        ${IDIOMAS.map(l => `
+        <div data-aba="${l.k}" ${l.k===state.aba?'':'hidden'}>
+          <div class="fld"><label>Tagline · ${l.lb} (linha curta sob o título)</label>
+            <input id="f-tagline${l.sf}" value="${esc(p['tagline'+l.sf]||'')}"></div>
+          <div class="fld"><label>Resumo · ${l.lb} (cartão da home, 1–2 frases)</label>
+            <textarea id="f-resumo${l.sf}" rows="2">${esc(p['resumo'+l.sf]||'')}</textarea></div>
+          <div class="fld"><label>Descrição · ${l.lb} (página de projetos)</label>
+            <textarea id="f-descricao${l.sf}" rows="5">${esc(p['descricao'+l.sf]||'')}</textarea></div>
+        </div>`).join('')}
+      </div>
       <div class="fld"><label>Status</label><input id="f-status" list="status-sug" value="${esc(p.status||'')}">
         <datalist id="status-sug">
           <option value="Applied research"><option value="Prototype">
@@ -262,19 +290,26 @@ function desenhaForm(){
     </div>`;
 }
 
+function trocaAba(k){
+  state.aba = k;
+  document.querySelectorAll('.abas button').forEach(b => b.classList.toggle('on', b.dataset.ab === k));
+  document.querySelectorAll('[data-aba]').forEach(d => d.hidden = (d.dataset.aba !== k));
+}
+
 function lerForm(){
-  return {
+  const v = {
     nome: $('#f-nome').value.trim(),
     slug: $('#f-slug').value.trim().toLowerCase(),
-    tagline: $('#f-tagline').value.trim() || null,
-    resumo: $('#f-resumo').value.trim() || null,
-    descricao: $('#f-descricao').value.trim() || null,
     status: $('#f-status').value.trim() || 'In development',
     ordem: parseInt($('#f-ordem').value, 10) || 100,
     tags: $('#f-tags').value.split(',').map(s => s.trim()).filter(Boolean),
     imagem_url: $('#f-imagem').value.trim() || null,
     publicado: $('#f-publicado').checked
   };
+  IDIOMAS.forEach(l => ['tagline','resumo','descricao'].forEach(c => {
+    v[c + l.sf] = $('#f-' + c + l.sf).value.trim() || null;
+  }));
+  return v;
 }
 
 async function salvar(id){
