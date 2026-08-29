@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="NeuroDynamics is a health-tech research & development initiative born at the School of Engineering of the Federal University of Minas Gerais (UFMG). Software, firmware, embedded systems and AI — in service of human health.">
+<meta id="meta-desc" name="description" content="NeuroDynamics is a nonprofit health-tech research and development initiative at the School of Engineering of the Federal University of Minas Gerais (UFMG). Software, firmware, embedded systems and AI in service of human health.">
 <meta name="theme-color" content="#050807">
-<title>NeuroDynamics — Health-Tech R&D</title>
+<title>NeuroDynamics — Nonprofit Health-Tech R&D</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -90,11 +90,25 @@ nav.hd-nav a.on::after{content:'';display:block;height:1.5px;margin:1px 2px 0;ba
 .hd-burger i{display:block;width:16px;height:1.5px;background:var(--ink);transition:transform .25s,opacity .25s}
 body.menu-open .hd-burger i:nth-child(1){transform:translateY(3.25px) rotate(45deg)}
 body.menu-open .hd-burger i:nth-child(2){transform:translateY(-3.25px) rotate(-45deg)}
+
+/* language selector */
+.lang{display:flex;align-items:center;height:42px;padding:3px;gap:1px;
+  border:1px solid var(--line2);border-radius:11px;background:rgba(255,255,255,.03)}
+.lang button{font-family:var(--fm);font-size:11px;letter-spacing:.06em;color:var(--dim);
+  height:100%;padding:0 9px;border-radius:8px;transition:color .15s,background .15s}
+.lang button:hover{color:var(--muted)}
+.lang button.on{color:var(--ink);background:rgba(255,255,255,.09)}
 @media (max-width:920px){
   nav.hd-nav{display:none}
-  .hd-in{height:54px}
+  .hd-in{height:54px;gap:12px}
   .hd-cta{height:40px;padding:0 16px}
-  .hd-burger{width:40px;height:40px}
+  .hd-burger,.lang{height:40px}
+  .hd-burger{width:40px}
+}
+@media (max-width:560px){
+  .hd-cta{display:none}
+  .hd-in{padding-left:16px}
+  .lang button{padding:0 8px}
 }
 
 /* ============ FULLSCREEN MENU ============ */
@@ -142,9 +156,9 @@ section{margin:0 0 clamp(90px,12vh,150px)}
 /* ============ HERO ============ */
 #hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   padding:150px 0 34px;position:relative}
-#hero h1{font-size:clamp(44px,7.6vw,100px);font-weight:600;letter-spacing:-.03em;line-height:.98;
+#hero h1{font-size:clamp(42px,7.2vw,96px);font-weight:600;letter-spacing:-.03em;line-height:.99;
   margin:22px 0 26px;max-width:1000px}
-.hero-sub{font-size:clamp(15.5px,1.75vw,19px);color:var(--muted);max-width:600px;margin-bottom:38px}
+.hero-sub{font-size:clamp(15.5px,1.75vw,19px);color:var(--muted);max-width:620px;margin-bottom:38px}
 .hero-sub b{color:var(--ink);font-weight:600}
 .hero-acts{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;border-radius:12px;
@@ -275,6 +289,23 @@ a.chan:hover{border-color:var(--line2);transform:translateY(-3px)}
   text-transform:uppercase;color:var(--dim)}
 a.chan:hover .go{color:var(--syn)}
 
+/* ============ NONPROFIT LEDGER ============ */
+.ledger{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;background:var(--card)}
+@media (max-width:820px){.ledger{grid-template-columns:1fr}}
+.ledger .cell{padding:30px 28px;border-right:1px solid var(--line)}
+.ledger .cell:last-child{border-right:none}
+@media (max-width:820px){
+  .ledger .cell{border-right:none;border-bottom:1px solid var(--line)}
+  .ledger .cell:last-child{border-bottom:none}
+}
+.ledger .k{font-family:var(--fm);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);display:block;margin-bottom:14px}
+.ledger .v{font-family:var(--fd);font-size:clamp(19px,2.3vw,25px);font-weight:600;
+  line-height:1.2;letter-spacing:-.015em;margin-bottom:10px}
+.ledger .v em{font-style:normal;color:var(--syn)}
+.ledger p{font-size:13.5px;color:var(--muted)}
+
 /* ============ PROJECTS PAGE ============ */
 .case{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(24px,4vw,56px);align-items:center;
   padding:clamp(40px,6vh,64px) 0;border-top:1px solid var(--line)}
@@ -297,11 +328,11 @@ a.chan:hover .go{color:var(--syn)}
 
 /* ============ CONTACT ============ */
 .mailrow{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:34px 0 10px}
-.mailrow .addr{font-family:var(--fm);font-size:clamp(17px,2.6vw,26px);color:var(--ink);
-  border-bottom:1px solid var(--line2);padding-bottom:6px;transition:border-color .2s}
+.mailrow .addr{font-family:var(--fm);font-size:clamp(16px,2.6vw,26px);color:var(--ink);
+  border-bottom:1px solid var(--line2);padding-bottom:6px;transition:border-color .2s;word-break:break-all}
 .mailrow .addr:hover{border-color:var(--syn)}
 .copybtn{width:44px;height:44px;border:1px solid var(--line2);border-radius:11px;display:inline-flex;
-  align-items:center;justify-content:center;color:var(--muted);transition:all .15s}
+  align-items:center;justify-content:center;color:var(--muted);transition:all .15s;flex-shrink:0}
 .copybtn:hover{color:var(--ink);border-color:var(--dim)}
 .copybtn svg{width:17px;height:17px}
 .reasons{margin-top:56px;border-bottom:1px solid var(--line)}
@@ -310,6 +341,7 @@ a.chan:hover .go{color:var(--syn)}
 .reason .no{font-family:var(--fm);font-size:12px;color:var(--dim)}
 .reason h3{font-size:18px;font-weight:600}
 .reason p{font-size:14px;color:var(--muted)}
+.reason p a{color:var(--ink);border-bottom:1px solid var(--line2)}
 @media (max-width:820px){
   .reason{grid-template-columns:52px 1fr;gap:6px 16px}
   .reason p{grid-column:2}
@@ -323,7 +355,7 @@ a.chan:hover .go{color:var(--syn)}
   background:radial-gradient(circle,rgba(206,220,0,.22),transparent 70%);filter:blur(34px)}
 .band .eyebrow{color:rgba(245,245,247,.6)}
 .band h2{font-size:clamp(28px,4.6vw,50px);font-weight:600;line-height:1.05;max-width:620px;margin:14px 0 14px}
-.band p{color:rgba(245,245,247,.78);max-width:520px;margin-bottom:30px;font-size:15px}
+.band p{color:rgba(245,245,247,.78);max-width:540px;margin-bottom:30px;font-size:15px}
 .band .btn.solid{background:var(--ink)}
 
 /* ============ FOOTER ============ */
@@ -333,7 +365,7 @@ footer{border-top:1px solid var(--line);margin-top:clamp(90px,12vh,150px)}
 @media (max-width:820px){.ft-grid{grid-template-columns:1fr}}
 .ft-grid img{height:19px;filter:brightness(0) invert(.92);margin-bottom:16px}
 .ft-grid .logotype{display:block;margin-bottom:16px}
-.ft-grid .desc{font-size:13px;color:var(--muted);max-width:340px;line-height:1.7}
+.ft-grid .desc{font-size:13px;color:var(--muted);max-width:360px;line-height:1.7}
 .ft-grid h4{font-family:var(--fm);font-size:10.5px;font-weight:500;letter-spacing:.2em;
   text-transform:uppercase;color:var(--dim);margin-bottom:16px}
 .ft-grid ul{list-style:none;display:flex;flex-direction:column;gap:10px}
@@ -359,16 +391,17 @@ footer{border-top:1px solid var(--line);margin-top:clamp(90px,12vh,150px)}
 
 <header id="hd">
   <div class="hd-in">
-    <a class="hd-logo" href="#/" aria-label="NeuroDynamics — home">
+    <a class="hd-logo" href="#/" aria-label="NeuroDynamics">
       <img id="logo-hd" src="" alt="NeuroDynamics">
     </a>
     <nav class="hd-nav" id="nav-inline">
-      <a href="#/about" data-r="about">Who we are</a>
-      <a href="#/projects" data-r="projects">Projects</a>
-      <a href="#/contact" data-r="contact">Contact</a>
+      <a href="#/about" data-r="about" data-k="about"></a>
+      <a href="#/projects" data-r="projects" data-k="projects"></a>
+      <a href="#/contact" data-r="contact" data-k="contact"></a>
     </nav>
     <div class="hd-right">
-      <a class="hd-cta" href="#/contact">Get in Touch</a>
+      <div class="lang" id="lang" role="group" aria-label="Language"></div>
+      <a class="hd-cta" id="hd-cta" href="#/contact"></a>
       <button class="hd-burger" id="burger" aria-label="Menu" aria-expanded="false">
         <i></i><i></i>
       </button>
@@ -379,15 +412,15 @@ footer{border-top:1px solid var(--line);margin-top:clamp(90px,12vh,150px)}
 <div id="menu" aria-hidden="true">
   <div class="menu-in">
     <nav class="menu-links" id="nav-menu">
-      <a href="#/" data-r="home"><span class="idx">01</span>Home</a>
-      <a href="#/about" data-r="about"><span class="idx">02</span>Who we are</a>
-      <a href="#/projects" data-r="projects"><span class="idx">03</span>Projects</a>
-      <a href="#/contact" data-r="contact"><span class="idx">04</span>Contact</a>
+      <a href="#/" data-r="home" data-k="home"><span class="idx">01</span><span class="lb"></span></a>
+      <a href="#/about" data-r="about" data-k="about"><span class="idx">02</span><span class="lb"></span></a>
+      <a href="#/projects" data-r="projects" data-k="projects"><span class="idx">03</span><span class="lb"></span></a>
+      <a href="#/contact" data-r="contact" data-k="contact"><span class="idx">04</span><span class="lb"></span></a>
     </nav>
     <div class="menu-foot">
-      <span>School of Engineering · UFMG</span>
-      <a id="menu-mail" href="#">—</a>
-      <span>Belo Horizonte, Brazil</span>
+      <span id="menu-place"></span>
+      <a id="menu-mail" href="#"></a>
+      <span id="menu-city"></span>
     </div>
   </div>
 </div>
@@ -399,29 +432,27 @@ footer{border-top:1px solid var(--line);margin-top:clamp(90px,12vh,150px)}
     <div class="ft-grid">
       <div>
         <img id="logo-ft" src="" alt="NeuroDynamics">
-        <p class="desc">A health-tech research &amp; development initiative at the School of
-          Engineering of the Federal University of Minas Gerais, based at LABBIO —
-          the university's Bioengineering Laboratory.</p>
+        <p class="desc" id="ft-desc"></p>
       </div>
       <div>
-        <h4>Navigate</h4>
+        <h4 id="ft-h-nav"></h4>
         <ul>
-          <li><a href="#/">Home</a></li>
-          <li><a href="#/about">Who we are</a></li>
-          <li><a href="#/projects">Projects</a></li>
-          <li><a href="#/contact">Contact</a></li>
+          <li><a href="#/" data-k="home"></a></li>
+          <li><a href="#/about" data-k="about"></a></li>
+          <li><a href="#/projects" data-k="projects"></a></li>
+          <li><a href="#/contact" data-k="contact"></a></li>
         </ul>
       </div>
       <div>
-        <h4>Reach us</h4>
+        <h4 id="ft-h-reach"></h4>
         <ul>
-          <li><a id="ft-mail" href="#">—</a></li>
-          <li><a href="https://selecao.neurodynamics.dev" target="_blank" rel="noopener">Join the team ↗</a></li>
+          <li><a id="ft-mail" href="#"></a></li>
+          <li><a id="ft-join" href="https://selecao.neurodynamics.dev" target="_blank" rel="noopener"></a></li>
         </ul>
       </div>
     </div>
     <div class="ft-base">
-      <span>© <span id="ft-ano">2026</span> NeuroDynamics</span>
+      <span id="ft-rights"></span>
       <span>Belo Horizonte · 19°52′S 43°58′W</span>
     </div>
   </div>
@@ -442,11 +473,9 @@ const LOGO_URL = 'https://raw.githubusercontent.com/matheusmarcondes1/nro/refs/h
 const CONTACT_EMAIL = 'contato@neurodynamics.dev';
 
 /* ============================================================
-   PARTNERS — shown in the monochrome marquee on the home page.
-   Each item: { name, img?, sub? }. With "img" the logo file is
-   used (drop it in ./assets and reference it here); without it
-   a typographic mark is rendered — replace with the real logo
-   whenever the file is available.
+   PARTNERS — monochrome marquee on the home page.
+   { name, img?, sub? } — with "img" the logo file is used (drop
+   it in ./assets); without it a typographic mark is rendered.
    ============================================================ */
 const PARTNERS = [
   { name:'LABBIO', img:'assets/labbio.png' },
@@ -455,32 +484,354 @@ const PARTNERS = [
 ];
 
 /* ============================================================
+   TEXTS — every language in one place. To edit the site copy,
+   edit here (and nowhere else). Project content lives in the
+   database and is edited at ./admin.html.
+   ============================================================ */
+const L = {
+
+/* ---------------------------------------------------------- EN */
+en:{ label:'EN', htmlLang:'en',
+  titles:{ home:'NeuroDynamics — Nonprofit Health-Tech R&D',
+           about:'Who we are — NeuroDynamics',
+           projects:'Projects — NeuroDynamics',
+           contact:'Contact — NeuroDynamics' },
+  desc:'NeuroDynamics is a nonprofit health-tech research and development initiative at the School of Engineering of the Federal University of Minas Gerais (UFMG). Software, firmware, embedded systems and AI in service of human health.',
+  nav:{ home:'Home', about:'Who we are', projects:'Projects', contact:'Contact' },
+  cta:'Get in Touch',
+  menu:{ place:'School of Engineering · UFMG', city:'Belo Horizonte, Brazil' },
+  ft:{ desc:'A nonprofit health-tech research and development initiative at the School of Engineering of the Federal University of Minas Gerais, based at LABBIO, the university\'s Bioengineering Laboratory.',
+       nav:'Navigate', reach:'Reach us', join:'Join the team ↗', rights:'© {y} NeuroDynamics · Nonprofit initiative' },
+  ui:{ copied:'E-mail address copied.', fig:'imagery in production', view:'View project' },
+  home:{
+    eyebrow:'Nonprofit health-tech R&D initiative',
+    h1:'Intelligent systems for human health.',
+    sub:'NeuroDynamics is a <b>nonprofit initiative</b> building the software, firmware and intelligent devices that help care reach people, born at the <b>School of Engineering</b> of the Federal University of Minas Gerais.',
+    b1:'Explore the work', b2:'Who we are',
+    meta:[['Based at','LABBIO — UFMG'],['Belo Horizonte','19°52′S 43°58′W'],
+          ['Field','Health technology'],['Structure','Nonprofit initiative']],
+    s1:{ eyebrow:'01 · Purpose',
+      big:'We exist to shorten the distance between engineering research and the people it serves. <span class="soft">Every project starts with a question that matters clinically, and ends as technology someone can actually use.</span>',
+      after:'We are a nonprofit: there are no shareholders and no profit to distribute. What we raise goes back into research, equipment and the training of the people who build it. Artificial intelligence runs through much of our work in health, held to the standard medicine demands.' },
+    s2:{ eyebrow:'02 · What we build', h2:'Engineering, end to end.',
+      sub:'From first sketch to tested prototype, one team carries the idea through every layer of the stack.',
+      rows:[
+        ['Software engineering','Clinical platforms, data pipelines and the tools that hold an ecosystem together, designed for environments where failure is not an option.'],
+        ['Firmware & embedded systems','Code that lives close to the metal: real-time firmware, low-power design and embedded intelligence for medical-grade devices.'],
+        ['AI for health','Intelligence applied across our portfolio, from signal to decision. We are deliberate about where it belongs, and where it does not.'],
+        ['Signals & data','From raw physiological signal to defensible insight: acquisition, processing, interpretation and the discipline in between.'],
+        ['Integrated hardware','Electronics, mechanics and industrial design engineered together, so the device and its intelligence are never an afterthought to each other.']] },
+    s3:{ eyebrow:'03 · Selected work', h2:'Five fronts, one direction.',
+      sub:'Internal codenames for work that ranges from early research to field-ready systems.', all:'All projects' },
+    s4:{ eyebrow:'04 · In collaboration with', h2:'Grounded in the university.' },
+    band:{ eyebrow:'Work with us', h2:'Building something in health?',
+      p:'We partner with researchers, clinicians and institutions, and take on select development engagements in software, firmware and embedded systems. What they fund goes straight back into the research.',
+      btn:'Start a conversation' }
+  },
+  about:{
+    eyebrow:'Who we are', h1:'Built like a startup.<br>Grounded in research.',
+    lead:'NeuroDynamics is a nonprofit research and development initiative in health technology, formed by engineering students at the School of Engineering of the Federal University of Minas Gerais (UFMG) and based at LABBIO, the university\'s Bioengineering Laboratory.',
+    s1:{ eyebrow:'01 · Why we do it',
+      big:'Technology only matters when it reaches people. Our purpose is to push development forward, <b>of devices, of systems, and of the engineers who build them</b>, so that better tools reach the people who need them, sooner.',
+      after:'That is the test every project has to pass. Not novelty for its own sake; usefulness, held to an engineering standard.' },
+    s2:{ eyebrow:'02 · How we work', h2:'Real projects, real deadlines,<br>real responsibility.',
+      cards:[
+        ['End to end','We take projects from concept and simulation through fabrication, electronics and software, including tests and documentation. Nothing ships half-built.'],
+        ['Research, translated','We work side by side with the university\'s academic research, turning scientific knowledge into working prototypes and measurable results.'],
+        ['Run by its members','We are organized in departments and project teams, with clear processes for management, evaluation and individual growth. The initiative is led by the people who build it.'],
+        ['A professional rhythm','General meetings, agreed deliverables, periodic reviews, and room to grow, make mistakes and learn. The pace of a company, inside a university.']] },
+    s3:{ eyebrow:'03 · How we are funded', h2:'A nonprofit, by design.',
+      ledger:[
+        ['Structure','Nonprofit <em>initiative</em>','No shareholders, no owners, no profit to distribute. We are a university initiative, and we intend to stay one.'],
+        ['Where it goes','Back into <em>the work</em>','Grants, partnerships and development engagements fund research, equipment, prototypes and the training of our members.'],
+        ['What we measure','Reach, not <em>revenue</em>','Success is a device that works in the field and a person who learned to build it. That is the ledger we keep.']] },
+    s4:{ eyebrow:'04 · Intelligence, applied', h2:'AI, held to a clinical standard.',
+      p1:'Artificial intelligence runs through much of our work in health, in how our devices listen, how our software reasons, and how signal becomes insight.',
+      p2:'We won\'t enumerate the ways here; part of it is still in the lab. The principle, though, is constant: AI in service of care, never the other way around, and always accountable to the people behind the data.' },
+    s5:{ eyebrow:'05 · Beyond our own projects', h2:'Occasionally, we build for others.',
+      sub:'Most of what we make is ours. Now and then, we take on development work for partners in software, firmware and embedded systems, when the problem is worth solving and the fit is right. Every engagement funds the research. If that sounds like your problem, we should talk.',
+      chans:[
+        ['E-mail', CONTACT_EMAIL, 'Partnerships, collaboration and development engagements.', 'Write to us', 'mail'],
+        ['Where we are','School of Engineering, UFMG','LABBIO — Bioengineering Laboratory · Campus Pampulha, Belo Horizonte, Brazil.', null, null],
+        ['Join the team','Selection process','Once a year we open positions for UFMG students. Everything happens at our selection site.','selecao.neurodynamics.dev','sel']] }
+  },
+  projects:{
+    eyebrow:'The portfolio', h1:'Projects',
+    lead:'Five active fronts, one direction: technology that helps people. The names are internal codenames; the work behind them ranges from early research to systems approaching the field.',
+    band:{ eyebrow:'Collaboration', h2:'Want the detail behind a codename?',
+      p:'Each project is documented as it matures. For collaboration, or detail beyond what is published here, get in touch.', btn:'Contact us' }
+  },
+  contact:{
+    eyebrow:'Contact', h1:'Let\'s talk.',
+    lead:'One address reaches the whole initiative. Tell us who you are and what you\'re working on, we read everything.',
+    reasons:[
+      ['Research collaboration','Universities, laboratories and research groups working on problems adjacent to ours.'],
+      ['Institutions & partnerships','Hospitals, clinics and organizations interested in what we are building, or in building together.'],
+      ['Development services','Select engagements in software, firmware and embedded systems. As a nonprofit, what we charge funds the research.'],
+      ['Supporting the work','Grants, donations of equipment and sponsorship of specific projects. Every contribution goes into the lab.'],
+      ['Joining the team','We select new members once a year, among UFMG students. Start at <a href="https://selecao.neurodynamics.dev" target="_blank" rel="noopener">selecao.neurodynamics.dev</a>.']],
+    chans:[
+      ['Where we are','School of Engineering, UFMG','LABBIO — Bioengineering Laboratory · Campus Pampulha, Belo Horizonte, Brazil.'],
+      ['What we are','Nonprofit initiative','A health-tech research and development initiative: student-led, university-grounded, run with the discipline of a startup.'],
+      ['Response','Within a few days','We are engineers first, expect a considered reply rather than an instant one.']]
+  },
+  status:{}, tags:{}
+},
+
+/* ---------------------------------------------------------- PT */
+pt:{ label:'PT', htmlLang:'pt-BR',
+  titles:{ home:'NeuroDynamics — P&D em saúde, sem fins lucrativos',
+           about:'Quem somos — NeuroDynamics',
+           projects:'Projetos — NeuroDynamics',
+           contact:'Contato — NeuroDynamics' },
+  desc:'A NeuroDynamics é uma iniciativa sem fins lucrativos de pesquisa e desenvolvimento em tecnologia para a saúde, na Escola de Engenharia da Universidade Federal de Minas Gerais (UFMG). Software, firmware, sistemas embarcados e IA a serviço da saúde humana.',
+  nav:{ home:'Início', about:'Quem somos', projects:'Projetos', contact:'Contato' },
+  cta:'Fale conosco',
+  menu:{ place:'Escola de Engenharia · UFMG', city:'Belo Horizonte, Brasil' },
+  ft:{ desc:'Iniciativa sem fins lucrativos de pesquisa e desenvolvimento em tecnologia para a saúde, na Escola de Engenharia da Universidade Federal de Minas Gerais, sediada no LABBIO, o Laboratório de Bioengenharia da universidade.',
+       nav:'Navegar', reach:'Contato', join:'Faça parte da equipe ↗', rights:'© {y} NeuroDynamics · Iniciativa sem fins lucrativos' },
+  ui:{ copied:'E-mail copiado.', fig:'imagem em produção', view:'Ver projeto' },
+  home:{
+    eyebrow:'Iniciativa de P&D em saúde, sem fins lucrativos',
+    h1:'Sistemas inteligentes para a saúde humana.',
+    sub:'A NeuroDynamics é uma <b>iniciativa sem fins lucrativos</b> que desenvolve o software, o firmware e os dispositivos inteligentes que ajudam o cuidado a chegar às pessoas, nascida na <b>Escola de Engenharia</b> da Universidade Federal de Minas Gerais.',
+    b1:'Conheça o trabalho', b2:'Quem somos',
+    meta:[['Sediada no','LABBIO — UFMG'],['Belo Horizonte','19°52′S 43°58′W'],
+          ['Área','Tecnologia em saúde'],['Estrutura','Sem fins lucrativos']],
+    s1:{ eyebrow:'01 · Propósito',
+      big:'Existimos para encurtar a distância entre a pesquisa em engenharia e as pessoas a quem ela serve. <span class="soft">Todo projeto começa com uma pergunta que importa clinicamente e termina como tecnologia que alguém consegue usar de verdade.</span>',
+      after:'Somos uma organização sem fins lucrativos: não há acionistas nem lucro a distribuir. O que captamos volta para a pesquisa, os equipamentos e a formação de quem constrói. A inteligência artificial atravessa boa parte do que fazemos em saúde, no padrão que a medicina exige.' },
+    s2:{ eyebrow:'02 · O que construímos', h2:'Engenharia de ponta a ponta.',
+      sub:'Do primeiro esboço ao protótipo testado, uma equipe leva a ideia por todas as camadas do projeto.',
+      rows:[
+        ['Engenharia de software','Plataformas clínicas, pipelines de dados e as ferramentas que sustentam um ecossistema, projetadas para ambientes em que falhar não é uma opção.'],
+        ['Firmware e sistemas embarcados','Código que vive perto do metal: firmware de tempo real, projeto de baixo consumo e inteligência embarcada para dispositivos de grau médico.'],
+        ['IA para a saúde','Inteligência aplicada em todo o portfólio, do sinal à decisão. Somos criteriosos sobre onde ela cabe e onde não cabe.'],
+        ['Sinais e dados','Do sinal fisiológico bruto à conclusão defensável: aquisição, processamento, interpretação e o rigor entre uma etapa e outra.'],
+        ['Hardware integrado','Eletrônica, mecânica e design industrial projetados juntos, para que o dispositivo e sua inteligência nunca sejam um acessório um do outro.']] },
+    s3:{ eyebrow:'03 · Trabalhos selecionados', h2:'Cinco frentes, uma direção.',
+      sub:'Nomes internos para trabalhos que vão da pesquisa inicial a sistemas prontos para o campo.', all:'Todos os projetos' },
+    s4:{ eyebrow:'04 · Em colaboração com', h2:'Enraizados na universidade.' },
+    band:{ eyebrow:'Trabalhe conosco', h2:'Construindo algo na saúde?',
+      p:'Somos parceiros de pesquisadores, profissionais de saúde e instituições, e aceitamos projetos selecionados de desenvolvimento em software, firmware e sistemas embarcados. O que eles financiam volta direto para a pesquisa.',
+      btn:'Começar uma conversa' }
+  },
+  about:{
+    eyebrow:'Quem somos', h1:'Feitos como uma startup.<br>Enraizados na pesquisa.',
+    lead:'A NeuroDynamics é uma iniciativa sem fins lucrativos de pesquisa e desenvolvimento em tecnologia para a saúde, formada por estudantes da Escola de Engenharia da Universidade Federal de Minas Gerais (UFMG) e sediada no LABBIO, o Laboratório de Bioengenharia da universidade.',
+    s1:{ eyebrow:'01 · Por que fazemos',
+      big:'Tecnologia só importa quando chega às pessoas. Nosso propósito é impulsionar o desenvolvimento, <b>de dispositivos, de sistemas e dos engenheiros que os constroem</b>, para que ferramentas melhores cheguem antes a quem precisa delas.',
+      after:'É o teste que todo projeto precisa passar. Não novidade pela novidade; utilidade, no padrão da engenharia.' },
+    s2:{ eyebrow:'02 · Como trabalhamos', h2:'Projetos reais, prazos reais,<br>responsabilidade real.',
+      cards:[
+        ['De ponta a ponta','Levamos os projetos da concepção e simulação à fabricação, à eletrônica e ao software, passando por testes e documentação. Nada sai pela metade.'],
+        ['Pesquisa traduzida','Trabalhamos lado a lado com a pesquisa acadêmica da universidade, transformando conhecimento científico em protótipos que funcionam e resultados mensuráveis.'],
+        ['Gerida pelos membros','Somos organizados em departamentos e equipes de projeto, com processos claros de gestão, avaliação e desenvolvimento individual. Quem constrói é quem conduz.'],
+        ['Ritmo profissional','Reuniões gerais, entregas acordadas, avaliações periódicas e espaço para crescer, errar e aprender. O ritmo de uma empresa, dentro da universidade.']] },
+    s3:{ eyebrow:'03 · Como nos sustentamos', h2:'Sem fins lucrativos, por escolha.',
+      ledger:[
+        ['Estrutura','<em>Iniciativa</em> sem fins lucrativos','Sem acionistas, sem donos, sem lucro a distribuir. Somos uma iniciativa universitária e pretendemos continuar sendo.'],
+        ['Para onde vai','De volta ao <em>trabalho</em>','Editais, parcerias e projetos de desenvolvimento financiam pesquisa, equipamentos, protótipos e a formação dos nossos membros.'],
+        ['O que medimos','Alcance, não <em>receita</em>','Sucesso é um dispositivo que funciona em campo e uma pessoa que aprendeu a construí-lo. É esse o balanço que mantemos.']] },
+    s4:{ eyebrow:'04 · Inteligência aplicada', h2:'IA no padrão que a clínica exige.',
+      p1:'A inteligência artificial atravessa boa parte do nosso trabalho em saúde: em como nossos dispositivos escutam, em como nosso software raciocina e em como o sinal vira informação.',
+      p2:'Não vamos enumerar aqui de que formas; parte disso ainda está no laboratório. O princípio, porém, é constante: IA a serviço do cuidado, nunca o contrário, e sempre responsável diante das pessoas por trás dos dados.' },
+    s5:{ eyebrow:'05 · Além dos nossos projetos', h2:'De vez em quando, construímos para outros.',
+      sub:'A maior parte do que fazemos é nossa. Vez ou outra, assumimos trabalhos de desenvolvimento para parceiros em software, firmware e sistemas embarcados, quando o problema vale a pena e o encaixe é bom. Cada projeto desses financia a pesquisa. Se isso se parece com o seu problema, vamos conversar.',
+      chans:[
+        ['E-mail', CONTACT_EMAIL, 'Parcerias, colaboração e projetos de desenvolvimento.', 'Escreva para nós', 'mail'],
+        ['Onde estamos','Escola de Engenharia, UFMG','LABBIO — Laboratório de Bioengenharia · Campus Pampulha, Belo Horizonte, Brasil.', null, null],
+        ['Faça parte','Processo seletivo','Uma vez por ano abrimos vagas para estudantes da UFMG. Tudo acontece no site da seleção.','selecao.neurodynamics.dev','sel']] }
+  },
+  projects:{
+    eyebrow:'O portfólio', h1:'Projetos',
+    lead:'Cinco frentes ativas, uma direção: tecnologia que ajuda pessoas. Os nomes são internos; o trabalho por trás deles vai da pesquisa inicial a sistemas que se aproximam do campo.',
+    band:{ eyebrow:'Colaboração', h2:'Quer o detalhe por trás de um nome?',
+      p:'Cada projeto é documentado conforme amadurece. Para colaborar, ou para detalhes além do que está publicado aqui, fale com a gente.', btn:'Fale conosco' }
+  },
+  contact:{
+    eyebrow:'Contato', h1:'Vamos conversar.',
+    lead:'Um endereço alcança a iniciativa inteira. Conte quem você é e no que está trabalhando: lemos tudo.',
+    reasons:[
+      ['Colaboração em pesquisa','Universidades, laboratórios e grupos de pesquisa que trabalham com problemas vizinhos aos nossos.'],
+      ['Instituições e parcerias','Hospitais, clínicas e organizações interessadas no que construímos, ou em construir junto.'],
+      ['Serviços de desenvolvimento','Projetos selecionados em software, firmware e sistemas embarcados. Como organização sem fins lucrativos, o que cobramos financia a pesquisa.'],
+      ['Apoiar o trabalho','Editais, doação de equipamentos e patrocínio de projetos específicos. Toda contribuição vai para o laboratório.'],
+      ['Fazer parte da equipe','Selecionamos novos membros uma vez por ano, entre estudantes da UFMG. Comece em <a href="https://selecao.neurodynamics.dev" target="_blank" rel="noopener">selecao.neurodynamics.dev</a>.']],
+    chans:[
+      ['Onde estamos','Escola de Engenharia, UFMG','LABBIO — Laboratório de Bioengenharia · Campus Pampulha, Belo Horizonte, Brasil.'],
+      ['O que somos','Iniciativa sem fins lucrativos','Uma iniciativa de pesquisa e desenvolvimento em tecnologia para a saúde: conduzida por estudantes, enraizada na universidade, com a disciplina de uma startup.'],
+      ['Resposta','Em alguns dias','Somos engenheiros antes de tudo: espere uma resposta pensada, não instantânea.']]
+  },
+  status:{ 'In development':'Em desenvolvimento', 'Applied research':'Pesquisa aplicada',
+           'Prototype':'Protótipo', 'Field pilot':'Piloto em campo' },
+  tags:{ 'Embedded systems':'Sistemas embarcados', 'Firmware':'Firmware', 'AI':'IA',
+         'Software':'Software', 'Clinical data':'Dados clínicos', 'Hardware':'Hardware',
+         'Instrumentation':'Instrumentação', 'Signal processing':'Processamento de sinais',
+         'Wearables':'Vestíveis', 'Infrastructure':'Infraestrutura', 'Interoperability':'Interoperabilidade' }
+},
+
+/* ---------------------------------------------------------- FR */
+fr:{ label:'FR', htmlLang:'fr',
+  titles:{ home:'NeuroDynamics — R&D en santé, à but non lucratif',
+           about:'Qui sommes-nous — NeuroDynamics',
+           projects:'Projets — NeuroDynamics',
+           contact:'Contact — NeuroDynamics' },
+  desc:'NeuroDynamics est une initiative à but non lucratif de recherche et développement en technologies de la santé, à l\'École d\'Ingénierie de l\'Université Fédérale du Minas Gerais (UFMG). Logiciel, firmware, systèmes embarqués et IA au service de la santé humaine.',
+  nav:{ home:'Accueil', about:'Qui sommes-nous', projects:'Projets', contact:'Contact' },
+  cta:'Nous contacter',
+  menu:{ place:'École d\'Ingénierie · UFMG', city:'Belo Horizonte, Brésil' },
+  ft:{ desc:'Initiative à but non lucratif de recherche et développement en technologies de la santé, à l\'École d\'Ingénierie de l\'Université Fédérale du Minas Gerais, hébergée au LABBIO, le Laboratoire de Bio-ingénierie de l\'université.',
+       nav:'Navigation', reach:'Nous joindre', join:'Rejoindre l\'équipe ↗', rights:'© {y} NeuroDynamics · Initiative à but non lucratif' },
+  ui:{ copied:'Adresse e-mail copiée.', fig:'image en production', view:'Voir le projet' },
+  home:{
+    eyebrow:'Initiative de R&D en santé, à but non lucratif',
+    h1:'Des systèmes intelligents au service de la santé.',
+    sub:'NeuroDynamics est une <b>initiative à but non lucratif</b> qui conçoit les logiciels, les firmwares et les dispositifs intelligents qui aident le soin à atteindre les personnes, née à l\'<b>École d\'Ingénierie</b> de l\'Université Fédérale du Minas Gerais.',
+    b1:'Découvrir nos travaux', b2:'Qui sommes-nous',
+    meta:[['Hébergée au','LABBIO — UFMG'],['Belo Horizonte','19°52′S 43°58′W'],
+          ['Domaine','Technologies de la santé'],['Structure','À but non lucratif']],
+    s1:{ eyebrow:'01 · Raison d\'être',
+      big:'Nous existons pour réduire la distance entre la recherche en ingénierie et celles et ceux qu\'elle sert. <span class="soft">Chaque projet part d\'une question qui compte cliniquement et aboutit à une technologie réellement utilisable.</span>',
+      after:'Nous sommes une organisation à but non lucratif : ni actionnaires, ni bénéfices à distribuer. Ce que nous obtenons retourne à la recherche, aux équipements et à la formation de celles et ceux qui construisent. L\'intelligence artificielle traverse une grande partie de notre travail en santé, à la hauteur des exigences de la médecine.' },
+    s2:{ eyebrow:'02 · Ce que nous construisons', h2:'De l\'ingénierie, de bout en bout.',
+      sub:'De la première esquisse au prototype testé, une même équipe porte l\'idée à travers toutes les couches.',
+      rows:[
+        ['Génie logiciel','Plateformes cliniques, pipelines de données et outils qui tiennent un écosystème ensemble, conçus pour des environnements où l\'échec n\'est pas une option.'],
+        ['Firmware et systèmes embarqués','Du code au plus près du matériel : firmware temps réel, conception basse consommation et intelligence embarquée pour des dispositifs de qualité médicale.'],
+        ['IA pour la santé','L\'intelligence appliquée à l\'ensemble du portefeuille, du signal à la décision. Nous choisissons avec soin où elle a sa place, et où elle ne l\'a pas.'],
+        ['Signaux et données','Du signal physiologique brut à la conclusion défendable : acquisition, traitement, interprétation et la rigueur entre les deux.'],
+        ['Matériel intégré','Électronique, mécanique et design industriel conçus ensemble, pour que le dispositif et son intelligence ne soient jamais l\'accessoire l\'un de l\'autre.']] },
+    s3:{ eyebrow:'03 · Travaux choisis', h2:'Cinq fronts, une direction.',
+      sub:'Des noms de code internes pour des travaux allant de la recherche initiale aux systèmes prêts pour le terrain.', all:'Tous les projets' },
+    s4:{ eyebrow:'04 · En collaboration avec', h2:'Ancrés dans l\'université.' },
+    band:{ eyebrow:'Travailler avec nous', h2:'Vous construisez quelque chose en santé ?',
+      p:'Nous accompagnons chercheurs, cliniciens et institutions, et acceptons certains mandats de développement en logiciel, firmware et systèmes embarqués. Ce qu\'ils financent retourne directement à la recherche.',
+      btn:'Entamer la conversation' }
+  },
+  about:{
+    eyebrow:'Qui sommes-nous', h1:'Bâtis comme une startup.<br>Ancrés dans la recherche.',
+    lead:'NeuroDynamics est une initiative à but non lucratif de recherche et développement en technologies de la santé, formée par des étudiants de l\'École d\'Ingénierie de l\'Université Fédérale du Minas Gerais (UFMG) et hébergée au LABBIO, le Laboratoire de Bio-ingénierie de l\'université.',
+    s1:{ eyebrow:'01 · Pourquoi nous le faisons',
+      big:'La technologie ne compte que lorsqu\'elle atteint les personnes. Notre raison d\'être est de faire avancer le développement, <b>des dispositifs, des systèmes et des ingénieurs qui les construisent</b>, pour que de meilleurs outils parviennent plus tôt à celles et ceux qui en ont besoin.',
+      after:'C\'est l\'épreuve que chaque projet doit passer. Non pas la nouveauté pour elle-même, mais l\'utilité, tenue à un standard d\'ingénierie.' },
+    s2:{ eyebrow:'02 · Notre manière de travailler', h2:'De vrais projets, de vrais délais,<br>de vraies responsabilités.',
+      cards:[
+        ['De bout en bout','Nous menons les projets de la conception et la simulation jusqu\'à la fabrication, l\'électronique et le logiciel, en passant par les tests et la documentation. Rien ne sort à moitié fait.'],
+        ['La recherche, traduite','Nous travaillons aux côtés de la recherche académique de l\'université, transformant le savoir scientifique en prototypes fonctionnels et en résultats mesurables.'],
+        ['Dirigés par ses membres','Nous sommes organisés en départements et en équipes projet, avec des processus clairs de gestion, d\'évaluation et de développement individuel. Celles et ceux qui construisent sont celles et ceux qui décident.'],
+        ['Un rythme professionnel','Réunions générales, livrables convenus, évaluations périodiques, et de la place pour grandir, se tromper et apprendre. Le rythme d\'une entreprise, au sein d\'une université.']] },
+    s3:{ eyebrow:'03 · Comment nous sommes financés', h2:'À but non lucratif, par choix.',
+      ledger:[
+        ['Structure','<em>Initiative</em> à but non lucratif','Ni actionnaires, ni propriétaires, ni bénéfices à distribuer. Nous sommes une initiative universitaire et comptons le rester.'],
+        ['Où cela va','De retour au <em>travail</em>','Subventions, partenariats et mandats de développement financent la recherche, les équipements, les prototypes et la formation de nos membres.'],
+        ['Ce que nous mesurons','La portée, pas le <em>chiffre</em>','La réussite, c\'est un dispositif qui fonctionne sur le terrain et une personne qui a appris à le construire. Voilà notre comptabilité.']] },
+    s4:{ eyebrow:'04 · Intelligence appliquée', h2:'Une IA à la hauteur du standard clinique.',
+      p1:'L\'intelligence artificielle traverse une grande partie de notre travail en santé : dans la façon dont nos dispositifs écoutent, dont nos logiciels raisonnent, et dont le signal devient information.',
+      p2:'Nous n\'en détaillerons pas ici les usages ; une partie est encore au laboratoire. Le principe, lui, ne varie pas : l\'IA au service du soin, jamais l\'inverse, et toujours responsable devant les personnes derrière les données.' },
+    s5:{ eyebrow:'05 · Au-delà de nos projets', h2:'Parfois, nous construisons pour d\'autres.',
+      sub:'L\'essentiel de ce que nous faisons est à nous. De temps à autre, nous acceptons des travaux de développement pour des partenaires en logiciel, firmware et systèmes embarqués, quand le problème en vaut la peine et que l\'accord est juste. Chacun de ces mandats finance la recherche. Si cela ressemble à votre problème, parlons-en.',
+      chans:[
+        ['E-mail', CONTACT_EMAIL, 'Partenariats, collaborations et mandats de développement.', 'Écrivez-nous', 'mail'],
+        ['Où nous sommes','École d\'Ingénierie, UFMG','LABBIO — Laboratoire de Bio-ingénierie · Campus Pampulha, Belo Horizonte, Brésil.', null, null],
+        ['Rejoindre l\'équipe','Processus de sélection','Une fois par an, nous ouvrons des postes aux étudiants de l\'UFMG. Tout se passe sur notre site de sélection.','selecao.neurodynamics.dev','sel']] }
+  },
+  projects:{
+    eyebrow:'Le portfolio', h1:'Projets',
+    lead:'Cinq fronts actifs, une direction : une technologie qui aide les personnes. Les noms sont des noms de code internes ; les travaux vont de la recherche initiale à des systèmes proches du terrain.',
+    band:{ eyebrow:'Collaboration', h2:'Envie du détail derrière un nom de code ?',
+      p:'Chaque projet est documenté à mesure qu\'il mûrit. Pour collaborer, ou pour aller au-delà de ce qui est publié ici, écrivez-nous.', btn:'Nous contacter' }
+  },
+  contact:{
+    eyebrow:'Contact', h1:'Parlons-en.',
+    lead:'Une seule adresse atteint toute l\'initiative. Dites-nous qui vous êtes et ce sur quoi vous travaillez : nous lisons tout.',
+    reasons:[
+      ['Collaboration de recherche','Universités, laboratoires et groupes de recherche travaillant sur des problèmes voisins des nôtres.'],
+      ['Institutions et partenariats','Hôpitaux, cliniques et organisations intéressés par ce que nous construisons, ou par construire avec nous.'],
+      ['Services de développement','Des mandats choisis en logiciel, firmware et systèmes embarqués. Association à but non lucratif, ce que nous facturons finance la recherche.'],
+      ['Soutenir le travail','Subventions, dons d\'équipement et parrainage de projets précis. Chaque contribution va au laboratoire.'],
+      ['Rejoindre l\'équipe','Nous sélectionnons de nouveaux membres une fois par an, parmi les étudiants de l\'UFMG. Commencez sur <a href="https://selecao.neurodynamics.dev" target="_blank" rel="noopener">selecao.neurodynamics.dev</a>.']],
+    chans:[
+      ['Où nous sommes','École d\'Ingénierie, UFMG','LABBIO — Laboratoire de Bio-ingénierie · Campus Pampulha, Belo Horizonte, Brésil.'],
+      ['Ce que nous sommes','Initiative à but non lucratif','Une initiative de recherche et développement en technologies de la santé : portée par des étudiants, ancrée dans l\'université, menée avec la discipline d\'une startup.'],
+      ['Réponse','Sous quelques jours','Nous sommes ingénieurs avant tout : attendez une réponse réfléchie plutôt qu\'immédiate.']]
+  },
+  status:{ 'In development':'En développement', 'Applied research':'Recherche appliquée',
+           'Prototype':'Prototype', 'Field pilot':'Pilote sur le terrain' },
+  tags:{ 'Embedded systems':'Systèmes embarqués', 'Firmware':'Firmware', 'AI':'IA',
+         'Software':'Logiciel', 'Clinical data':'Données cliniques', 'Hardware':'Matériel',
+         'Instrumentation':'Instrumentation', 'Signal processing':'Traitement du signal',
+         'Wearables':'Wearables', 'Infrastructure':'Infrastructure', 'Interoperability':'Interopérabilité' }
+}
+};
+
+/* ============================================================
    FALLBACK PROJECTS — the site reads projects from Supabase
-   (soma_v9.sql, edited at ./admin.html). If the database is
-   unreachable, this content keeps the site whole. Keep it
-   loosely in sync with what is published.
+   (soma_v9 + soma_v13, edited at ./admin.html). If the database
+   is unreachable, this content keeps the site whole. Same shape
+   as the database rows: <field> is English, <field>_pt / _fr are
+   the translations.
    ============================================================ */
 const FALLBACK_PROJECTS = [
-  { slug:'calima', nome:'Calima', tagline:'Monitoring that follows the patient',
+  { slug:'calima', nome:'Calima', status:'In development',
+    tags:['Embedded systems','Firmware','AI'],
+    tagline:'Monitoring that follows the patient',
     resumo:'An intelligent monitoring platform that pairs embedded sensing with on-device intelligence, built to follow patients beyond the clinic.',
-    descricao:'Calima pairs embedded sensing with on-device intelligence to follow patients beyond the walls of the clinic. The project covers the full stack — sensor hardware, real-time firmware and the models that turn raw signal into information a clinician can trust.',
-    status:'In development', tags:['Embedded systems','Firmware','AI'] },
-  { slug:'opalina', nome:'Opalina', tagline:'Clinical data, made legible',
-    resumo:'A software platform that turns fragmented clinical data into clear, usable insight for the teams who act on it.',
-    descricao:'Opalina is a software platform that turns fragmented clinical data into clear, usable insight. It began as a research question about how care teams actually make decisions — and grew into an exploration of what decision support should look like when it is designed around people, not dashboards.',
-    status:'Applied research', tags:['Software','Clinical data','AI'] },
-  { slug:'orion', nome:'Órion', tagline:'Instrumentation without compromise',
-    resumo:'Instrumentation engineered for procedures where precision is non-negotiable — hardware, firmware and software designed as one.',
+    descricao:'Calima pairs embedded sensing with on-device intelligence to follow patients beyond the walls of the clinic. The project covers the full stack: sensor hardware, real-time firmware and the models that distill raw signal to information a clinician can trust.',
+    tagline_pt:'Monitoramento que acompanha o paciente',
+    resumo_pt:'Uma plataforma de monitoramento inteligente que une sensoriamento embarcado e inteligência no próprio dispositivo, feita para acompanhar o paciente além da clínica.',
+    descricao_pt:'A Calima une sensoriamento embarcado e inteligência no próprio dispositivo para acompanhar o paciente além das paredes da clínica. O projeto cobre a pilha inteira: o hardware dos sensores, o firmware de tempo real e os modelos que destilam o sinal bruto em informação na qual um profissional pode confiar.',
+    tagline_fr:'Un suivi qui accompagne le patient',
+    resumo_fr:'Une plateforme de surveillance intelligente qui associe capteurs embarqués et intelligence sur l\'appareil, conçue pour suivre le patient au-delà de la clinique.',
+    descricao_fr:'Calima associe capteurs embarqués et intelligence sur l\'appareil pour suivre le patient au-delà des murs de la clinique. Le projet couvre toute la chaîne : le matériel des capteurs, le firmware temps réel et les modèles qui distillent le signal brut en information digne de la confiance du clinicien.' },
+
+  { slug:'opalina', nome:'Opalina', status:'Applied research',
+    tags:['Software','Clinical data','AI'],
+    tagline:'Clinical data, made legible',
+    resumo:'A software platform that makes fragmented clinical data clear and usable for the teams who act on it.',
+    descricao:'Opalina is a software platform that makes fragmented clinical data clear and usable. It began as a research question about how care teams actually make decisions, and grew to explore what decision support should look like when it is designed around people, not dashboards.',
+    tagline_pt:'Dados clínicos, tornados legíveis',
+    resumo_pt:'Uma plataforma de software que torna dados clínicos fragmentados claros e utilizáveis para as equipes que agem sobre eles.',
+    descricao_pt:'A Opalina é uma plataforma de software que torna dados clínicos fragmentados claros e utilizáveis. Começou como uma pergunta de pesquisa sobre como as equipes de cuidado realmente decidem, e cresceu para explorar como deveria ser o apoio à decisão quando é desenhado em torno de pessoas, não de painéis.',
+    tagline_fr:'Les données cliniques, rendues lisibles',
+    resumo_fr:'Une plateforme logicielle qui rend les données cliniques fragmentées claires et exploitables pour les équipes qui agissent.',
+    descricao_fr:'Opalina est une plateforme logicielle qui rend claires et exploitables des données cliniques fragmentées. Née d\'une question de recherche sur la façon dont les équipes soignantes décident réellement, elle explore ce que devrait être l\'aide à la décision lorsqu\'elle est conçue autour des personnes, et non des tableaux de bord.' },
+
+  { slug:'orion', nome:'Órion', status:'Prototype',
+    tags:['Hardware','Instrumentation','Embedded systems'],
+    tagline:'Instrumentation without compromise',
+    resumo:'Instrumentation engineered for procedures where precision is non-negotiable: hardware, firmware and software designed as one.',
     descricao:'Órion is instrumentation for procedures where precision is non-negotiable. Hardware, firmware and software are engineered as a single system, with every layer designed, simulated and tested in-house.',
-    status:'Prototype', tags:['Hardware','Instrumentation','Embedded systems'] },
-  { slug:'deriva', nome:'Deriva', tagline:'Movement, measured',
-    resumo:'Technology that reads human movement and turns it into objective measures for rehabilitation and follow-up.',
-    descricao:'Deriva reads human movement and turns it into objective measures for rehabilitation and follow-up. Wearable sensing, signal processing and machine intelligence work together so that progress can be seen — not just felt.',
-    status:'In development', tags:['Signal processing','Wearables','AI'] },
-  { slug:'nebula', nome:'Nebula', tagline:'The connective layer',
+    tagline_pt:'Instrumentação sem concessões',
+    resumo_pt:'Instrumentação projetada para procedimentos em que a precisão não é negociável: hardware, firmware e software desenhados como um só.',
+    descricao_pt:'Órion é instrumentação para procedimentos em que a precisão não é negociável. Hardware, firmware e software são projetados como um único sistema, com cada camada desenhada, simulada e testada dentro de casa.',
+    tagline_fr:'L\'instrumentation sans compromis',
+    resumo_fr:'Une instrumentation conçue pour des gestes où la précision ne se négocie pas : matériel, firmware et logiciel pensés comme un tout.',
+    descricao_fr:'Órion est une instrumentation destinée aux gestes où la précision ne se négocie pas. Matériel, firmware et logiciel forment un seul système, chaque couche étant conçue, simulée et testée en interne.' },
+
+  { slug:'deriva', nome:'Deriva', status:'In development',
+    tags:['Signal processing','Wearables','AI'],
+    tagline:'Movement, measured',
+    resumo:'Technology that reads human movement and translates it to objective measures for rehabilitation and follow-up.',
+    descricao:'Deriva reads human movement and translates it to objective measures for rehabilitation and follow-up. Wearable sensing, signal processing and machine intelligence work together so that progress can be seen, not just felt.',
+    tagline_pt:'Movimento, medido',
+    resumo_pt:'Tecnologia que lê o movimento humano e o traduz em medidas objetivas para reabilitação e acompanhamento.',
+    descricao_pt:'A Deriva lê o movimento humano e o traduz em medidas objetivas para reabilitação e acompanhamento. Sensores vestíveis, processamento de sinais e inteligência de máquina trabalham juntos para que o progresso possa ser visto, e não apenas sentido.',
+    tagline_fr:'Le mouvement, mesuré',
+    resumo_fr:'Une technologie qui lit le mouvement humain et le traduit en mesures objectives pour la rééducation et le suivi.',
+    descricao_fr:'Deriva lit le mouvement humain et le traduit en mesures objectives pour la rééducation et le suivi. Capteurs portés, traitement du signal et intelligence artificielle travaillent ensemble pour que les progrès se voient, et ne soient pas seulement ressentis.' },
+
+  { slug:'nebula', nome:'Nebula', status:'Applied research',
+    tags:['Software','Infrastructure','Interoperability'],
+    tagline:'The connective layer',
     resumo:'Secure infrastructure that lets devices, software and people speak the same language across our ecosystem.',
-    descricao:'Nebula is the connective layer of our ecosystem: the infrastructure that lets devices, software and people speak the same language. Quiet by design, it carries data securely from every other project to wherever it needs to be.',
-    status:'Applied research', tags:['Software','Infrastructure','Interoperability'] }
+    descricao:'Nebula is the connective layer of our ecosystem: the infrastructure that lets devices, software and people speak the same language. Quiet by design, it carries data securely between every project and wherever it needs to be.',
+    tagline_pt:'A camada que conecta',
+    resumo_pt:'Infraestrutura segura que faz dispositivos, software e pessoas falarem a mesma língua em todo o nosso ecossistema.',
+    descricao_pt:'A Nebula é a camada que conecta o nosso ecossistema: a infraestrutura que faz dispositivos, software e pessoas falarem a mesma língua. Discreta por projeto, ela leva os dados com segurança entre cada projeto e onde eles precisam chegar.',
+    tagline_fr:'La couche qui relie',
+    resumo_fr:'Une infrastructure sécurisée qui permet aux appareils, aux logiciels et aux personnes de parler la même langue dans tout notre écosystème.',
+    descricao_fr:'Nebula est la couche qui relie notre écosystème : l\'infrastructure qui permet aux appareils, aux logiciels et aux personnes de parler la même langue. Discrète par conception, elle transporte les données en toute sécurité entre chaque projet et leur destination.' }
 ];
 
 /* ---------------- utilities ---------------- */
@@ -488,13 +839,23 @@ const sb = window.supabase ? supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.S
 const $ = s => document.querySelector(s);
 const esc = v => v == null ? '' : String(v).replace(/[&<>"']/g, c =>
   ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const state = { projects: FALLBACK_PROJECTS, loaded:false };
+
+const LANGS = ['en','pt','fr'];
+function pickLang(){
+  const q = new URLSearchParams(location.search).get('lang');
+  if (LANGS.includes(q)) return q;
+  try{ const s = localStorage.getItem('nd-lang'); if (LANGS.includes(s)) return s; }catch(_){}
+  const nav = (navigator.language || 'en').slice(0,2).toLowerCase();
+  return LANGS.includes(nav) ? nav : 'en';
+}
+const state = { lang: pickLang(), projects: FALLBACK_PROJECTS, loaded:false };
+const T = () => L[state.lang];
 
 function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
   $('#toast').appendChild(t); setTimeout(()=>t.remove(), 4200); }
 
-const SVG = (d, vb='0 0 24 24') =>
-  `<svg viewBox="${vb}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const SVG = (d) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
 const IC = {
   arrow: SVG('<path d="M4 12h15M13 5.5 19.5 12 13 18.5"/>'),
   ne:    SVG('<path d="M7 17 17 7M9 7h8v8"/>'),
@@ -503,14 +864,21 @@ const IC = {
 
 /* placeholder panel for imagery we don't have yet */
 function ph(fig, name, cls=''){
-  return `<div class="ph ${cls}" role="img" aria-label="${esc(name)} — imagery in production">
+  return `<div class="ph ${cls}" role="img" aria-label="${esc(name)}">
     <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
     <span class="glyph">${esc(name.charAt(0))}</span>
-    <span class="fig">FIG.${fig} — <em>${esc(name)}</em> · imagery in production</span>
+    <span class="fig">FIG.${fig} — <em>${esc(name)}</em> · ${esc(T().ui.fig)}</span>
   </div>`;
 }
 
-const statusChip = s => `<span class="st">${esc(s||'In development')}</span>`;
+/* project text in the active language, English as fallback */
+function pt_(p, field){
+  const suf = state.lang === 'en' ? '' : '_' + state.lang;
+  return p[field + suf] || p[field] || '';
+}
+const trStatus = s => (T().status && T().status[s]) || s || '';
+const trTag    = t => (T().tags   && T().tags[t])   || t || '';
+const statusChip = s => `<span class="st">${esc(trStatus(s))}</span>`;
 
 /* ---------------- data ---------------- */
 async function loadProjects(){
@@ -520,7 +888,6 @@ async function loadProjects(){
     if (!error && Array.isArray(data) && data.length){
       state.projects = data;
       state.loaded = true;
-      // re-render current page with fresh data
       render(route());
     }
   }catch(_){ /* fallback content stays */ }
@@ -528,25 +895,23 @@ async function loadProjects(){
 
 /* ---------------- pages ---------------- */
 function pageHome(){
-  const prj = state.projects;
+  const t = T().home;
   const spans = ['w7','w5','w5','w7',''];
-  const cards = prj.map((p,i)=>`
+  const cards = state.projects.map((p,i)=>`
     <a class="pcard ${spans[i]||''} reveal" href="#/projects">
       ${ph(String(i+1).padStart(2,'0'), p.nome)}
       <div class="body">
         <div class="top"><h3>${esc(p.nome)}</h3>${statusChip(p.status)}</div>
-        <p class="tg">${esc(p.resumo || p.tagline || '')}</p>
-        <span class="go">View project ${IC.ne}</span>
+        <p class="tg">${esc(pt_(p,'resumo') || pt_(p,'tagline'))}</p>
+        <span class="go">${esc(T().ui.view)} ${IC.ne}</span>
       </div>
     </a>`).join('');
 
   const partners = PARTNERS.map(pt => `
     <div class="mq-item">
-      ${pt.img
-        ? `<img src="${esc(pt.img)}" alt="${esc(pt.name)}">`
-        : `<span class="tm">${esc(pt.name)}${pt.sub?`<small>${esc(pt.sub)}</small>`:''}</span>`}
+      ${pt.img ? `<img src="${esc(pt.img)}" alt="${esc(pt.name)}">`
+               : `<span class="tm">${esc(pt.name)}${pt.sub?`<small>${esc(pt.sub)}</small>`:''}</span>`}
     </div>`);
-  // repeat until the strip is long enough for a seamless loop
   let seq = []; while (seq.length < 10) seq = seq.concat(partners);
   const track = seq.join('');
 
@@ -556,54 +921,35 @@ function pageHome(){
       <path d="M-20 300 C 120 60, 240 60, 340 230 S 560 430, 690 190 S 800 80, 840 120"/>
       <path class="p2" d="M-20 330 C 130 110, 250 110, 350 260 S 570 450, 700 220 S 810 110, 850 150"/>
     </svg>
-    <span class="eyebrow">Health-tech research &amp; development initiative</span>
-    <h1>Intelligent systems for human health.</h1>
-    <p class="hero-sub">NeuroDynamics builds the software, firmware and intelligent devices that
-      help care reach people — born at the <b>School of Engineering</b> of the
-      Federal University of Minas Gerais.</p>
+    <span class="eyebrow">${t.eyebrow}</span>
+    <h1>${t.h1}</h1>
+    <p class="hero-sub">${t.sub}</p>
     <div class="hero-acts">
-      <a class="btn solid" href="#/projects">Explore the work <span class="ar">${IC.arrow}</span></a>
-      <a class="btn ghost" href="#/about">Who we are</a>
+      <a class="btn solid" href="#/projects">${t.b1} <span class="ar">${IC.arrow}</span></a>
+      <a class="btn ghost" href="#/about">${t.b2}</a>
     </div>
     <div class="hero-meta reveal">
-      <span>Based at <em>LABBIO — UFMG</em></span>
-      <span>Belo Horizonte · <em>19°52′S 43°58′W</em></span>
-      <span>Field · <em>Health technology</em></span>
-      <span>Structure · <em>R&amp;D initiative</em></span>
+      ${t.meta.map(m=>`<span>${m[0]} · <em>${m[1]}</em></span>`).join('')}
     </div>
   </section>
 
   <section>
     <div class="statement reveal">
-      <span class="eyebrow">01 · Purpose</span>
+      <span class="eyebrow">${t.s1.eyebrow}</span>
       <div>
-        <p class="big">We exist to shorten the distance between engineering research and
-          the people it serves. <span class="soft">Every project starts with a question that
-          matters clinically — and ends as technology someone can actually use.</span></p>
-        <p class="after">Artificial intelligence runs through much of what we build in health.
-          We hold it to the standard medicine demands: quiet, rigorous, and always with a
-          person at the end of the pipeline.</p>
+        <p class="big">${t.s1.big}</p>
+        <p class="after">${t.s1.after}</p>
       </div>
     </div>
   </section>
 
   <section>
     <div class="sec-head reveal">
-      <span class="eyebrow">02 · What we build</span>
-      <div>
-        <h2>Engineering, end to end.</h2>
-        <p class="sub">From first sketch to tested prototype — one team carries the idea
-          through every layer of the stack.</p>
-      </div>
+      <span class="eyebrow">${t.s2.eyebrow}</span>
+      <div><h2>${t.s2.h2}</h2><p class="sub">${t.s2.sub}</p></div>
     </div>
     <div class="xlist">
-      ${[
-        ['Software engineering','Clinical platforms, data pipelines and the tools that hold an ecosystem together — designed for environments where failure is not an option.'],
-        ['Firmware & embedded systems','Code that lives close to the metal: real-time firmware, low-power design and embedded intelligence for medical-grade devices.'],
-        ['AI for health','Intelligence applied across our portfolio, from signal to decision. We are deliberate about where it belongs — and where it does not.'],
-        ['Signals & data','From raw physiological signal to defensible insight: acquisition, processing, interpretation and the discipline in between.'],
-        ['Integrated hardware','Electronics, mechanics and industrial design engineered together, so the device and its intelligence are never an afterthought to each other.']
-      ].map((x,i)=>`
+      ${t.s2.rows.map((x,i)=>`
       <div class="xrow reveal">
         <span class="no">0${i+1}</span>
         <h3>${x[0]}</h3>
@@ -615,23 +961,19 @@ function pageHome(){
 
   <section>
     <div class="sec-head reveal">
-      <span class="eyebrow">03 · Selected work</span>
-      <div>
-        <h2>Five fronts, one direction.</h2>
-        <p class="sub">Internal codenames for work that ranges from early research to
-          field-ready systems.</p>
-      </div>
+      <span class="eyebrow">${t.s3.eyebrow}</span>
+      <div><h2>${t.s3.h2}</h2><p class="sub">${t.s3.sub}</p></div>
     </div>
     <div class="pgrid">${cards}</div>
     <div class="pgrid-foot reveal">
-      <a class="btn ghost" href="#/projects">All projects <span class="ar">${IC.arrow}</span></a>
+      <a class="btn ghost" href="#/projects">${t.s3.all} <span class="ar">${IC.arrow}</span></a>
     </div>
   </section>
 
   <section>
     <div class="sec-head reveal">
-      <span class="eyebrow">04 · In collaboration with</span>
-      <div><h2>Grounded in the university.</h2></div>
+      <span class="eyebrow">${t.s4.eyebrow}</span>
+      <div><h2>${t.s4.h2}</h2></div>
     </div>
     <div class="mq-wrap reveal">
       <div class="mq"><div class="mq-track">${track}${track}</div></div>
@@ -640,53 +982,53 @@ function pageHome(){
 
   <section>
     <div class="band reveal">
-      <span class="eyebrow">Work with us</span>
-      <h2>Building something in health?</h2>
-      <p>We partner with researchers, clinicians and companies — and take on select
-        development engagements in software, firmware and embedded systems when the
-        work aligns with our mission.</p>
-      <a class="btn solid" href="#/contact">Start a conversation <span class="ar">${IC.arrow}</span></a>
+      <span class="eyebrow">${t.band.eyebrow}</span>
+      <h2>${t.band.h2}</h2>
+      <p>${t.band.p}</p>
+      <a class="btn solid" href="#/contact">${t.band.btn} <span class="ar">${IC.arrow}</span></a>
     </div>
   </section>`;
 }
 
+function chanCard(c){
+  const [lb, vl, p, go, kind] = c;
+  const href = kind === 'mail' ? `mailto:${CONTACT_EMAIL}`
+             : kind === 'sel'  ? 'https://selecao.neurodynamics.dev' : null;
+  const attrs = kind === 'sel' ? ' target="_blank" rel="noopener"' : '';
+  const inner = `<span class="lb">${esc(lb)}</span>
+    <span class="vl">${esc(vl)}</span>
+    <p>${esc(p)}</p>
+    ${go ? `<span class="go">${esc(go)} ${IC.ne}</span>` : ''}`;
+  return href ? `<a class="chan reveal" href="${href}"${attrs}>${inner}</a>`
+              : `<div class="chan reveal">${inner}</div>`;
+}
+
 function pageAbout(){
+  const t = T().about;
   return `
   <div class="pg-head">
-    <span class="eyebrow">Who we are</span>
-    <h1>Built like a startup.<br>Grounded in research.</h1>
-    <p class="lead">NeuroDynamics is a health-tech research and development initiative formed
-      by engineering students at the School of Engineering of the Federal University of
-      Minas Gerais (UFMG), based at LABBIO — the university's Bioengineering Laboratory.</p>
+    <span class="eyebrow">${t.eyebrow}</span>
+    <h1>${t.h1}</h1>
+    <p class="lead">${t.lead}</p>
   </div>
 
   <section>
     <div class="statement reveal">
-      <span class="eyebrow">01 · Why we do it</span>
+      <span class="eyebrow">${t.s1.eyebrow}</span>
       <div>
-        <p class="big">Technology only matters when it reaches people. Our purpose is to push
-          development forward — <b>of devices, of systems, and of the engineers who build
-          them</b> — so that better tools reach the people who need them, sooner.</p>
-        <p class="after">That is the test every project has to pass. Not novelty for its own
-          sake; usefulness, held to an engineering standard.</p>
+        <p class="big">${t.s1.big}</p>
+        <p class="after">${t.s1.after}</p>
       </div>
     </div>
   </section>
 
   <section>
     <div class="sec-head reveal">
-      <span class="eyebrow">02 · How we work</span>
-      <div>
-        <h2>Real projects, real deadlines,<br>real responsibility.</h2>
-      </div>
+      <span class="eyebrow">${t.s2.eyebrow}</span>
+      <div><h2>${t.s2.h2}</h2></div>
     </div>
     <div class="how-grid">
-      ${[
-        ['End to end','We take projects from concept and simulation through fabrication, electronics and software — including tests and documentation. Nothing ships half-built.'],
-        ['Research, translated','We work side by side with the university’s academic research, turning scientific knowledge into working prototypes and measurable results.'],
-        ['Run by its members','We are organized in departments and project teams, with clear processes for management, evaluation and individual growth. The initiative is led by the people who build it.'],
-        ['A professional rhythm','General meetings, agreed deliverables, periodic reviews — and room to grow, make mistakes and learn. The pace of a company, inside a university.']
-      ].map((x,i)=>`
+      ${t.s2.cards.map((x,i)=>`
       <div class="how reveal">
         <span class="no">0${i+1}</span>
         <h3>${x[0]}</h3>
@@ -697,114 +1039,98 @@ function pageAbout(){
 
   <section>
     <div class="sec-head reveal">
-      <span class="eyebrow">03 · Intelligence, applied</span>
-      <div><h2>AI, held to a clinical standard.</h2></div>
+      <span class="eyebrow">${t.s3.eyebrow}</span>
+      <div><h2>${t.s3.h2}</h2></div>
     </div>
-    <div class="quiet reveal">
-      <p>Artificial intelligence runs through much of our work in health — in how our
-        devices listen, how our software reasons, and how signal becomes insight.</p>
-      <p class="fine">We won't enumerate the ways here; part of it is still in the lab. The
-        principle, though, is constant: AI in service of care, never the other way around,
-        and always accountable to the people behind the data.</p>
+    <div class="ledger reveal">
+      ${t.s3.ledger.map(c=>`
+      <div class="cell">
+        <span class="k">${c[0]}</span>
+        <p class="v">${c[1]}</p>
+        <p>${c[2]}</p>
+      </div>`).join('')}
     </div>
   </section>
 
   <section>
     <div class="sec-head reveal">
-      <span class="eyebrow">04 · Beyond our own projects</span>
-      <div>
-        <h2>Occasionally, we build for others.</h2>
-        <p class="sub">Most of what we make is ours. Now and then, we take on development
-          work for partners — software, firmware, embedded systems — when the problem is
-          worth solving and the fit is right. If that sounds like your problem, we should
-          talk.</p>
-      </div>
+      <span class="eyebrow">${t.s4.eyebrow}</span>
+      <div><h2>${t.s4.h2}</h2></div>
     </div>
-    <div class="chan-grid">
-      <a class="chan reveal" href="mailto:${CONTACT_EMAIL}">
-        <span class="lb">E-mail</span>
-        <span class="vl">${esc(CONTACT_EMAIL)}</span>
-        <p>Partnerships, collaboration and development engagements.</p>
-        <span class="go">Write to us ${IC.ne}</span>
-      </a>
-      <div class="chan reveal">
-        <span class="lb">Where we are</span>
-        <span class="vl">School of Engineering, UFMG</span>
-        <p>LABBIO — Bioengineering Laboratory · Campus Pampulha, Belo Horizonte, Brazil.</p>
-      </div>
-      <a class="chan reveal" href="https://selecao.neurodynamics.dev" target="_blank" rel="noopener">
-        <span class="lb">Join the team</span>
-        <span class="vl">Selection process</span>
-        <p>Once a year we open positions for UFMG students. Everything happens at our
-          selection site.</p>
-        <span class="go">selecao.neurodynamics.dev ${IC.ne}</span>
-      </a>
+    <div class="quiet reveal">
+      <p>${t.s4.p1}</p>
+      <p class="fine">${t.s4.p2}</p>
     </div>
+  </section>
+
+  <section>
+    <div class="sec-head reveal">
+      <span class="eyebrow">${t.s5.eyebrow}</span>
+      <div><h2>${t.s5.h2}</h2><p class="sub">${t.s5.sub}</p></div>
+    </div>
+    <div class="chan-grid">${t.s5.chans.map(chanCard).join('')}</div>
   </section>`;
 }
 
 function pageProjects(){
-  const rows = state.projects.map((p,i)=>`
+  const t = T().projects;
+  const n = String(state.projects.length).padStart(2,'0');
+  const rows = state.projects.map((p,i)=>{
+    const tagline = pt_(p,'tagline'), texto = pt_(p,'descricao') || pt_(p,'resumo');
+    return `
   <article class="case reveal">
     <div>
       <div class="meta">
-        <span class="no">${String(i+1).padStart(2,'0')} / ${String(state.projects.length).padStart(2,'0')}</span>
+        <span class="no">${String(i+1).padStart(2,'0')} / ${n}</span>
         ${statusChip(p.status)}
       </div>
       <h2>${esc(p.nome)}</h2>
-      ${p.tagline ? `<p class="tg">${esc(p.tagline)}</p>` : ''}
-      <p class="ds">${esc(p.descricao || p.resumo || '')}</p>
+      ${tagline ? `<p class="tg">${esc(tagline)}</p>` : ''}
+      <p class="ds">${esc(texto)}</p>
       ${Array.isArray(p.tags) && p.tags.length
-        ? `<div class="tags">${p.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>` : ''}
+        ? `<div class="tags">${p.tags.map(x=>`<span>${esc(trTag(x))}</span>`).join('')}</div>` : ''}
     </div>
     <div class="case-media">
       ${p.imagem_url
         ? `<div class="ph tall"><img class="real" src="${esc(p.imagem_url)}" alt="${esc(p.nome)}"></div>`
         : ph(String(i+1).padStart(2,'0'), p.nome, 'tall')}
     </div>
-  </article>`).join('');
+  </article>`;
+  }).join('');
 
   return `
   <div class="pg-head">
-    <span class="eyebrow">The portfolio</span>
-    <h1>Projects</h1>
-    <p class="lead">Five active fronts, one direction: technology that helps people. The names
-      are internal codenames; the work behind them ranges from early research to systems
-      approaching the field.</p>
+    <span class="eyebrow">${t.eyebrow}</span>
+    <h1>${t.h1}</h1>
+    <p class="lead">${t.lead}</p>
   </div>
   ${rows}
   <section style="margin-top:clamp(60px,9vh,110px)">
     <div class="band reveal">
-      <span class="eyebrow">Collaboration</span>
-      <h2>Want the detail behind a codename?</h2>
-      <p>Each project is documented as it matures. For collaboration — or detail beyond
-        what's published here — get in touch.</p>
-      <a class="btn solid" href="#/contact">Contact us <span class="ar">${IC.arrow}</span></a>
+      <span class="eyebrow">${t.band.eyebrow}</span>
+      <h2>${t.band.h2}</h2>
+      <p>${t.band.p}</p>
+      <a class="btn solid" href="#/contact">${t.band.btn} <span class="ar">${IC.arrow}</span></a>
     </div>
   </section>`;
 }
 
 function pageContact(){
+  const t = T().contact;
   return `
   <div class="pg-head">
-    <span class="eyebrow">Contact</span>
-    <h1>Let's talk.</h1>
-    <p class="lead">One address reaches the whole initiative. Tell us who you are and what
-      you're working on — we read everything.</p>
+    <span class="eyebrow">${t.eyebrow}</span>
+    <h1>${t.h1}</h1>
+    <p class="lead">${t.lead}</p>
     <div class="mailrow reveal">
       <a class="addr" href="mailto:${CONTACT_EMAIL}">${esc(CONTACT_EMAIL)}</a>
-      <button class="copybtn" onclick="copyMail()" aria-label="Copy e-mail address">${IC.copy}</button>
+      <button class="copybtn" onclick="copyMail()" aria-label="${esc(T().ui.copied)}">${IC.copy}</button>
     </div>
   </div>
 
   <section>
     <div class="reasons">
-      ${[
-        ['Research collaboration','Universities, laboratories and research groups working on problems adjacent to ours.'],
-        ['Institutions & partnerships','Hospitals, clinics and organizations interested in what we are building — or in building together.'],
-        ['Development services','Select engagements in software, firmware and embedded systems, taken on when the work aligns with our mission.'],
-        ['Joining the team','We select new members once a year, among UFMG students. Start at <a href="https://selecao.neurodynamics.dev" target="_blank" rel="noopener" style="color:var(--ink);border-bottom:1px solid var(--line2)">selecao.neurodynamics.dev</a>.']
-      ].map((x,i)=>`
+      ${t.reasons.map((x,i)=>`
       <div class="reason reveal">
         <span class="no">0${i+1}</span>
         <h3>${x[0]}</h3>
@@ -815,51 +1141,68 @@ function pageContact(){
 
   <section>
     <div class="chan-grid">
+      ${t.chans.map(c=>`
       <div class="chan reveal">
-        <span class="lb">Where we are</span>
-        <span class="vl">School of Engineering, UFMG</span>
-        <p>LABBIO — Bioengineering Laboratory · Campus Pampulha, Belo Horizonte, Brazil.</p>
-      </div>
-      <div class="chan reveal">
-        <span class="lb">What we are</span>
-        <span class="vl">R&amp;D initiative</span>
-        <p>A health-tech research and development initiative — student-led, university-grounded,
-          run with the discipline of a startup.</p>
-      </div>
-      <div class="chan reveal">
-        <span class="lb">Response</span>
-        <span class="vl">Within a few days</span>
-        <p>We are engineers first — expect a considered reply rather than an instant one.</p>
-      </div>
+        <span class="lb">${esc(c[0])}</span>
+        <span class="vl">${esc(c[1])}</span>
+        <p>${esc(c[2])}</p>
+      </div>`).join('')}
     </div>
   </section>`;
 }
 
 function copyMail(){
   navigator.clipboard?.writeText(CONTACT_EMAIL)
-    .then(()=>toast('E-mail address copied.'))
+    .then(()=>toast(T().ui.copied))
     .catch(()=>toast(CONTACT_EMAIL));
 }
 
 /* ---------------- router ---------------- */
-const PAGES = {
-  home:     { fn:pageHome,     title:'NeuroDynamics — Health-Tech R&D' },
-  about:    { fn:pageAbout,    title:'Who we are — NeuroDynamics' },
-  projects: { fn:pageProjects, title:'Projects — NeuroDynamics' },
-  contact:  { fn:pageContact,  title:'Contact — NeuroDynamics' }
-};
+const PAGES = { home:pageHome, about:pageAbout, projects:pageProjects, contact:pageContact };
 function route(){
   const h = (location.hash || '#/').replace(/^#\//,'').split('/')[0];
   return PAGES[h] ? h : 'home';
 }
 function render(r){
-  document.title = PAGES[r].title;
-  $('#main').innerHTML = PAGES[r].fn();
-  document.querySelectorAll('[data-r]').forEach(a =>
-    a.classList.toggle('on', a.dataset.r === r));
+  const t = T();
+  document.documentElement.lang = t.htmlLang;
+  document.title = t.titles[r];
+  $('#meta-desc').setAttribute('content', t.desc);
+  $('#main').innerHTML = PAGES[r]();
+  document.querySelectorAll('[data-r]').forEach(a => a.classList.toggle('on', a.dataset.r === r));
   closeMenu();
   observe();
 }
+
+/* labels that live outside <main> */
+function paintChrome(){
+  const t = T();
+  document.querySelectorAll('#nav-inline [data-k]').forEach(a => a.textContent = t.nav[a.dataset.k]);
+  document.querySelectorAll('#nav-menu [data-k]').forEach(a => a.querySelector('.lb').textContent = t.nav[a.dataset.k]);
+  document.querySelectorAll('.ft-grid [data-k]').forEach(a => a.textContent = t.nav[a.dataset.k]);
+  $('#hd-cta').textContent = t.cta;
+  $('#menu-place').textContent = t.menu.place;
+  $('#menu-city').textContent = t.menu.city;
+  $('#ft-desc').textContent = t.ft.desc;
+  $('#ft-h-nav').textContent = t.ft.nav;
+  $('#ft-h-reach').textContent = t.ft.reach;
+  $('#ft-join').textContent = t.ft.join;
+  $('#ft-rights').textContent = t.ft.rights.replace('{y}', new Date().getFullYear());
+  $('#lang').innerHTML = LANGS.map(l =>
+    `<button data-l="${l}" class="${l===state.lang?'on':''}" aria-pressed="${l===state.lang}"
+      lang="${L[l].htmlLang}">${L[l].label}</button>`).join('');
+  $('#lang').querySelectorAll('button').forEach(b =>
+    b.addEventListener('click', () => setLang(b.dataset.l)));
+}
+
+function setLang(l){
+  if (!LANGS.includes(l) || l === state.lang) return;
+  state.lang = l;
+  try{ localStorage.setItem('nd-lang', l); }catch(_){}
+  paintChrome();
+  render(route());
+}
+
 window.addEventListener('hashchange', ()=>{ render(route()); window.scrollTo({top:0,behavior:'instant'}); });
 
 /* ---------------- menu ---------------- */
@@ -886,14 +1229,15 @@ window.addEventListener('scroll', ()=>{
 }, { passive:true });
 
 /* ---------------- boot ---------------- */
-[['#logo-hd'],['#logo-ft']].forEach(([sel])=>{
+['#logo-hd','#logo-ft'].forEach(sel=>{
   const img = $(sel);
-  img.onerror = () => { const s=document.createElement('span'); s.className='logotype'; s.textContent='NeuroDynamics'; img.replaceWith(s); };
+  img.onerror = () => { const s=document.createElement('span'); s.className='logotype';
+    s.textContent='NeuroDynamics'; img.replaceWith(s); };
   img.src = LOGO_URL;
 });
 $('#ft-mail').href = `mailto:${CONTACT_EMAIL}`; $('#ft-mail').textContent = CONTACT_EMAIL;
 $('#menu-mail').href = `mailto:${CONTACT_EMAIL}`; $('#menu-mail').textContent = CONTACT_EMAIL;
-$('#ft-ano').textContent = new Date().getFullYear();
+paintChrome();
 render(route());
 loadProjects();
 </script>
