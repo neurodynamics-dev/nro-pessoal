@@ -27,10 +27,21 @@ entrada de ninguém. **Não apague esta pasta.**
 
 ## 3. Guardar as fotos do quadro
 
-A pasta [`fotos/`](fotos/) serve as fotos dos membros (`fotos/<registro>.jpg`).
-O portal as busca pelo endereço `raw.githubusercontent.com` deste repositório,
-que não depende do GitHub Pages — então ela sobrevive a qualquer mudança de
-domínio. **Não apague.**
+A pasta [`fotos/`](fotos/) é a fonte viva das fotos de perfil do quadro —
+confirmado no código, não por suposição. A regra, em `membro/index.html`:
+
+1. se o membro tem `membros.foto_url` preenchido, vale esse endereço;
+2. **senão**, o portal monta `fotos/<registro>.<ext>` daqui e tenta as
+   extensões em cascata até uma carregar;
+3. se nenhuma carregar, aparecem as iniciais do nome.
+
+Ou seja: hoje quase todo mundo cai no passo 2, e esta pasta é o acervo. O
+portal a busca por `raw.githubusercontent.com`, que não depende do GitHub
+Pages — então ela sobrevive a qualquer mudança de domínio. **Não apague.**
+
+Para migrar uma foto para outro lugar, basta preencher `foto_url` na ficha do
+membro (SOMA → Equipe → ficha → Dados): o passo 1 passa na frente e o arquivo
+daqui deixa de ser consultado para aquela pessoa.
 
 ## O app antigo
 
