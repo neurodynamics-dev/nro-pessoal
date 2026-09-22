@@ -52,6 +52,11 @@ se algo faltar no portal, um `git mv` o recoloca no ar em um minuto.
 Quando a equipe estiver confortável — um mês de uso é uma boa régua —, este
 arquivo pode ser apagado. O histórico do git continua guardando tudo.
 
+Por um tempo, ele foi mais que rede de segurança: o **Processo Seletivo** e
+os **OKRs** ficaram de fora da migração e só existiam aqui, até ganharem
+`#/selecao` e `#/okrs` no portal. O mês de uso conta a partir de quando
+eles chegaram, não do corte.
+
 ## As migrações
 
 `soma_v6.sql` a `soma_v13.sql` continuam aqui como acervo. As versões
