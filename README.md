@@ -14,7 +14,7 @@ por eles.
 | Arquivo | Leva para |
 |---|---|
 | `index.html` | o portal, com um resumo de onde cada coisa foi parar |
-| `app.html` | a Agenda — e repassa o token do QR antigo da entrada, para o check-in continuar sendo registrado |
+| `app.html` | a Agenda — e repassa o token do QR antigo da entrada, para o check-in continuar sendo registrado (a presença mora em Equipe › Presença) |
 | `quiosque.html` | o quiosque, que agora é servido pelo portal |
 
 ## 2. Servir as imagens dos e-mails já enviados
@@ -45,17 +45,11 @@ daqui deixa de ser consultado para aquela pessoa.
 
 ## O app antigo
 
-O SOMA · Gestão está preservado em [`soma-legado.html`](soma-legado.html), sem
-link e sem ser servido como página inicial. É rede de segurança para a virada:
-se algo faltar no portal, um `git mv` o recoloca no ar em um minuto.
-
-Quando a equipe estiver confortável — um mês de uso é uma boa régua —, este
-arquivo pode ser apagado. O histórico do git continua guardando tudo.
-
-Por um tempo, ele foi mais que rede de segurança: o **Processo Seletivo** e
-os **OKRs** ficaram de fora da migração e só existiam aqui, até ganharem
-`#/selecao` e `#/okrs` no portal. O mês de uso conta a partir de quando
-eles chegaram, não do corte.
+O SOMA · Gestão (`soma-legado.html`) foi **removido** na revisão 28 do portal,
+junto com o que só ele ainda fazia na agenda: checklist por tipo de evento,
+dossiê e lista de presença por evento. A agenda do portal segue o modelo do
+Google Agenda. O arquivo continua no histórico do git, se for preciso
+consultar.
 
 ## As migrações
 
