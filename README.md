@@ -43,6 +43,15 @@ Para migrar uma foto para outro lugar, basta preencher `foto_url` na ficha do
 membro (SOMA → Equipe → ficha → Dados): o passo 1 passa na frente e o arquivo
 daqui deixa de ser consultado para aquela pessoa.
 
+Desde o SOMA 2.17.0 a foto também pode ser **enviada pelo portal**, sem
+publicar arquivo aqui. A própria pessoa clica no seu avatar do menu (ou em
+**Foto de perfil**, no rodapé); o Pessoal e a administração usam a câmera na
+ficha de qualquer membro. O portal recorta a imagem, grava no Storage do
+Supabase (bucket `fotos`, em `<registro>/<carimbo>.jpg`) e preenche
+`foto_url` sozinho. É o passo 1, então a foto enviada passa na frente do
+arquivo daqui. Esta pasta continua valendo para quem não enviou, e
+**Remover**, na mesma janela, devolve a pessoa a ela.
+
 ## O app antigo
 
 O SOMA · Gestão (`soma-legado.html`) foi **removido** na revisão 28 do portal,
